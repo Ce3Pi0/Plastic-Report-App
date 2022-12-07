@@ -1,0 +1,12 @@
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+db = SQLAlchemy(app)
+CORS(app)
+
+app.config["JWT_SECRET_KEY"] = "Ce3Pi0"
+jwt = JWTManager(app)
