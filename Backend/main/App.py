@@ -10,7 +10,7 @@ from routes.userAuthRoute import UserAuthRouteInstance
 test = BaseRoute()
 
 @app.route('/user', methods=["POST", "GET", "PUT", "DELETE"])
-@jwt_required()
+# @jwt_required()
 def user():
     return createReqeust(request, UserRouteInstance)
 

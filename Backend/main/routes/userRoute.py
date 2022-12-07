@@ -1,3 +1,4 @@
+from flask import jsonify
 from config.config import db
 from routes.baseRoute import BaseRoute
 from classes.classes import User
