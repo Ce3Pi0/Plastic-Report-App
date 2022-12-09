@@ -8,11 +8,12 @@ import hmac
 
 class UserRoute(BaseRoute):
     __types = ["client", "admin"]
+    __genders = ["male", "female", "other"]
 
     def __init__(self) -> None:
-        self.create_req = ["name", "username", "email", "password", "type"]
-        self.update_req = ["username", "email", "password"]
-        self.delete_req = ["username", "email", "password"]
+        self.create_req = ["name", "username", "email", "password", "type", "gender"]
+        self.update_req = ["username", "password"]
+        self.delete_req = ["username", "password"]
 
     def create(self, request):
         for key in self.create_req:
@@ -30,12 +31,15 @@ class UserRoute(BaseRoute):
 
         if self.type not in self.__types:
             return customAbort("User type not allowed", 405)
+
+        if self.gender not in self.__genders:
+            return customAbort("User gender not allowed", 405)
         
         salt = genSalt()
         hashed_pw = hashPassword(self.password, salt)
 
         new_user = User(name = self.name, username = self.username,
-        email = self.email, password = hashed_pw, salt = salt, type = self.type)
+        email = self.email, password = hashed_pw, salt = salt, type = self.type, gender = self.gender)
 
         db.session.add(new_user)
         db.session.commit()
@@ -51,7 +55,7 @@ class UserRoute(BaseRoute):
                 data = {"id":user.id, "name":user.name,
                 "username":user.username, "email":user.email,
                 "type":user.type,
-                "password":user.password.decode('UTF-8')}
+                "gender":user.gender}
                 output.append(data)
 
             return {"Users": output}
@@ -63,7 +67,7 @@ class UserRoute(BaseRoute):
 
         data = {"id":user.id, "name":user.name,
                 "username":user.username, "email":user.email,
-                "type":user.type}
+                "type":user.type, "gender": user.gender}
         return {"user":data}
 
     def update(self, request):
@@ -77,8 +81,7 @@ class UserRoute(BaseRoute):
         for key in request.json:
             setattr(self, key, request.json[key])
 
-        user = User.query.filter_by(id=request.args['id'], username=self.username,
-         email=self.email).first()
+        user = User.query.filter_by(id=request.args['id'], username=self.username).first()
 
         if user is None:
             return customAbort("User doesn't exists!", 404)

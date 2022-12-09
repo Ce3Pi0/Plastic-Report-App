@@ -38,14 +38,18 @@ import './theme/variables.css';
 import AccountCreate from './pages/Account/AccountCreate';
 import AccountChange from './pages/Account/AccountChange';
 import Account from './pages/Account/Account';
+import { GlobalProvider } from './context/Context';
+import { useState } from 'react';
 
 setupIonicReact();
 
-const loggedIn: boolean = false;// get logged in info ***
-const redirectRoute: string = loggedIn ? "/home" : "/account";
+const loggedIn = window.localStorage.getItem('logged_in');
+const redirectRoute: string = loggedIn === "true" ? "/home" : "/account/login";
 
 const Tabs = () => {
-  const location = useLocation()
+  const location = useLocation();
+  const [path, setPath] = useState<string>(loggedIn === "true" ? "/account" : "/account/login");
+
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -59,13 +63,13 @@ const Tabs = () => {
           <Shop />
         </Route>
         <Route exact path="/account">
-          <Account />
+          <Account setPath={setPath}/>
         </Route>
         <Route exact path="/account/login">
-          <AccountLogin />
+          <AccountLogin setPath={setPath}/>
         </Route>
         <Route exact path="/account/create">
-          <AccountCreate />
+          <AccountCreate setPath={setPath}/>
         </Route>
         <Route exact path="/account/change">
           <AccountChange />
@@ -88,7 +92,7 @@ const Tabs = () => {
           <IonIcon icon={cart} />
           <IonLabel>E-Shop</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="account/login" href="/account/login" selected={location.pathname.includes("account")}>
+        <IonTabButton tab={path} href={path} selected={location.pathname.includes("account")}>
           <IonIcon icon={person} />
           <IonLabel>Account</IonLabel>
         </IonTabButton>
@@ -98,11 +102,13 @@ const Tabs = () => {
 }
 
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <Tabs />
-    </IonReactRouter>
-  </IonApp>
+  <GlobalProvider>
+    <IonApp>
+      <IonReactRouter>
+        <Tabs />
+      </IonReactRouter>
+    </IonApp>
+  </GlobalProvider>
 );
 
 export default App;

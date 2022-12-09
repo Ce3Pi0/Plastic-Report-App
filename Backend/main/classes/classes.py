@@ -10,6 +10,7 @@ class User(db.Model):
     email = db.Column(db.String(2048), unique = True, nullable = False)
     password = db.Column(db.String(256), nullable = False)
     salt = db.Column(db.String(256), unique = True, nullable = False)
+    gender = db.Column(db.String(48))
 
     def __repr__(self) -> str:
         return f'id:{self.id},type:{self.type},name:{self.name},username":{self.username},email:{self.email},password:{self.password}'

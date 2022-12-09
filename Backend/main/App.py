@@ -14,9 +14,13 @@ test = BaseRoute()
 def user():
     return createReqeust(request, UserRouteInstance)
 
-@app.route('/user/auth', methods=["POST"])
-def user_auth():
-    return createReqeust(request, UserAuthRouteInstance)
+@app.route('/user/register', methods=["POST"])
+def user_register():
+    return UserAuthRouteInstance.register(request)
+
+@app.route('/user/login', methods=["POST"])
+def user_login():
+    return UserAuthRouteInstance.login(request)
 
 @app.errorhandler(404)
 def not_found():

@@ -1,5 +1,10 @@
 #warning{
-    color:#e04055;
+  color:#e04055;
+  position: relative;
+  float: center;
+}
+
+.not-found{
     text-align: center;
 }
 
@@ -12,17 +17,33 @@
         align-items: center;
     }
 
+    #container{
+      margin: 0;
+      top: 50px;
+      left: 50%;
+      position: absolute;
+      text-align: center;
+      transform: translateX(-50%);
+      background-color: var(--ion-color-light-shade);
+      border-radius: 9px;
+      border-top: 10px solid var(--ion-color-secondary);
+      border-bottom: 10px solid var(--ion-color-secondary-shade);
+      width: 35%;
+      height: 70%;
+      box-shadow: 1px 1px 108.8px 0px rgb(25, 53, 34);
+    }
+
     #form{
         width: 30%;
         border-radius: 10px;
         padding: 20px;
     }
     #username{
-        margin-left: 10px;
+        margin-left: 5px;
         text-align: center;
     }
     #password{
-        margin-left: 10px;
+        margin-left: 5px;
         text-align: center;
     }
     #title{
@@ -43,15 +64,38 @@
         float: right;
         text-decoration: none;
     }
+
+    .btn1 {
+      border:0;
+      background: var(--ion-color-primary);
+      color: #dfdeee;
+      border-radius: 100px;
+      width: 85%;
+      height: 49px;
+      font-size: 16px;
+      position: absolute;
+      top: 82%;
+      left: 8%;
+      transition: 0.3s;
+      cursor: pointer;
+    }
 }
 
 @media screen and (max-width: 1000px) {
-    .container{
-        padding-top: 10%;
-        margin:auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+   #container{
+      margin: 0;
+      top: 50px;
+      left: 50%;
+      position: absolute;
+      text-align: center;
+      transform: translateX(-50%);
+      background-color: var(--ion-color-light-shade);
+      border-radius: 9px;
+      border-top: 10px solid var(--ion-color-secondary);
+      border-bottom: 10px solid var(--ion-color-secondary-shade);
+      width: 75%;
+      height: 75%;
+      box-shadow: 1px 1px 108.8px 0px rgb(25, 53, 34);
     }
     #form{
         width: 70%;
@@ -59,11 +103,11 @@
         padding: 20px;
     }
     #username{
-        margin-left: 15px;
+        margin-left: 5px;
         text-align: center;
     }
     #password{
-        margin-left: 15px;
+        margin-left: 5px;
         text-align: center;
     }
     #title{
@@ -84,4 +128,146 @@
         text-align: center;
         text-decoration: none;
     }
+
+    .btn1 {
+      border:0;
+      background: var(--ion-color-primary);
+      color: #dfdeee;
+      border-radius: 100px;
+      width: 85%;
+      height: 49px;
+      font-size: 16px;
+      position: absolute;
+      top: 82%;
+      left: 8%;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+}
+
+
+/*  ################################################  */
+
+/* CSS Libraries Used 
+
+*Animate.css by Daniel Eden.
+*FontAwesome 4.7.0
+*Typicons
+
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400');
+
+body, html {
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color: #1d243d;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+.box h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: var(--ion-color-primary-tint);; 
+  margin-top:24px;;
+}
+
+.box-sign-in h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: var(--ion-color-primary-tint);; 
+  margin-top:24px;;
+}
+
+.box h5 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 13px;
+  color: #a1a4ad;
+  letter-spacing: 1.5px;
+  margin-top: -15px;
+  margin-bottom: 50px;
+}
+
+.box-sign-in h5 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 13px;
+  color: #a1a4ad;
+  letter-spacing: 1.5px;
+  margin-bottom: 0px;
+}
+
+.box input[type = "text"],.box input[type = "password"], .box input[type = "email"]{
+  display: block;
+  margin: 20px auto;
+  background: var(--ion-color-light);
+  border: 0;
+  border-radius: 5px;
+  padding: 14px 10px;
+  outline: none;
+  color: #d6d6d6;
+      -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+  
+}
+
+.box-sign-in input[type = "text"],.box-sign-in input[type = "password"], .box-sign-in input[type = "email"]{
+  display: block;
+  margin: 10px auto;
+  background: var(--ion-color-light);
+  border: 0;
+  border-radius: 15px;
+  padding: 5px 10px;
+  outline: none;
+  color: #d6d6d6;
+      -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+  
+}
+::-webkit-input-placeholder {
+  color: #565f79;
+}
+
+.box input[type = "text"]:focus,.box input[type = "password"]:focus, .box-sign-in input[type = "text"]:focus,.box-sign-in input[type = "password"]:focus, .box-sign-in input[type = "email"]:focus {
+  border: 1px solid var(--ion-color-primary-shade);
+  
+}
+
+a{
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.btn1:hover {
+    background: var(--ion-color-tertiary-tint);
+}
+
+.rmb {
+  position: absolute;
+  margin-left: -24%;
+  margin-top: 0px;
+  color: #dfdeee;
+  font-size: 13px;
+}
+
+.forgetpass {
+  position: relative;
+  float: center;
+}
+
+.dnthave{
+  position: relative;
+  float: center;
+}
+
+.gender{
+  border-radius: 20px;
 }

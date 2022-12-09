@@ -1,8 +1,9 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import React from 'react';
 import Login from '../../components/account/login';
 import './Account.css';
 
-const AccountLogin: React.FC = () => {
+const AccountLogin: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}> = ({setPath}) => {
   return (
     <IonPage>
       <IonHeader>
@@ -11,7 +12,7 @@ const AccountLogin: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Login />
+        <Login setPath={setPath}/>
       </IonContent>
     </IonPage>
   );
