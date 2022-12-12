@@ -3,7 +3,7 @@ import React from 'react';
 import Login from '../../components/account/login';
 import './Account.css';
 
-const AccountLogin: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}> = ({setPath}) => {
+const AccountLogin: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -12,7 +12,7 @@ const AccountLogin: React.FC<{setPath: React.Dispatch<React.SetStateAction<strin
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Login setPath={setPath}/>
+        <Login/>
       </IonContent>
     </IonPage>
   );

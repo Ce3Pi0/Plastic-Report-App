@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchReturn } from "../interfaces/interfaces";
-import { domain } from './utils';
+import { FetchRefreshToken } from './utils';
 
 const useFetch = (url: string): fetchReturn => {
     const [data, setData] = useState<JSON|null>(null);
@@ -22,71 +22,16 @@ const useFetch = (url: string): fetchReturn => {
             signal: AbtCnt.signal
         })
             .then(data => {
-                if (data.status === 401)
-                    window.location.reload();
-
                 if (data.status === 422 || data.status === 401){
-                
                     let refreshHeaders = new Headers();
                     
                     refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
                     refreshHeaders.append("Content-Type", "application/json");
                                     
-                    fetch(`http://${domain}/users/refresh_token`, {
-                        method:"GET",
-                        headers: refreshHeaders
-                    })
-                    .then(data => {
-                        if (!data.ok)
-                            throw Error("There was a mistake!")
-                        return data.json();
-                    })
-                    .then(json => {
-                        localStorage.setItem("session_id", json.access_token);
-                        localStorage.setItem("refresh_token", json.refresh_token);
-
-                        let myHeaders = new Headers();
-                        myHeaders.append("Authorization", `Bearer ${json.access_token}`);
-                        myHeaders.append("Content-Type", "application/json");
-
-                        fetch(url, {
-                            method: "GET",
-                            headers: myHeaders,
-                            body: null,
-                            signal: AbtCnt.signal
-                        })
-                        .then(data => {
-                            if(setLoading !== undefined)
-                                setLoading(false);
-                            if (!data.ok){
-                                throw Error("Something went wrong!")
-                            }
-                            return data.json()
-                        })
-                        .then(json => {
-                            if (setLoading !== undefined && setData !== undefined && setErr !== undefined) {
-                                setLoading(false);
-                                setData(JSON.parse(JSON.stringify(data)));
-                                setErr(null);
-                            } else window.location.reload();
-                        })
-                        .catch(err => {
-                            if (setErr !== undefined && setLoading !== undefined) {
-                                setLoading(false);
-                                setErr(err.message);
-                            }
-                        })
-                    })
-                    .catch(e => {
-                        if (window.localStorage.getItem('logged_in') === "true"){
-                            window.alert("Session expired!");
-                            window.location.assign('/account');
-                            window.localStorage.clear();    
-                        }
-                    })}
+                    FetchRefreshToken(url, undefined, AbtCnt, undefined, setData, setLoading, setErr, undefined, undefined, true);
+                }
                 else{
-                    if(setLoading !== undefined)
-                        setLoading(false);
+                    setLoading(false);
                     if (!data.ok){
                         throw Error("Something went wrong!")
                     }
@@ -94,19 +39,14 @@ const useFetch = (url: string): fetchReturn => {
                 }
             })
             .then(json => {
-                if (setLoading !== undefined && setData !== undefined && setErr !== undefined) {
-                    setLoading(false);
-                    setData(JSON.parse(JSON.stringify(json)));
-                    setErr(null);
-                } else window.location.reload();
+                setLoading(false);
+                setData(json);
+                setErr(null);
             })
             .catch(err => {
-                if (setErr !== undefined && setLoading !== undefined) {
-                    setLoading(false);
-                    setErr(err.message);
-                }
+                setLoading(false);
+                setErr(err.message);
             })
-
 
         return () => AbtCnt.abort();
     }, []);

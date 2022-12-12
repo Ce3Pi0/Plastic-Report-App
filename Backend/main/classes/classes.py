@@ -15,5 +15,16 @@ class User(db.Model):
     def __repr__(self) -> str:
         return f'id:{self.id},type:{self.type},name:{self.name},username":{self.username},email:{self.email},password:{self.password}'
 
+class Report(db.Model):
+    __tablename__ = "Report"
+
+    id = db.Column(db.Integer, primary_key = True, nullable = False)
+    location = db.Column(db.String(256), nullable = False)
+    url = db.Column(db.String(128))
+    status = db.Column(db.String(128), nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey("User.id"), nullable = False)
+
+    User = db.relationship("User", backref = db.backref("Report"), lazy = True)
+
 with app.app_context():
     db.create_all()

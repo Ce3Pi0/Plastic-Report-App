@@ -1,3 +1,12 @@
+export interface UserInterface {
+    id: number,
+    username: string,
+    gender: string,
+    access_token:string,
+    refresh_token:string,
+    type: string
+}
+
 export interface UserLogin {
     username: string,
     password: string

@@ -19,14 +19,11 @@ class UserAuthRoute(BaseRoute):
             if key not in request.json:
                 return customAbort("Key not in request!", 400)
 
-        for key in request.json:
-            setattr(self, key, request.json[key])
-
         check_username = User.query.filter_by(username = self.username).first()
         check_email = User.query.filter_by(email=self.email).first()
 
         if check_username is not None or check_email is not None:
-            return customAbort("User already exists!", 400)
+            return customAbort("User already exists!", 409)
 
         salt = genSalt()
         hashed_pw = hashPassword(self.password, salt)
@@ -34,13 +31,13 @@ class UserAuthRoute(BaseRoute):
         if self.gender not in self.__genders:
             return customAbort("User gender not allowed", 405)
 
-        new_user = User(name = self.name, username = self.username,
-        email = self.email, password = hashed_pw, salt = salt, type = "client", gender = self.gender)
+        new_user = User(name=request.json["name"], username=request.json["username"], 
+        email=request.json["email"], password=hashed_pw, gender=request.json["gender"], type="client")
 
         db.session.add(new_user)
         db.session.commit()
 
-        return {"msg":"User registered successfully!"}
+        return {"msg":"success"}
 
     def login(self, request):
         for key in self.login_req:
@@ -60,6 +57,6 @@ class UserAuthRoute(BaseRoute):
         new_token = create_access_token(identity = user.id, fresh = True, expires_delta = datetime.timedelta(days=7))
         refresh_token = create_refresh_token(identity = user.id, expires_delta = datetime.timedelta(days=30))
 
-        return {'id':user.id, 'username':user.username, 'access_token': new_token, 'refresh_token': refresh_token}
+        return {'id':user.id, 'username':user.username, 'gender':user.gender, 'type':user.type, 'access_token': new_token, 'refresh_token': refresh_token}
 
 UserAuthRouteInstance = UserAuthRoute()

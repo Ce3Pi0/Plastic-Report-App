@@ -10,7 +10,7 @@ from routes.userAuthRoute import UserAuthRouteInstance
 test = BaseRoute()
 
 @app.route('/user', methods=["POST", "GET", "PUT", "DELETE"])
-# @jwt_required()
+@jwt_required()
 def user():
     return createReqeust(request, UserRouteInstance)
 
@@ -21,6 +21,11 @@ def user_register():
 @app.route('/user/login', methods=["POST"])
 def user_login():
     return UserAuthRouteInstance.login(request)
+
+@app.route('/user/refresh_token', methods=["GET"])
+@jwt_required(refresh=True)
+def get_token():
+    return UserAuthRouteInstance.refresh()
 
 @app.errorhandler(404)
 def not_found():

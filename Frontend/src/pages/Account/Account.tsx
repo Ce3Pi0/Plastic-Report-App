@@ -3,7 +3,7 @@ import Change from '../../components/account/change';
 import Info from '../../components/account/info';
 import './Account.css';
 
-const Account: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}> = ({setPath}) => {
+const Account: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -12,7 +12,7 @@ const Account: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Info setPath={setPath}/>
+        <Info/>
       </IonContent>
     </IonPage>
   );

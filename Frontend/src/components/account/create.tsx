@@ -6,9 +6,10 @@ import { arrowBack } from "ionicons/icons";
 import { UserRegister } from "../../interfaces/interfaces";
 import { handleRequest } from "../../utils/userRequest";
 import { domain } from "../../utils/utils";
+import { UNSAFE_PASSWORD } from "../../utils/utils";
 
 
-const Register: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}> = ({setPath}) => {
+const Register: React.FC = () => {
 
     const { loggedIn, setLoggedIn} = useContext(GlobalContext) as contextInterface;
     
@@ -24,21 +25,18 @@ const Register: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}
 
     const logOut = () => {
         window.localStorage.clear();
-        setPath('/account/login');
-        setLoggedIn(false);
+        setLoggedIn(false, null);
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setMessage('');
 
         if (gender === ''){
             setMessage('Please select a gender!')
             return;
         }
-
-        setMessage('');
-
-        if (password.length < 6){
+        if (password.length < UNSAFE_PASSWORD){
             setMessage("Password too weak!")
             return;
         }
@@ -51,75 +49,67 @@ const Register: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}
             gender
         };
 
-        handleRequest(`http://${domain}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists, undefined);
+        handleRequest(`http://${domain}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists);
     }
 
-    return (  
-        <>
-            {!loggedIn && <IonFab horizontal="start" vertical="top">
+    return (
+        <div id="container">
+        {!loggedIn && <form id="form" onSubmit={handleSubmit}>
+            <IonFab>
                 <IonFabButton size={"small"} onClick={() =>history.push('/account/login')}>
                     <IonIcon icon={arrowBack}></IonIcon>
                 </IonFabButton>
-            </IonFab>}
-            {!loggedIn &&
-            <div id="container">
-                <form name="form1" className="box-sign-in" onSubmit={handleSubmit}>
-                    <h2>Sign in<span /></h2>
-                    <h5>Sign in to your account.</h5>
-                    <IonInput onIonChange={e => {
-                                if(e.detail.value === undefined) return;
-                                setName(e.detail.value!);
-                            }} clearInput={true} value={name} id="username" placeholder="Enter your name" required={true} />
-                    <i className="typcn typcn-eye" id="eye"></i>
-                    <IonInput onIonChange={e => {
-                        if(e.detail.value === undefined) return;
-                        setUsername(e.detail.value!);
-                    }} clearInput={true} value={username} id="username" placeholder="Enter username" required={true} />
-                    <i className="typcn typcn-eye" id="eye"></i>
-                    <IonInput type="email" onIonChange={e => {
-                                if (e.detail.value === undefined) return;
-                                setEamil(e.detail.value!)
-                            }} clearInput={true} value={email} id="username" placeholder="Enter an email" required={true} />
-                    <i className="typcn typcn-eye" id="eye"></i>
-                    <IonInput type="password" onIonChange={e => {
-                        if (e.detail.value === undefined) return;
-                        setPassword(e.detail.value!)
-                    }} clearInput={true} value={password} id="password" placeholder="Enter password" required={true} />
-                    <IonRadioGroup value={gender} onIonChange={(e) => setGender(e.detail.value)}>
-                        <IonItem className="gender" color={"light"}>
-                        <IonLabel>Male</IonLabel>
-                        <IonRadio slot="end" value="male"></IonRadio>
-                        </IonItem>
+            </IonFab>
+            <IonTitle id="title">Create a new account</IonTitle>
+            <br />
+            <IonInput type="email" onIonChange={e => {
+                if(e.detail.value === undefined) return;
+                setEamil(e.detail.value!);
+            }} clearInput={true} value={email} id="username" placeholder="Enter your email" required={true} />
+            <br />
+            <IonInput onIonChange={e => {
+                if(e.detail.value === undefined) return;
+                setName(e.detail.value!);
+            }} clearInput={true} value={name} id="username" placeholder="Enter your name" required={true} />
+            <br />
+            <IonInput onIonChange={e => {
+                if(e.detail.value === undefined) return;
+                setUsername(e.detail.value!);
+            }} clearInput={true} value={username} id="username" placeholder="Enter username" required={true} />
+            <br />
+            <IonInput type="password" onIonChange={e => {
+                if (e.detail.value === undefined) return;
+                setPassword(e.detail.value!)
+            }} clearInput={true} value={password} id="password" placeholder="Enter password" required={true} />
+
+            <IonRadioGroup value={gender} onIonChange={(e) => setGender(e.detail.value)}>
+                    <IonItem className="gender" color={"light"}>
+                    <IonLabel>Male</IonLabel>
+                    <IonRadio slot="end" value="male"></IonRadio>
+                    </IonItem>
 
 
-                        <IonItem className="gender" color={"light"}>
-                        <IonLabel>Female</IonLabel>
-                        <IonRadio slot="end" value="female"></IonRadio>
-                        </IonItem>
+                    <IonItem className="gender" color={"light"}>
+                    <IonLabel>Female</IonLabel>
+                    <IonRadio slot="end" value="female"></IonRadio>
+                    </IonItem>
 
-                        <IonItem className="gender" color={"light"}>
-                        <IonLabel>Other</IonLabel>
-                        <IonRadio slot="end" value="other"></IonRadio>
-                        </IonItem>
-                    </IonRadioGroup>
-                    
-                    <br />
-                    <br />
-                    <br />
-                    
+                    <IonItem className="gender" color={"light"}>
+                    <IonLabel>Other</IonLabel>
+                    <IonRadio slot="end" value="other"></IonRadio>
+                    </IonItem>
+                </IonRadioGroup>
 
-                    <p id="warning">{!userExists && !message && <br></br>} {message} {userExists && "User already exists"}</p>
-                    <input type="submit" value="Sign in" className="btn1" />
-                </form>
-            </div>}
-            {loggedIn &&
-                <div className="container">
-                    <div>
-                        <h1>You are already logged in!</h1>
-                        <IonButton expand="block" onClick={() => logOut()}>Logout</IonButton>
-                    </div>
-                </div>} 
-        </>
+            {userExists && !message && <p id="warning">User already exists!</p>}
+            {!userExists && message && <p id="warning">{message}</p>}
+            {!userExists && !message && <br />}
+            <IonButton type="submit" expand="block" id="button">Register</IonButton>
+        </form>}
+        {loggedIn && <div>
+            <h1>You are already logged in!</h1>
+            <IonButton expand="block" onClick={() => logOut()}>Logout</IonButton>
+        </div>}
+    </div>  
     );
 }
  

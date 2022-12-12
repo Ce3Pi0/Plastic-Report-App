@@ -2,7 +2,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 import Create from '../../components/account/create';
 import './Account.css';
 
-const AccountCreate: React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}> = ({setPath})=> {
+const AccountCreate: React.FC = ()=> {
   return (
     <IonPage>
       <IonHeader>
@@ -11,7 +11,7 @@ const AccountCreate: React.FC<{setPath: React.Dispatch<React.SetStateAction<stri
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Create setPath={setPath}/>
+        <Create/>
       </IonContent>
     </IonPage>
   );

@@ -5,16 +5,15 @@ import useFetch from '../../utils/useFetch';
 import { domain } from '../../utils/utils';
 
 
-const Info:React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}> = ({setPath}) => {
+const Info:React.FC = () => {
     const {data, err, loading} = useFetch(`http://${domain}/user?id=${window.localStorage.getItem('id')}`);
 
     const {loggedIn, setLoggedIn} = useContext(GlobalContext) as contextInterface;
 
     const logOut = () => {
-        window.localStorage.clear();
-        setPath('/account/login');
-        setLoggedIn(false);
         window.location.assign('/account/login');
+        window.localStorage.clear();
+        setLoggedIn(false, null);
     }
 
     return (
@@ -36,7 +35,7 @@ const Info:React.FC<{setPath: React.Dispatch<React.SetStateAction<string>>}> = (
             }
             {loading && <div>...Loading</div>}
             {err && loggedIn && <div>Error while fetching data</div>}
-            {err && !loggedIn && <div className="not-found">
+            {!loggedIn && <div className="not-found">
             <h1>You are not logged in!</h1>
             <IonButton shape="round" href="/account/login" slot="center">Log in</IonButton>
         </div>}
