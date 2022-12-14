@@ -17,19 +17,19 @@ class UserAuthRoute(BaseRoute):
     def register(self, request):
         for key in self.register_req:
             if key not in request.json:
-                return customAbort("Key not in request!", 400)
+                return customAbort("Key not in request", 400)
 
         check_username = User.query.filter_by(username = self.username).first()
         check_email = User.query.filter_by(email=self.email).first()
 
         if check_username is not None or check_email is not None:
-            return customAbort("User already exists!", 409)
+            return customAbort("User already exists", 409)
 
         salt = genSalt()
         hashed_pw = hashPassword(self.password, salt)
 
         if self.gender not in self.__genders:
-            return customAbort("User gender not allowed", 405)
+            return customAbort("Gender not allowed", 406)
 
         new_user = User(name=request.json["name"], username=request.json["username"], 
         email=request.json["email"], password=hashed_pw, gender=request.json["gender"], type="client")
@@ -42,17 +42,17 @@ class UserAuthRoute(BaseRoute):
     def login(self, request):
         for key in self.login_req:
             if key not in request.json:
-                return customAbort("Key not in request!", 400)
+                return customAbort("Key not in request", 400)
 
         user = User.query.filter_by(username = request.json["username"]).first()
 
         if user is None:
-            return customAbort("User doesn't exist!", 404)
+            return customAbort("User no found", 404)
 
         hashed_pw = hashPassword(request.json["password"], user.salt) 
 
         if not hmac.compare_digest(hashed_pw, user.password):
-            return customAbort("Password doesn't match!", 405)
+            return customAbort("Password doesn't match", 401)
 
         new_token = create_access_token(identity = user.id, fresh = True, expires_delta = datetime.timedelta(days=7))
         refresh_token = create_refresh_token(identity = user.id, expires_delta = datetime.timedelta(days=30))

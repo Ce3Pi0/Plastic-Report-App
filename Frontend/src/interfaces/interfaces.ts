@@ -31,3 +31,10 @@ export interface fetchReturn{
     err: string|null,
     loading: boolean
 }
+
+export interface ReportInterface{
+    id:number,
+    location:string,
+    status:string,
+    url:string,
+}

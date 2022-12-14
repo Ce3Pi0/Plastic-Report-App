@@ -49,7 +49,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
             window.localStorage.setItem("username", json.username);
             window.localStorage.setItem("gender", json.gender);
             window.localStorage.setItem("type", json.type);
-            window.localStorage.setItem("acces_token", json.access_token);
+            window.localStorage.setItem("access_token", json.access_token);
             window.localStorage.setItem("refresh_token", json.refresh_token);
             window.localStorage.setItem("logged_in", "true");
 

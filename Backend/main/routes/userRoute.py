@@ -10,34 +10,41 @@ class UserRoute(BaseRoute):
     __genders = ["male", "female", "other"]
 
     def __init__(self) -> None:
-        self.create_req = ["name", "username", "email", "password", "type", "gender"]
+        self.create_req = ["current_username", "current_password", "name", "username", "email", "password", "type", "gender"]
         self.update_req = ["username", "password"]
         self.delete_req = ["username", "password"]
 
     def create(self, request):
-        if "id" not in request.args:
-            return customAbort("Id not in request", 400)
-
         for key in self.create_req:
             if key not in request.json:
                 return customAbort("Key not in request", 400)
 
-        current_user = User.query.filter_by(id=request.args["id"]).first()
+        user = User.query.filter_by(username=request.json["current_username"]).first()
+
+        if user is None:
+            return customAbort("User not found", 404)
+
+        salt = user.salt
+        hashed_pass = hashPassword(request.json["current_password"], salt)
+        
+        if not hmac.compare_digest(user.password, hashed_pass):
+            return customAbort("Password doesn't match", 401)
+
+
+        if self.__privilage[user.type] < self.__privilage[request.json["type"]]:
+            return customAbort("Cannot create a user with bigger privilage than your own", 405) 
 
         if request.json["type"] not in self.__privilage.keys():
-            return customAbort("User type not allowed", 405)
+            return customAbort("Type not allowed", 406)
 
         if request.json["gender"] not in self.__genders:
-            return customAbort("User gender not allowed", 405)
-
-        if self.__privilage[current_user.type] < self.__privilage[request.json["type"]]:
-            return customAbort("Cannot create a user with bigger privilage than your own!", 405) 
-
+            return customAbort("gender not allowed", 4-6)
+        
         check_username = User.query.filter_by(username = request.json["username"]).first()
         check_email = User.query.filter_by(email = request.json["email"]).first()
 
         if check_username is not None and check_email is not None:
-            return customAbort("User already exists!", 400)       
+            return customAbort("User already exists", 409)       
         
         salt = genSalt()
         hashed_pw = hashPassword(request.json["password"], salt)
@@ -71,7 +78,7 @@ class UserRoute(BaseRoute):
         user = User.query.filter_by(id=request.args['id']).first()
 
         if user is None:
-            return customAbort("User not found!", 404)
+            return customAbort("User not found", 404)
 
         data = {
             "id":user.id,
@@ -85,28 +92,28 @@ class UserRoute(BaseRoute):
 
     def update(self, request):
         if "id" not in request.args:
-            return customAbort("Id not in request!", 400)
+            return customAbort("Id not in request", 400)
         
         for key in self.update_req:
             if key not in request.json:
-                return customAbort("Key not in reuqest!", 400)
+                return customAbort("Key not in reuqest", 400)
 
         user = User.query.filter_by(id=request.args['id'], username=request.json["username"]).first()
 
         if user is None:
-            return customAbort("User doesn't exists!", 404)
+            return customAbort("User not found", 404)
 
         salt = user.salt
         hashed_pass = hashPassword(request.json["password"], salt)
         
         if not hmac.compare_digest(user.password, hashed_pass):
-            return customAbort("Password doesn't match!", 405)
+            return customAbort("Password doesn't match", 406)
 
         if "new_password" not in request.json:
-            return customAbort("New password not in request!", 400)
+            return customAbort("New password not in request", 400)
 
         if self.password == self.new_password:
-            return customAbort("New password cannot be the same as the old one!", 405)
+            return customAbort("New password cannot be the same as the old one", 409)
 
         salt = genSalt()
         new_hashed_pw = hashPassword(self.new_password, salt)
@@ -120,22 +127,22 @@ class UserRoute(BaseRoute):
 
     def delete(self, request):
         if "id" not in request.args:
-            return customAbort("Id not in request!", 400)
+            return customAbort("Id not in request", 400)
 
         for key in self.delete_req:
             if key not in request.json:
-                return customAbort("Key not in request!", 400)
+                return customAbort("Key not in request", 400)
 
         user = User.query.filter_by(id=request.args["id"], username=request.json["username"]).first()
 
         if user is None:
-            return customAbort("User not found!", 404)
+            return customAbort("User not found", 404)
 
         salt = user.salt
         hashed_pass = hashPassword(request.json["password"], salt)
         
         if not hmac.compare_digest(user.password, hashed_pass):
-            return customAbort("Password doesn't match!", 405)
+            return customAbort("Password doesn't match", 406)
 
         db.session.delete(user)
         db.session.commit()  

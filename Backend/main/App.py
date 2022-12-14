@@ -4,7 +4,8 @@ from flask_jwt_extended import jwt_required
 from config.config import *
 from utils.utils import createReqeust, customAbort
 from routes.baseRoute import BaseRoute
-from routes.userRoute import UserRouteInstance 
+from routes.userRoute import UserRouteInstance
+from routes.reportRoute import ReportRouteInstance 
 from routes.userAuthRoute import UserAuthRouteInstance
 
 test = BaseRoute()
@@ -13,6 +14,11 @@ test = BaseRoute()
 @jwt_required()
 def user():
     return createReqeust(request, UserRouteInstance)
+
+@app.route('/report', methods=["POST", "GET", "PUT", "DELETE"])
+@jwt_required()
+def report():
+    return createReqeust(request, ReportRouteInstance)
 
 @app.route('/user/register', methods=["POST"])
 def user_register():
