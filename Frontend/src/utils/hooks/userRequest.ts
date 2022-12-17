@@ -1,5 +1,5 @@
-import { UserLogin, UserChange, UserRegister, UserInterface } from '../interfaces/interfaces';
-import { FetchRefreshToken, methodType } from './utils';
+import { UserLogin, UserChange, UserRegister, UserInterface } from '../../interfaces/interfaces';
+import { FetchRefreshToken, methodType } from '../utils';
 
 function instanceOfUserChange(data: any): data is UserChange {
     return 'new_password' in data;
@@ -28,7 +28,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
             refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
             refreshHeaders.append("Content-Type", "application/json");
                             
-            FetchRefreshToken(url, method, undefined, user, undefined, undefined, undefined, setMessage, setMistake, false);
+            FetchRefreshToken(url, method, undefined, user, undefined, undefined, undefined, setMessage, setMistake, "user");
         } else {
             if(!response.ok){
                 throw Error("Something went wrong!")

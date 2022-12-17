@@ -19,20 +19,20 @@ class UserAuthRoute(BaseRoute):
             if key not in request.json:
                 return customAbort("Key not in request", 400)
 
-        check_username = User.query.filter_by(username = self.username).first()
-        check_email = User.query.filter_by(email=self.email).first()
+        check_username = User.query.filter_by(username = request.json["username"]).first()
+        check_email = User.query.filter_by(email=request.json["email"]).first()
 
         if check_username is not None or check_email is not None:
             return customAbort("User already exists", 409)
 
         salt = genSalt()
-        hashed_pw = hashPassword(self.password, salt)
+        hashed_pw = hashPassword(request.json["password"], salt)
 
-        if self.gender not in self.__genders:
+        if request.json["gender"] not in self.__genders:
             return customAbort("Gender not allowed", 406)
 
         new_user = User(name=request.json["name"], username=request.json["username"], 
-        email=request.json["email"], password=hashed_pw, gender=request.json["gender"], type="client")
+        email=request.json["email"], salt = salt, password=hashed_pw, gender=request.json["gender"], type="client")
 
         db.session.add(new_user)
         db.session.commit()

@@ -1,10 +1,10 @@
 import { IonButton, IonInput, IonTitle } from "@ionic/react";
 import { domain } from "../../utils/utils";
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import { contextInterface, GlobalContext } from "../../context/Context";
 import { UserLogin } from "../../interfaces/interfaces";
-import { handleRequest } from "../../utils/userRequest";
+import { handleRequest } from "../../utils/hooks/userRequest";
 
 
 const Login:React.FC = () => {
@@ -39,7 +39,7 @@ const Login:React.FC = () => {
     return ( 
         <div id="container"> 
             {!loggedIn && <form id="form" onSubmit={handleSubmit}>
-                <IonTitle id="title">Login to your account</IonTitle>
+                <IonTitle id="title">Login</IonTitle>
                 <br />
                 <IonInput onIonChange={e => {
                     if(e.detail.value === undefined) return;
@@ -56,11 +56,12 @@ const Login:React.FC = () => {
                 <a id="forgot" href="/account/change"><p>change password</p></a>
             </form>}
             {loggedIn && 
-            <div>
-                <h2> You are already logged in!</h2>
-                <IonButton expand="block" onClick={() => logOut()}>Logout</IonButton>
-                <IonButton expand="block" onClick={() => history.push('/account/change')}>Change Password</IonButton>
-            </div>
+            <Redirect to="/home" />
+            // <div>
+            //     <h2> You are already logged in!</h2>
+            //     <IonButton expand="block" onClick={() => logOut()}>Logout</IonButton>
+            //     <IonButton expand="block" onClick={() => history.push('/account/change')}>Change Password</IonButton>
+            // </div>
             }
         </div> 
     );

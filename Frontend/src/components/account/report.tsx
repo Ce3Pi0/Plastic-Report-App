@@ -3,6 +3,13 @@ import React from "react";
 import { ReportInterface } from "../../interfaces/interfaces";
 
 const Report: React.FC<{report: ReportInterface}> = ({report}) => {
+    
+    const checkStatus = (status: string): string => {
+        if (status === "completed") return "success";
+        else if (status === "pending") return "warning";
+        return "danger";
+    }
+
     return (  
         <IonCard>
             <IonCardHeader>
@@ -10,7 +17,7 @@ const Report: React.FC<{report: ReportInterface}> = ({report}) => {
             </IonCardHeader>
 
             <IonCardContent>
-                <IonBadge className="test" color={report.status === "completed"? "success":"warning"} slot="start"> </IonBadge>
+                <IonBadge className="test" color={checkStatus(report.status)} slot="start"> </IonBadge>
                 <br />
                 Location: {report.location}
                 <br />
