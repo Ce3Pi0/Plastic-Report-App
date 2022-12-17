@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useHistory } from "react-router";
 import { contextInterface, GlobalContext } from '../../context/Context';
 import { UserChange } from "../../interfaces/interfaces";
-import { handleRequest } from "../../utils/userRequest";
+import { handleRequest } from "../../utils/hooks/userRequest";
 import { domain, UNSAFE_PASSWORD } from "../../utils/utils";
 
 
@@ -52,12 +52,12 @@ const Change: React.FC = () => {
     return (
         <div id="container">{loggedIn && 
             <form id="form" onSubmit={handleSubmit}>
-                <IonFab>
+                <IonFab horizontal="start" vertical="top">
                     <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>
                         <IonIcon icon={arrowBack}></IonIcon>
                     </IonFabButton>
                 </IonFab>
-                <IonTitle id="title">Change your password</IonTitle>
+                <IonTitle id="title">Change password</IonTitle>
                 <br />
                 <IonInput type="password" onIonChange={e => {
                     if (e.detail.value === undefined) return;

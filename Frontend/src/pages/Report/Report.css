@@ -1,0 +1,10 @@
+.title{
+    text-align: center;
+}
+
+.location {
+    background-color: #1e2023;
+    border-radius: 5px;
+    margin-bottom: 10%;
+    margin-left: -35%;
+}

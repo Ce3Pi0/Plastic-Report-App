@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { fetchReturn } from "../interfaces/interfaces";
-import { FetchRefreshToken } from './utils';
+import { fetchReturn } from "../../interfaces/interfaces";
+import { FetchRefreshToken } from '../utils';
 
 const useFetch = (url: string): fetchReturn => {
     const [data, setData] = useState<JSON|null>(null);
@@ -28,7 +28,7 @@ const useFetch = (url: string): fetchReturn => {
                     refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
                     refreshHeaders.append("Content-Type", "application/json");
                                     
-                    FetchRefreshToken(url, undefined, AbtCnt, undefined, setData, setLoading, setErr, undefined, undefined, true);
+                    FetchRefreshToken(url, undefined, AbtCnt, undefined, setData, setLoading, setErr, undefined, undefined, "data");
                 }
                 else{
                     setLoading(false);

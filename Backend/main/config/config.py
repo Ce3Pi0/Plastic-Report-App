@@ -8,5 +8,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 db = SQLAlchemy(app)
 CORS(app)
 
+STATIC_ROOT = "C:/projects/Plastic-Report-App/Static/"
+
 app.config["JWT_SECRET_KEY"] = "Ce3Pi0"
 jwt = JWTManager(app)

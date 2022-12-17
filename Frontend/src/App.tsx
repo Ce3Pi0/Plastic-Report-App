@@ -13,7 +13,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { home, cart, person, locate, listOutline } from 'ionicons/icons';
 import Home from './pages/Home/Home';
 import Report from './pages/Report/Report';
-import Shop from './pages/Shop/Report';
+// import Shop from './interfaces/Shop/Report';
 import AccountLogin from './pages/Account/AccountLogin';
 import NotFound from './pages/NotFound/NotFound';
 
@@ -56,9 +56,9 @@ const Tabs = () => {
         <Route exact path="/report">
           <Report />
         </Route>
-        <Route exact path="/shop">
+        {/* <Route exact path="/shop">
           <Shop />
-        </Route>
+        </Route> */}
         <Route exact path="/account">
           <Account/>
         </Route>
@@ -83,12 +83,12 @@ const Tabs = () => {
         </IonTabButton>
         <IonTabButton tab="report" href="/report">
           <IonIcon icon={user?.type === "client" || user?.type === undefined? locate:listOutline} />
-          <IonLabel>Report</IonLabel>
+          <IonLabel>{user?.type === "client" || user?.type === undefined? "Report":"Reports"}</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="shop" href="/shop">
+        {/* <IonTabButton tab="shop" href="/shop">
           <IonIcon icon={cart} />
           <IonLabel>E-Shop</IonLabel>
-        </IonTabButton>
+        </IonTabButton> */}
         <IonTabButton tab={loggedIn === true ? "/account" : "/account/login"} href={loggedIn === true ? "/account" : "/account/login"} selected={location.pathname.includes("account")}>
           <IonIcon icon={person} />
           <IonLabel>Account</IonLabel>

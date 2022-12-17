@@ -1,15 +1,15 @@
-.test{
-    width: 10%;
-}
-
 #warning{
   color:#e04055;
   text-align: center;
 }
 
 @media screen and (min-width: 1000px) {
+  .test{
+      width: 10%;
+  }
+
   #container{
-      padding-top: 10%;
+      padding-top: 5%;
       margin:auto;
       display: flex;
       justify-content: center;
@@ -51,8 +51,12 @@
 }
 
 @media screen and (max-width: 1000px) {
+  .test{
+      width: 50%;
+  }
+
   #container{
-      padding-top: 30%;
+      padding-top: 20%;
       margin:auto;
       display: flex;
       justify-content: center;

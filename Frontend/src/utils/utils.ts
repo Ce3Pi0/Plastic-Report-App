@@ -1,4 +1,4 @@
-import { UserChange, UserLogin, UserRegister } from "../interfaces/interfaces";
+import { ReportInterface, UserChange, UserLogin, UserRegister } from "../interfaces/interfaces";
 
 export const domain: string = '127.0.0.1:5000';
 export const UNSAFE_PASSWORD: number = 6
@@ -44,7 +44,7 @@ const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, us
 
     })
     .then(json => {
-        if(json.message === "Properties updated successfully!"){
+        if(json.msg === "success"){
             setMistake(false);
             setMessage('');
         }
@@ -54,8 +54,26 @@ const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, us
     })
 }
 
+const FetchReportChange = (url: string, method: methodType, myHeaders: Headers) => {
+    fetch(url, {
+        method:method,
+        headers:myHeaders,
+    })
+    .then(data => {
+        if (!data.ok){
+            throw Error("Something went wrong!")
+        }
+        return data.json();
+    })
+    .then(json => {
+        if(json.msg === "success")
+            window.location.reload();
+    })
+    .catch(err => Error(err.message))
+}
+
 export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
-     setMessage: any, setMistake: any, fetchData: boolean) => {
+     setMessage: any, setMistake: any, fetchData: string) => {
     let refreshHeaders = new Headers();
     
     refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
@@ -78,10 +96,13 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
         myHeaders.append("Authorization", `Bearer ${json.access_token}`);
         myHeaders.append("Content-Type", "application/json");
 
-        if (fetchData)
+        if (fetchData === "data")
             FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
-        else
+        else if (fetchData === "report")
+            FetchReportChange(url, method!, myHeaders)
+        else if (fetchData === "user")
             FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake);
+
     })
     .catch(e => {
         if (window.localStorage.getItem('logged_in') === "true"){

@@ -4,7 +4,7 @@ import { IonButton, IonTitle, IonInput, IonFab, IonFabButton, IonIcon, IonList, 
 import { useHistory } from "react-router";
 import { arrowBack } from "ionicons/icons";
 import { UserRegister } from "../../interfaces/interfaces";
-import { handleRequest } from "../../utils/userRequest";
+import { handleRequest } from "../../utils/hooks/userRequest";
 import { domain } from "../../utils/utils";
 import { UNSAFE_PASSWORD } from "../../utils/utils";
 
@@ -55,12 +55,12 @@ const Register: React.FC = () => {
     return (
         <div id="container">
         {!loggedIn && <form id="form" onSubmit={handleSubmit}>
-            <IonFab>
+            <IonFab horizontal="start" vertical="top">
                 <IonFabButton size={"small"} onClick={() =>history.push('/account/login')}>
                     <IonIcon icon={arrowBack}></IonIcon>
                 </IonFabButton>
             </IonFab>
-            <IonTitle id="title">Create a new account</IonTitle>
+            <IonTitle id="title">Create account</IonTitle>
             <br />
             <IonInput type="email" onIonChange={e => {
                 if(e.detail.value === undefined) return;
@@ -103,7 +103,7 @@ const Register: React.FC = () => {
             {userExists && !message && <p id="warning">User already exists!</p>}
             {!userExists && message && <p id="warning">{message}</p>}
             {!userExists && !message && <br />}
-            <IonButton type="submit" expand="block" id="button">Register</IonButton>
+            <IonButton type="submit" expand="block" id="button">Create</IonButton>
         </form>}
         {loggedIn && <div>
             <h1>You are already logged in!</h1>
