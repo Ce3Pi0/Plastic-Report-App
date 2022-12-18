@@ -1,6 +1,7 @@
-import { ReportInterface, UserChange, UserLogin, UserRegister } from "../interfaces/interfaces";
+import { UserChange, UserLogin, UserRegister } from "../interfaces/interfaces";
 
-export const domain: string = '127.0.0.1:5000';
+export const domain: string = '127.0.0.1:5000';// needs to change to DOMAIN for better practices throughtout the whole project
+export const STATIC_URL = "127.0.0.1:88/"
 export const UNSAFE_PASSWORD: number = 6
 export type methodType = "POST" | "PUT" | "GET" | "DELETE"
 
@@ -73,7 +74,8 @@ const FetchReportChange = (url: string, method: methodType, myHeaders: Headers) 
 }
 
 export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
-     setMessage: any, setMistake: any, fetchData: string) => {
+    setMessage: any, setMistake: any, fetchData: string) => {
+        
     let refreshHeaders = new Headers();
     
     refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);

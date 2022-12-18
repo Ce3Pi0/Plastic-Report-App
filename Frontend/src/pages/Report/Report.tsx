@@ -1,7 +1,7 @@
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { useContext } from 'react';
 import SendReport from '../../components/report/SendReport';
-import ShowReports from '../../components/report/ShowReports';
+import ShowReports from '../../components/report/AdminReports/ShowReports';
 import { contextInterface, GlobalContext } from '../../context/Context';
 import './Report.css';
 
@@ -27,7 +27,6 @@ const Report: React.FC = () => {
       </IonContent>}
       {user?.type === "client" && < SendReport/>}
       {user?.type === "admin" && < ShowReports/>} 
-      {/* Reverse the above condition */}
     </IonPage>
   );
 };

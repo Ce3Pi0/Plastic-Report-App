@@ -3,7 +3,7 @@
   text-align: center;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 800px) {
   .test{
       width: 10%;
   }
@@ -50,7 +50,7 @@
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 800px) {
   .test{
       width: 50%;
   }
@@ -94,4 +94,63 @@
       text-align: center;
       text-decoration: none;
   }
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120%;
+    background-color: var(--ion-color-light-contrast);
+    color: var(--ion-color-light);
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    font-size: 12px;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 30%;
+    left: -110%;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.account-info{
+    background-color: var(--ion-color-step-150);
+    border:3px solid var(--ion-color-success);
+    border-radius: 15px;
+    padding-bottom: 15px;
+}
+
+.container{
+    padding-top: 2%;
+    margin:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.center-text{
+    text-align: center;
+    padding: 5px;
+    width: 98%;
+    background-color: var(--ion-color-background);
+    border-top: 2px solid var(--ion-color-primary);
+    border-left: 2px solid var(--ion-color-primary);
+    border-right: 2px solid var(--ion-color-primary);
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+.trash-image-info{
+    max-height: 150px;
 }

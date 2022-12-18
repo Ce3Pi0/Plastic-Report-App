@@ -38,9 +38,3 @@ export interface ReportInterface{
     status:string,
     url:string,
 }
-
-export interface CrateReportInterface {
-    location:string,
-    url:string,
-    user_id:number
-}

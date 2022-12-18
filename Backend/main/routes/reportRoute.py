@@ -1,8 +1,9 @@
-from config.config import db, STATIC_ROOT
+from config.config import db, app, secure_filename
 from routes.baseRoute import BaseRoute
 from classes.classes import User, Report
 from utils.utils import customAbort
 from flask_jwt_extended import get_jwt_identity
+from flask import jsonify
 import random 
 
 def get_random_alphanumerical(_len = 16):
@@ -21,15 +22,20 @@ class ReportRoute(BaseRoute):
     __statuses = ["pending", "completed", "rejected"]
     
     def __init__(self) -> None:
-        self.create_req = ["location", "url", "user_id"]
-        self.delete_req = ["id", "user_id"]
+        self.create_req = ["lat", "lon"]
+        self.delete_req = ["id"]
 
     def create(self, request):
-        for key in self.create_req:
-            if key not in request.json:
-                return customAbort("Key not in request", 400)
+        self.lat = str(request.form["lat"])
+        self.lon = str(request.form["lon"])
+        self.image = str(request.form["image"])
 
-        user = User.query.filter_by(id=request.json["user_id"]).first()
+        if not self.lat or not self.lon or not self.image:
+            return customAbort("Key not in request", 400)
+
+        user_id = get_jwt_identity()
+
+        user = User.query.filter_by(id=user_id).first()
 
         if user is None:
             return customAbort("User not found", 404)
@@ -37,20 +43,18 @@ class ReportRoute(BaseRoute):
         if user.type == "admin":
             return customAbort("Admin can't send report", 405)
 
+
         if "image" not in request.files:
-            return customAbort("missing image", 400)
+            return customAbort("Missing image", 400)
 
         img = request.files["image"]
         img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
-
         
 
         img_name = get_random_alphanumerical() + "." + img_ext
-        img.save(STATIC_ROOT + img_name)
+        img.save(secure_filename(app.config["UPLOAD_FOLDER"] + img_name))
         
-
-        report = Report(location = request.json["location"], url=request.json["url"],
-        status="pending", user_id = request.json["user_id"])
+        report = Report(location = f'{self.lat}&{self.lon}', url=img_name, status="pending", user_id = user_id)
 
         db.session.add(report)
         db.session.commit()
@@ -174,7 +178,8 @@ class ReportRoute(BaseRoute):
             if key not in request.args:
                 return customAbort("Key not in request", 400)
 
-        user = User.query.filter_by(id=request.args["user_id"]).first()
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
 
         if user is None:
             return customAbort("User not found", 404)

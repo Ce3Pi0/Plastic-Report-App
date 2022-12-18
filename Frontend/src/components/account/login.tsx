@@ -55,14 +55,7 @@ const Login:React.FC = () => {
                 <a id="create" href="/account/create"><p>create an account</p></a>
                 <a id="forgot" href="/account/change"><p>change password</p></a>
             </form>}
-            {loggedIn && 
-            <Redirect to="/home" />
-            // <div>
-            //     <h2> You are already logged in!</h2>
-            //     <IonButton expand="block" onClick={() => logOut()}>Logout</IonButton>
-            //     <IonButton expand="block" onClick={() => history.push('/account/change')}>Change Password</IonButton>
-            // </div>
-            }
+            {loggedIn && <Redirect to="/account" />}
         </div> 
     );
 }

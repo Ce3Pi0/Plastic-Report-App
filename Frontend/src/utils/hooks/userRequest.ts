@@ -13,7 +13,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
 
     let myHeaders = new Headers();
         
-    myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("session_id")}`);
+    myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
     myHeaders.append("Content-Type", "application/json");
 
     fetch(url, {
@@ -61,7 +61,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                 access_token: json.acces_token,
                 refresh_token: json.refresh_token
             }
-            window.location.assign('/');
+            window.location.assign('/home');
 
             setLoggedIn(true, current_user);
             setMistake(false);

@@ -2,9 +2,85 @@
     text-align: center;
 }
 
-.location {
-    background-color: #1e2023;
+.container{
+    position: relative;
+}
+
+.send-report-container{
+    position: relative;
+    
+}
+
+@media screen and (max-width: 500px) {
+    .report-form{
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-content: center;
+        padding: 3%;
+        background-color: var(--ion-color-light);
+        border-radius: 12px;
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 10%);
+    }    
+}
+
+@media screen and (min-width: 500px) {
+    .report-form{
+        min-width: 30%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-content: center;
+        padding: 3%;
+        background-color: var(--ion-color-light);
+        border-radius: 12px;
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 5%);
+    }
+}
+
+.report-form > *{
+    margin: 10px;
+    align-self: center;
+    text-align: center;
+}
+
+.label{
+    display: inline-block;
+    padding: 7px 15px;
+    cursor: pointer;
     border-radius: 5px;
-    margin-bottom: 10%;
-    margin-left: -35%;
+    background-color: var(--ion-color-step-200);
+    color: white;
+}
+
+.label:active{
+    background-color: var(--ion-color-step-300);
+} 
+
+.upload{
+    display: none;
+}
+
+.submit-report{
+    width: 30%;
+}
+
+ol{
+    margin: 0; padding: 0;
+    list-style-position:inside;
+}
+
+ol li{
+    list-style: none;
+}
+
+.trash-image{
+    max-height: 350px;
 }

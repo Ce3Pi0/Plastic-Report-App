@@ -3,7 +3,7 @@ import { FetchRefreshToken, methodType } from "../utils";
 export const reportRequest = (url: string, method: methodType) => {
     let myHeaders = new Headers();
         
-    myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("session_id")}`);
+    myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
     myHeaders.append("Content-Type", "application/json");
 
     fetch(url, {

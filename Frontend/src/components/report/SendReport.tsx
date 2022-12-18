@@ -1,24 +1,78 @@
-import { IonButton, IonContent, IonFab, IonFabButton, IonIcon, IonInput, IonTitle, useIonAlert } from "@ionic/react";
-import { camera, checkmarkOutline } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
-import { CrateReportInterface } from "../../interfaces/interfaces";
-import usePhotoGallery from "../../utils/hooks/usePhotoGallery";
-const STATIC_URL = "localhost:88/"
+import { IonButton, IonContent, IonFab, IonIcon, IonInput, IonLabel, IonTitle, useIonAlert } from "@ionic/react";
+import { arrowUpOutline } from "ionicons/icons";
+import React, { useState } from "react";
+import { domain } from "../../utils/utils";
 
 const SendReport:React.FC = () => {
     const [presentAlert] = useIonAlert();
 
     const [location, setLocation] = useState<{
-        lat: string
-        lon: string
-    }>({ lat: "0", lon: "0"});
-    const [url, setUrl] = useState<string>("");
+        lat: string | undefined
+        lon: string | undefined
+    }>({ lat: undefined, lon: undefined});
     const [file, setFile] = useState<File | null>(null)
-    console.log(file)
 
-    const { takePhoto } = usePhotoGallery();
+    const fileTypes = [
+        "image/apng",
+        "image/bmp",
+        "image/gif",
+        "image/jpeg",
+        "image/pjpeg",
+        "image/png",
+        "image/svg+xml",
+        "image/tiff",
+        "image/webp",
+        "image/x-icon"
+      ];
+      
+      function validFileType(file: File) {
+        return fileTypes.includes(file.type);
+      }
 
-    useEffect(() => {
+
+    const updateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const preview: Element | null = document.querySelector('.preview');
+        const input: HTMLInputElement | null = document.querySelector('.upload');
+
+        if (preview === null || input === null) return;
+
+        while(preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        const curFiles = input.files;
+
+        
+        if (curFiles === null) return;
+
+        if (curFiles.length === 0) {
+            const para = document.createElement('p');
+            para.textContent = 'No files currently selected for upload';
+            preview.appendChild(para);
+          } else {
+            const list = document.createElement('ol');
+            preview.appendChild(list);
+        
+            for (const file in curFiles) {
+              const listItem = document.createElement('li');
+              const para = document.createElement('p');
+              if (validFileType(curFiles[file])) {
+                para.textContent = `File name: ${curFiles[file].name}.`;
+                const image = document.createElement('img');
+                image.src = URL.createObjectURL(curFiles[file]);
+                image.style.maxHeight = "150px";
+        
+                listItem.appendChild(image);
+                listItem.appendChild(para);
+              }
+        
+              list.appendChild(listItem);
+            }
+          }
+
+    }
+
+    const getLocation = () => {
         navigator.geolocation.getCurrentPosition((position) => {
             let lat = position.coords.latitude.toFixed(2)
             let long = position.coords.longitude.toFixed(2)
@@ -27,71 +81,98 @@ const SendReport:React.FC = () => {
                 lon: long
             })
           });
-    }, [])
+    }
 
-    console.log(location)
+    const handleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        updateImageDisplay(e);
 
-    const handleSubmit = () => {
-        if (file === null) return
+        setFile(e.target.files === null ? null : e.target.files[0]);
+    }
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (location.lat === undefined || location.lon === undefined ){
+            presentAlert({
+                subHeader: 'Location not specified!',
+                message: 'Please specifiy a location',
+                buttons: ['OK'],
+            });
+
+            return;
+        }
+
+        if (file === null) {
+            presentAlert({
+                subHeader: 'Image not attached!',
+                message: 'Please attach an image',
+                buttons: ['OK'],
+            });
+
+            return;
+        }        
         
         const data = new FormData()
         data.append("image", file)
-        data.append("coordinate_lon", location.lon)
-        data.append("coordinate_lat", location.lat)
+        data.append("lon", location.lon!)
+        data.append("lat", location.lat!)
 
+        let myHeaders = new Headers();
+        
+        myHeaders.append("Content-Type", "multipart/form-data");
+        myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
 
+        //send data to API with a fetch
+        // needs fixing
+
+        fetch(`http://${domain}/report`, {
+            method: "POST",
+            headers: myHeaders,
+            body: data
+        }).then(res =>  {
+            if (res.ok !== true){
+                return Error("Something went wrong");
+            }
+            return res.json();
+        }).then(json =>{
+            if (json.msg !== "success")
+                return Error("Something went wrong!");
+        }).catch(err => Error(err.message))
     }
-
-    // const createReport = () => {
-
-    //     if (location === ""){
-    //         presentAlert({
-    //             subHeader: 'Location not specified!',
-    //             message: 'Please specifiy a location',
-    //             buttons: ['OK'],
-    //           })
-    //         return;
-    //     }
-
-    //     if (url === ""){
-    //         presentAlert({
-    //             subHeader: 'Image not attached!',
-    //             message: 'Please attach an image',
-    //             buttons: ['OK'],
-    //           })
-    //         return;
-    //     }
-
-
-    //     const Report: CrateReportInterface = {
-    //         location,
-    //         url,
-    //         user_id: parseInt(localStorage.getItem("id")!)
-    //     }
-
-        // console.log(Report);
-    // }
 
     return (
         <IonContent>  
             <IonTitle className="title">
-                <h1>Report plastic!</h1>
+                <h3>Fill the form bellow and submit it <br />to let us know the location <br/> of the plastic waste!</h3>
             </IonTitle>
 
 
-            <IonFab vertical="bottom" horizontal="center" slot="fixed">
-                {/* <IonInput className="location" type="text" value={location} placeholder="Enter location:" onIonChange={(e) => setLocation(e.detail.value!)} required={true}></IonInput> */}
+            <div className="send-report-container">
+                <form className="report-form" onSubmit={handleSubmit}>
+                    <IonButton onClick={() => getLocation()}>Get location</IonButton>
+                    <br/>
+                    <IonLabel>Selected location:</IonLabel>
+                    <IonInput value={location.lat !== undefined || location.lon !== undefined? `Lat:${location.lat} Long:${location.lon}`: "No location selected!"} disabled={true}/>
 
-                {/* <IonButton type="submit" onClick={() => createReport()}>
-                    <IonIcon icon={checkmarkOutline} />
-                </IonButton> */}
-            </IonFab>
-            <input type="file" onChange={e => setFile(e.target.files === null ? null : e.target.files[0]) } />
-            <IonFab vertical="bottom" horizontal="end" slot="fixed">
-                <IonFabButton onClick={() => takePhoto()}>
-                    <IonIcon icon={camera} />
-                </IonFabButton>
-            </IonFab>
+
+                    <label className="label">
+                        {!file && "Select an image:"}
+                        {file && "Select a different image:"}
+                        <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/x-png,image/gif,image/jpeg"/>
+                    </label>
+
+                    <br />
+
+                    <div className="preview">
+                        <p>No files currently selected for upload</p>
+                    </div>
+
+                    <IonButton className="submit-report" color={"success"} type="submit">
+                        <IonIcon icon={arrowUpOutline}/>
+                    </IonButton>
+                </form>
+            </div>
+
         </IonContent>
     );
 }

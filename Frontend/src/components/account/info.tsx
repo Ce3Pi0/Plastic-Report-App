@@ -7,6 +7,7 @@ import useFetch from '../../utils/hooks/useFetch';
 import { domain } from '../../utils/utils';
 import Report from "./report";
 import { checkmark } from "ionicons/icons";
+import { Redirect } from "react-router";
 // https://console.cloud.google.com/apis/dashboard
 // Geocoding API
 // Google Maps Embeded
@@ -28,31 +29,49 @@ const Info:React.FC = () => {
         <div>  
             {data &&
             <> 
-                <IonFab horizontal="end" vertical="top">
-                        <IonFabButton size="small">
-                            <IonIcon icon={arrowDownOutline}/>
-                        </IonFabButton>
+                <IonFab slot="fixed" horizontal="end" vertical="top" >
+                        <div className="tooltip">
+                            <IonFabButton size="small">
+                                <IonIcon icon={arrowDownOutline}/>
+                            </IonFabButton>
+                            <span className="tooltiptext">Filter reports</span>
+                        </div>
 
-                        <IonFabList side="bottom">
-                            <IonFabButton color="success" onClick={() => setStatus("completed")}>
-                                <IonIcon icon={checkmark}/>
-                            </IonFabButton>
-                            <IonFabButton color="warning" onClick={() => setStatus("pending")}>
-                                <IonIcon icon={codeWorkingOutline}/>
-                            </IonFabButton>
-                            <IonFabButton color="danger" onClick={() => setStatus("rejected")}>
-                                <IonIcon icon={alertOutline}/>
-                            </IonFabButton>
-                            <IonFabButton onClick={() => setStatus("")}>
-                                <IonIcon icon={appsOutline}/>
-                            </IonFabButton>
+                        <IonFabList className="tooltips"side="bottom">
+                            <div className="tooltip">
+                                <IonFabButton size = "small" color="success" onClick={() => setStatus("completed")}>
+                                    <IonIcon icon={checkmark}/>
+                                </IonFabButton>
+                                <span className="tooltiptext">Completed</span>
+                            </div>
+
+                            <div className="tooltip">
+                                <IonFabButton size="small" color="warning" onClick={() => setStatus("pending")}>
+                                    <IonIcon icon={codeWorkingOutline}/>
+                                </IonFabButton>
+                                <span className="tooltiptext">Pending</span>
+                            </div>
+
+                            <div className="tooltip">
+                                <IonFabButton size="small" color="danger" onClick={() => setStatus("rejected")}>
+                                    <IonIcon icon={alertOutline}/>
+                                </IonFabButton>
+                                <span className="tooltiptext">Rejected</span>
+                            </div>
+
+                            <div className="tooltip">
+                                <IonFabButton size="small" onClick={() => setStatus("")}>
+                                    <IonIcon icon={appsOutline}/>
+                                </IonFabButton>
+                                <span className="tooltiptext">All</span>
+                            </div>
                         </IonFabList>
                 </IonFab>
                     
-                <IonCard>
+                <IonCard className="account-info">
                     
                     <IonCardHeader>
-                        <IonCardTitle>{JSON.parse(JSON.stringify(data)).user.username}</IonCardTitle>
+                        <IonCardTitle><h1>{JSON.parse(JSON.stringify(data)).user.username}</h1></IonCardTitle>
                         <IonCardSubtitle>{JSON.parse(JSON.stringify(data)).user.email}</IonCardSubtitle>
                     </IonCardHeader>
 
@@ -63,6 +82,11 @@ const Info:React.FC = () => {
                     <IonButton color={"tertiary"} fill="clear" onClick={() => logOut()}>Log out</IonButton>
                     <IonButton color={"tertiary"} fill="clear" onClick={() => window.location.assign('/account/change')}>Change Password</IonButton>
                 </IonCard>
+                <div className="container">
+                    <div className="center-text">
+                        <h2>Your reports:</h2>
+                    </div>
+                </div>
                 {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.status === status || status === "").map((report: ReportInterface) => (<Report key={report.id} report={report}/>))}
                 {reports_loading && <div>...Loading</div>}
                 {reports_error && loggedIn && <div>Error while fetching data</div>}
@@ -70,10 +94,6 @@ const Info:React.FC = () => {
             }
             {loading && <div>...Loading</div>}
             {err && loggedIn && <div>Error while fetching data</div>}
-            {!loggedIn && <div className="not-found">
-            <h1>You are not logged in!</h1>
-            <IonButton shape="round" href="/account/login" slot="center">Log in</IonButton>
-        </div>}
         </div>
     );
 }

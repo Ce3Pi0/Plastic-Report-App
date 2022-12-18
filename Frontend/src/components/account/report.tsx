@@ -1,6 +1,7 @@
 import { IonBadge, IonCard, IonCardContent, IonCardHeader, IonCardTitle } from "@ionic/react";
 import React from "react";
 import { ReportInterface } from "../../interfaces/interfaces";
+import { STATIC_URL } from "../../utils/utils";
 
 const Report: React.FC<{report: ReportInterface}> = ({report}) => {
     
@@ -23,10 +24,13 @@ const Report: React.FC<{report: ReportInterface}> = ({report}) => {
                 <br />
                 Status: {report.status}
                 <br />
-                Image: {report.url}
+                <img className = "trash-image-info" src={`http://${STATIC_URL}${report.url}.jpg`} alt="Image not found"/> 
             </IonCardContent>
         </IonCard>
     );
 }
  
 export default Report;
+
+
+// i need to change the .jpg on img src after i fix image saving to the backend

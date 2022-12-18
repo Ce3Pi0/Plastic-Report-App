@@ -1,0 +1,10 @@
+.footer-content{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.footer-container{
+    margin:auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

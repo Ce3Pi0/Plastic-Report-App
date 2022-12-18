@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef, useState } from 'react';
 import { 
   IonButtons,
   IonContent,
@@ -10,23 +10,41 @@ import {
   IonMenuButton,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  ScrollDetail
 } from '@ionic/react';
 import './Home.css';
 import { chevronUpOutline } from 'ionicons/icons';
+import logo from '../../images/logo.png'
 
 const Home: React.FC = () => {
+  const contentRef = createRef<HTMLIonContentElement>();
+  const [backToTop, setBackToTop] = useState<boolean>(false);
+
+  const scrollToTop = () =>{  
+    contentRef.current?.scrollToTop(500);
+  } 
+
+  const handleScroll = (ev: CustomEvent<ScrollDetail>) => {
+
+    if (ev.detail.scrollTop > 20) {
+      setBackToTop(true);
+    } else {
+      setBackToTop(false);
+    }
+  }
+
   return (
     <>
-      <IonMenu contentId="main-content">
+      {window.location.pathname.includes("home") && <IonMenu contentId="main-content">
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Menu Content</IonTitle>
+              <IonTitle>Menu</IonTitle>
             </IonToolbar>
           </IonHeader>
-          <IonContent className="ion-padding">This is the menu content.</IonContent>
-        </IonMenu>
-      <IonPage id="main-content">
+          <IonContent className="ion-padding">Menu content.</IonContent>
+      </IonMenu>}
+      <IonPage id="main-content" onScroll={() => console.log('test')}>
         <IonHeader>
           <IonToolbar>
               <IonButtons slot="start">
@@ -36,12 +54,23 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
+      <IonContent 
+      scrollEvents={true}
+      onIonScroll={handleScroll}
+      fullscreen={true} ref={contentRef}>
+        <div className='container'>
+          <img className='logo-image' src={logo} />
+        </div>
 
-        <IonFab slot="fixed" vertical="bottom" horizontal="end">
-          <IonFabButton>
+      </IonContent>
+
+        {backToTop && <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton onClick={() => scrollToTop()}>
             <IonIcon icon={chevronUpOutline}></IonIcon>
           </IonFabButton>
-        </IonFab>
+        </IonFab>}
+
+        
       </IonPage>
     </>
   );
