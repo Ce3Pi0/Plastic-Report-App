@@ -38,3 +38,8 @@ export interface ReportInterface{
     status:string,
     url:string,
 }
+
+export interface Location{
+    lat: string | undefined,
+    lon: string | undefined
+}

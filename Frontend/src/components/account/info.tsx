@@ -30,42 +30,42 @@ const Info:React.FC = () => {
             {data &&
             <> 
                 <IonFab slot="fixed" horizontal="end" vertical="top" >
+                    <div className="tooltip">
+                        <IonFabButton size="small">
+                            <IonIcon icon={arrowDownOutline}/>
+                        </IonFabButton>
+                        <span className="tooltiptext">Filter reports</span>
+                    </div>
+
+                    <IonFabList className="tooltips"side="bottom">
                         <div className="tooltip">
-                            <IonFabButton size="small">
-                                <IonIcon icon={arrowDownOutline}/>
+                            <IonFabButton size = "small" color="success" onClick={() => setStatus("completed")}>
+                                <IonIcon icon={checkmark}/>
                             </IonFabButton>
-                            <span className="tooltiptext">Filter reports</span>
+                            <span className="tooltiptext">Completed</span>
                         </div>
 
-                        <IonFabList className="tooltips"side="bottom">
-                            <div className="tooltip">
-                                <IonFabButton size = "small" color="success" onClick={() => setStatus("completed")}>
-                                    <IonIcon icon={checkmark}/>
-                                </IonFabButton>
-                                <span className="tooltiptext">Completed</span>
-                            </div>
+                        <div className="tooltip">
+                            <IonFabButton size="small" color="warning" onClick={() => setStatus("pending")}>
+                                <IonIcon icon={codeWorkingOutline}/>
+                            </IonFabButton>
+                            <span className="tooltiptext">Pending</span>
+                        </div>
 
-                            <div className="tooltip">
-                                <IonFabButton size="small" color="warning" onClick={() => setStatus("pending")}>
-                                    <IonIcon icon={codeWorkingOutline}/>
-                                </IonFabButton>
-                                <span className="tooltiptext">Pending</span>
-                            </div>
+                        <div className="tooltip">
+                            <IonFabButton size="small" color="danger" onClick={() => setStatus("rejected")}>
+                                <IonIcon icon={alertOutline}/>
+                            </IonFabButton>
+                            <span className="tooltiptext">Rejected</span>
+                        </div>
 
-                            <div className="tooltip">
-                                <IonFabButton size="small" color="danger" onClick={() => setStatus("rejected")}>
-                                    <IonIcon icon={alertOutline}/>
-                                </IonFabButton>
-                                <span className="tooltiptext">Rejected</span>
-                            </div>
-
-                            <div className="tooltip">
-                                <IonFabButton size="small" onClick={() => setStatus("")}>
-                                    <IonIcon icon={appsOutline}/>
-                                </IonFabButton>
-                                <span className="tooltiptext">All</span>
-                            </div>
-                        </IonFabList>
+                        <div className="tooltip">
+                            <IonFabButton size="small" onClick={() => setStatus("")}>
+                                <IonIcon icon={appsOutline}/>
+                            </IonFabButton>
+                            <span className="tooltiptext">All</span>
+                        </div>
+                    </IonFabList>
                 </IonFab>
                     
                 <IonCard className="account-info">
@@ -76,17 +76,19 @@ const Info:React.FC = () => {
                     </IonCardHeader>
 
                     <IonCardContent>
-                    Welcome to your account {JSON.parse(JSON.stringify(data)).user.gender === "male" && "mr."} {JSON.parse(JSON.stringify(data)).user.gender === "female" && "mrs."} {JSON.parse(JSON.stringify(data)).user.name}
+                        Welcome to your account {JSON.parse(JSON.stringify(data)).user.gender === "male" && "mr."} {JSON.parse(JSON.stringify(data)).user.gender === "female" && "mrs."} {JSON.parse(JSON.stringify(data)).user.name}
                     </IonCardContent>
 
                     <IonButton color={"tertiary"} fill="clear" onClick={() => logOut()}>Log out</IonButton>
                     <IonButton color={"tertiary"} fill="clear" onClick={() => window.location.assign('/account/change')}>Change Password</IonButton>
                 </IonCard>
+                
                 <div className="container">
                     <div className="center-text">
                         <h2>Your reports:</h2>
                     </div>
                 </div>
+                
                 {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.status === status || status === "").map((report: ReportInterface) => (<Report key={report.id} report={report}/>))}
                 {reports_loading && <div>...Loading</div>}
                 {reports_error && loggedIn && <div>Error while fetching data</div>}

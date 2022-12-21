@@ -2,7 +2,7 @@ import { IonButton, IonFab, IonFabButton, IonIcon, IonInput, IonTitle } from "@i
 import { arrowBack } from "ionicons/icons";
 import React, { useContext } from "react";
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import { contextInterface, GlobalContext } from '../../context/Context';
 import { UserChange } from "../../interfaces/interfaces";
 import { handleRequest } from "../../utils/hooks/userRequest";
@@ -37,6 +37,7 @@ const Change: React.FC = () => {
         if (newPassword === password){
             setMistake(false);
             setMessage("You can't change to the same password!")
+
             return;
         }
 
@@ -76,13 +77,10 @@ const Change: React.FC = () => {
                 <p id="warning">{!message && !mistake && <br></br>} {message} {mistake && "Incorrect password or username"}</p>
                 <IonButton type="submit" expand="block" id="button">Change</IonButton>
             </form>}
-            {!loggedIn && <div>
-                <h2> You aren't logged in!</h2>
-                <IonButton expand="block" onClick={() => history.push('/account/login')}>Login</IonButton>
-            </div>}
+            {!loggedIn && <Redirect to="/account/login" />}
         </div>
     );
 }
  
 export default Change;
-
+// add option to change password without beeing lkogged in

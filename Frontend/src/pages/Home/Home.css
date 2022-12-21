@@ -1,10 +1,12 @@
-.footer-content{
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+.sponsor-image{
+    max-width: 250px;
 }
-.footer-container{
-    margin:auto;
+
+.bottom-right{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    float: right;
+}
+
+.sponsor-image{
+    padding-bottom: 40px;
 }

@@ -22,16 +22,28 @@ class ReportRoute(BaseRoute):
     __statuses = ["pending", "completed", "rejected"]
     
     def __init__(self) -> None:
-        self.create_req = ["lat", "lon"]
+        self.create_req = ["lat", "lon", "url"]
         self.delete_req = ["id"]
 
     def create(self, request):
-        self.lat = str(request.form["lat"])
-        self.lon = str(request.form["lon"])
-        self.image = str(request.form["image"])
+        # testing only
+        for key in self.create_req:
+            if key not in request.json:
+                return customAbort("Key not in request", 400)
+        
+        self.lat = request.json["lat"]
+        self.lon = request.json["lon"]
+        self.url = request.json["url"]
 
-        if not self.lat or not self.lon or not self.image:
+        # self.lat = str(request.form["lat"])
+        # self.lon = str(request.form["lon"])
+        # self.image = str(request.form["image"])
+
+        # if not self.lat or not self.lon or not self.image:
+        if not self.lat or not self.lon or not self.url:
             return customAbort("Key not in request", 400)
+
+        # end testing only 
 
         user_id = get_jwt_identity()
 
@@ -44,17 +56,18 @@ class ReportRoute(BaseRoute):
             return customAbort("Admin can't send report", 405)
 
 
-        if "image" not in request.files:
-            return customAbort("Missing image", 400)
+        # if "image" not in request.files:
+        #     return customAbort("Missing image", 400)
 
-        img = request.files["image"]
-        img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
+        # img = request.files["image"]
+        # img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
         
 
-        img_name = get_random_alphanumerical() + "." + img_ext
-        img.save(secure_filename(app.config["UPLOAD_FOLDER"] + img_name))
+        # img_name = get_random_alphanumerical() + "." + img_ext
+        # img.save(secure_filename(app.config["UPLOAD_FOLDER"] + img_name))
         
-        report = Report(location = f'{self.lat}&{self.lon}', url=img_name, status="pending", user_id = user_id)
+        # report = Report(location = f'{self.lat}&{self.lon}', url=img_name, status="pending", user_id = user_id)
+        report = Report(location = f'{self.lat}&{self.lon}', url=self.url, status="pending", user_id = user_id)
 
         db.session.add(report)
         db.session.commit()

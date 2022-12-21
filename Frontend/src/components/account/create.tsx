@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { contextInterface, GlobalContext } from "../../context/Context";
 import { IonButton, IonTitle, IonInput, IonFab, IonFabButton, IonIcon, IonList, IonRadioGroup, IonItem, IonLabel, IonRadio } from "@ionic/react";
-import { useHistory } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import { arrowBack } from "ionicons/icons";
 import { UserRegister } from "../../interfaces/interfaces";
 import { handleRequest } from "../../utils/hooks/userRequest";
@@ -34,10 +34,12 @@ const Register: React.FC = () => {
 
         if (gender === ''){
             setMessage('Please select a gender!')
+
             return;
         }
         if (password.length < UNSAFE_PASSWORD){
             setMessage("Password too weak!")
+
             return;
         }
 
@@ -60,55 +62,62 @@ const Register: React.FC = () => {
                     <IonIcon icon={arrowBack}></IonIcon>
                 </IonFabButton>
             </IonFab>
+
             <IonTitle id="title">Create account</IonTitle>
+            
             <br />
+            
             <IonInput type="email" onIonChange={e => {
                 if(e.detail.value === undefined) return;
                 setEamil(e.detail.value!);
             }} clearInput={true} value={email} id="username" placeholder="Enter your email" required={true} />
+            
             <br />
+            
             <IonInput onIonChange={e => {
                 if(e.detail.value === undefined) return;
                 setName(e.detail.value!);
             }} clearInput={true} value={name} id="username" placeholder="Enter your name" required={true} />
+            
             <br />
+            
             <IonInput onIonChange={e => {
                 if(e.detail.value === undefined) return;
                 setUsername(e.detail.value!);
             }} clearInput={true} value={username} id="username" placeholder="Enter username" required={true} />
+            
             <br />
+            
             <IonInput type="password" onIonChange={e => {
                 if (e.detail.value === undefined) return;
                 setPassword(e.detail.value!)
             }} clearInput={true} value={password} id="password" placeholder="Enter password" required={true} />
 
             <IonRadioGroup value={gender} onIonChange={(e) => setGender(e.detail.value)}>
-                    <IonItem className="gender" color={"light"}>
+                <IonItem className="gender" color={"light"}>
                     <IonLabel>Male</IonLabel>
                     <IonRadio slot="end" value="male"></IonRadio>
-                    </IonItem>
+                </IonItem>
 
 
-                    <IonItem className="gender" color={"light"}>
+                <IonItem className="gender" color={"light"}>
                     <IonLabel>Female</IonLabel>
                     <IonRadio slot="end" value="female"></IonRadio>
-                    </IonItem>
+                </IonItem>
 
-                    <IonItem className="gender" color={"light"}>
+                <IonItem className="gender" color={"light"}>
                     <IonLabel>Other</IonLabel>
                     <IonRadio slot="end" value="other"></IonRadio>
-                    </IonItem>
-                </IonRadioGroup>
+                </IonItem>
+            </IonRadioGroup>
 
             {userExists && !message && <p id="warning">User already exists!</p>}
             {!userExists && message && <p id="warning">{message}</p>}
             {!userExists && !message && <br />}
+            
             <IonButton type="submit" expand="block" id="button">Create</IonButton>
         </form>}
-        {loggedIn && <div>
-            <h1>You are already logged in!</h1>
-            <IonButton expand="block" onClick={() => logOut()}>Logout</IonButton>
-        </div>}
+        {loggedIn && <Redirect to="/account/login" />}
     </div>  
     );
 }
