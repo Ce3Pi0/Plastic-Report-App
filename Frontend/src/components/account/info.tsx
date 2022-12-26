@@ -7,7 +7,8 @@ import useFetch from '../../utils/hooks/useFetch';
 import { domain } from '../../utils/utils';
 import Report from "./report";
 import { checkmark } from "ionicons/icons";
-
+import { Redirect } from "react-router";
+// https://console.cloud.google.com/apis/dashboard
 
 const Info:React.FC = () => {
     const {loggedIn, setLoggedIn} = useContext(GlobalContext) as contextInterface;

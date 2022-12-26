@@ -54,7 +54,7 @@ const AdminReport: React.FC<{report: ReportInterface}> = ({report}) => {
 
                 <IonContent className="ion-padding">
                     <div className="container">
-                        <img className = "trash-image" src={`http://${STATIC_URL}${report.url}.jpg`} alt="Image not found"/>
+                        <img className = "trash-image" src={`http://${STATIC_URL}${report.url}`} alt="Image not found"/>
                     </div>
                 </IonContent>
             </IonModal>
@@ -74,7 +74,3 @@ const AdminReport: React.FC<{report: ReportInterface}> = ({report}) => {
 }
  
 export default AdminReport;
-
-
-// i need to change the .jpg on img src after i fix image saving to the backend
-//why does modal not close when X not pressed

@@ -12,13 +12,22 @@
 }
 
 @media screen and (max-width: 500px) {
+    .map{
+        height: 40%;
+        width: 70%;
+        margin-left: 15%;
+        margin-top: 2%;
+        border: 6px solid var(--ion-color-tertiary-shade);
+        border-radius: 5px;
+    }
+
     .report-form{
         width: 70%;
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
         align-content: center;
-        padding: 3%;
+        /* padding: 3%; */
         background-color: var(--ion-color-light);
         border-radius: 12px;
         margin: 0;
@@ -29,6 +38,15 @@
 }
 
 @media screen and (min-width: 500px) {
+    .map{
+        height: 40%;
+        width: 40%;
+        margin-left: 30%;
+        margin-top: 2%;
+        border: 6px solid var(--ion-color-tertiary-shade);
+        border-radius: 5px;
+    }
+
     .report-form{
         min-width: 30%;
         display: flex;
@@ -84,3 +102,4 @@ ol li{
 .trash-image{
     max-height: 350px;
 }
+

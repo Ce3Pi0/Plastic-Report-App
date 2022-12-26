@@ -30,13 +30,10 @@ const Report: React.FC<{report: ReportInterface}> = ({report}) => {
                 
                 <br />
                 
-                <img className = "trash-image-info" src={`http://${STATIC_URL}${report.url}.jpg`} alt="Image not found"/> 
+                <img className = "trash-image-info" src={`http://${STATIC_URL}${report.url}`} alt="Image not found"/> 
             </IonCardContent>
         </IonCard>
     );
 }
  
 export default Report;
-
-
-// i need to change the .jpg on img src after i fix image saving to the backend
