@@ -4,13 +4,15 @@ import { UserInterface } from "../interfaces/interfaces";
 export type contextInterface = {
     loggedIn: boolean,
     setLoggedIn: (userLoggedIn: boolean, user: UserInterface | null) => void,
-    user: UserInterface | null
+    user: UserInterface | null,
+    isLoaded: boolean
 };
 
 const initial_state: contextInterface = {
     loggedIn: false,
     setLoggedIn: () => {return},
-    user: null
+    user: null,
+    isLoaded: false
 };
 
 export const GlobalContext = React.createContext<contextInterface | null>(initial_state);
@@ -40,16 +42,19 @@ export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children
                     access_token: localStorage.getItem("access_token")!,
                     refresh_token: localStorage.getItem("refresh_token")!,
                     type: localStorage.getItem("type")!
-                }
+                },
+                isLoaded: true
             }); 
         }
+        //change if logged in is false
     }, [])
 
     return(
         <GlobalContext.Provider value={{
             loggedIn : state.loggedIn,
             setLoggedIn,
-            user : state.user
+            user : state.user,
+            isLoaded: state.isLoaded
         }}>
             {children}
         </GlobalContext.Provider>);

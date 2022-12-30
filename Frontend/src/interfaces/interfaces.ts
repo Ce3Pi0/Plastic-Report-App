@@ -41,5 +41,5 @@ export interface ReportInterface{
 
 export interface Location{
     lat: string | undefined,
-    lon: string | undefined
+    lng: string | undefined
 }

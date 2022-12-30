@@ -5,6 +5,11 @@ export const domain: string = '127.0.0.1:5000';// needs to change to DOMAIN for 
 export const STATIC_URL = "127.0.0.1:88/"
 export const UNSAFE_PASSWORD: number = 6
 export type methodType = "POST" | "PUT" | "GET" | "DELETE"
+export const MACEDONIA_CENTER = {
+    lat: 41.56,
+    lng: 21.8
+};
+export const DEFAULT_ZOOM = 9.5;
 
 
 //fetches
@@ -183,7 +188,7 @@ export const getLocation = (setLocation: React.Dispatch<React.SetStateAction<Loc
         let long = position.coords.longitude.toFixed(2)
         setLocation({
             lat: lat,
-            lon: long
+            lng: long
         })
     });
 }

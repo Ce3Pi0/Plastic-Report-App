@@ -1,21 +1,18 @@
-import { IonButton, IonContent, IonFab, IonIcon, IonInput, IonLabel, IonTitle, useIonAlert } from "@ionic/react";
-import { updateImageDisplay, getLocation } from '../../utils/utils';
-import { arrowUpOutline, locationOutline, locationSharp } from "ionicons/icons";
+import { IonButton, IonContent, IonIcon, IonTitle, useIonAlert } from "@ionic/react";
+import { updateImageDisplay, MACEDONIA_CENTER, DEFAULT_ZOOM } from '../../utils/utils';
+import { arrowUpOutline} from "ionicons/icons";
 import React, { useState } from "react";
 import { domain } from "../../utils/utils";
 import { Location } from "../../interfaces/interfaces";
 import GoogleMapReact from "google-map-react";
+import Marker from "./Marker";
 
 const SendReport: React.FC = () => {
-  const center = {
-    lat: 41.56,
-    lng: 21.8
-  };
-  const zoom = 9.5;
+
 
   const [presentAlert] = useIonAlert();
 
-  const [location, setLocation] = useState<Location>({ lat: `${center.lat}`, lon: `${center.lng}`});
+  const [location, setLocation] = useState<Location>({ lat: undefined, lng: undefined});
   const [file, setFile] = useState<File | null>(null)
 
 
@@ -27,7 +24,7 @@ const SendReport: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (location.lat === undefined || location.lon === undefined ){
+      if (location.lat === undefined || location.lng === undefined ){
           presentAlert({
               subHeader: 'Location not specified!',
               message: 'Please specifiy a location',
@@ -49,7 +46,7 @@ const SendReport: React.FC = () => {
       
       const data = new FormData();
       data.append("image", file);
-      data.append("lon", location.lon!);
+      data.append("lon", location.lng!);
       data.append("lat", location.lat!);
 
       let myHeaders = new Headers();
@@ -91,12 +88,13 @@ const SendReport: React.FC = () => {
 
       <div className="map">
 
-        <GoogleMapReact 
+        <GoogleMapReact
+          onClick={(e) => setLocation({lat:`${e.lat}`, lng:`${e.lng}`})} 
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
-          defaultCenter={center}
-          defaultZoom={zoom}
+          defaultCenter={MACEDONIA_CENTER}
+          defaultZoom={DEFAULT_ZOOM}
         >
-          <IonIcon color={"danger"} size="large" icon={locationSharp} />
+          {location.lat !== undefined && location.lng !== undefined && <Marker lat={location.lat} lng={location.lng} />}
         </GoogleMapReact>
 
         <form className="report-form" onSubmit={handleSubmit}>
