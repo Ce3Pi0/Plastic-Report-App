@@ -46,6 +46,12 @@ export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children
                 isLoaded: true
             }); 
         }
+        else if (localStorage.getItem("logged_in") === "false"){
+            setState({
+                ...state,
+                isLoaded: true
+            })
+        }
         //change if logged in is false
     }, [])
 

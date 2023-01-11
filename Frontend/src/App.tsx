@@ -48,8 +48,6 @@ const Tabs = () => {
   const {loggedIn, user, isLoaded} = useContext(GlobalContext) as contextInterface;
   const location = useLocation();
 
-  console.log(isLoaded, loggedIn)
-  
   return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : (
     <IonTabs>
       <IonRouterOutlet>
