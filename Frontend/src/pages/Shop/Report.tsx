@@ -1,5 +1,7 @@
 import { IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+
 import './Shop.css';
+
 
 const Shop: React.FC = () => {
   return (
@@ -10,6 +12,7 @@ const Shop: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
+      {/* shop component */}
     </IonPage>
   );
 };

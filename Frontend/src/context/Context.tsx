@@ -1,25 +1,21 @@
-import React, { createContext, useState, useEffect , FC} from "react";
-import { UserInterface } from "../interfaces/interfaces";
+import React, { useState, useEffect } from "react";
 
-export type contextInterface = {
-    loggedIn: boolean,
-    setLoggedIn: (userLoggedIn: boolean, user: UserInterface | null) => void,
-    user: UserInterface | null,
-    isLoaded: boolean
-};
+import { UserInterface, ContextInterface } from "../interfaces/interfaces";
 
-const initial_state: contextInterface = {
+
+const initial_state: ContextInterface = {
     loggedIn: false,
     setLoggedIn: () => {return},
+    updateTokens: () => {return},
     user: null,
     isLoaded: false
 };
 
-export const GlobalContext = React.createContext<contextInterface | null>(initial_state);
+export const GlobalContext = React.createContext<ContextInterface | null>(initial_state);
 
 export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children} ) => {
 
-    const [state, setState] = useState<contextInterface>(initial_state);
+    const [state, setState] = useState<ContextInterface>(initial_state);
 
     const setLoggedIn =(userLoggedIn: boolean, user: UserInterface | null): void => {
         setState({
@@ -28,6 +24,20 @@ export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children
             user
         });
         localStorage.setItem("logged_in", userLoggedIn ? "true" : "false")
+    }
+
+    const updateTokens = (): void => {
+        setState({
+            ...state,
+            user: {
+                id: parseInt(localStorage.getItem("id")!),
+                username: localStorage.getItem("username")!,
+                gender: localStorage.getItem("gender")!,
+                access_token: localStorage.getItem("access_token")!,
+                refresh_token: localStorage.getItem("refresh_token")!,
+                type: localStorage.getItem("type")!
+            }
+        })
     }
 
     useEffect(() => {
@@ -46,19 +56,20 @@ export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children
                 isLoaded: true
             }); 
         }
-        else if (localStorage.getItem("logged_in") === "false"){
+        else {
             setState({
                 ...state,
                 isLoaded: true
             })
+            localStorage.setItem("logged_in", "false");
         }
-        //change if logged in is false
     }, [])
 
     return(
         <GlobalContext.Provider value={{
             loggedIn : state.loggedIn,
             setLoggedIn,
+            updateTokens,
             user : state.user,
             isLoaded: state.isLoaded
         }}>

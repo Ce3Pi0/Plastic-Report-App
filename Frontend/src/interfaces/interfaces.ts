@@ -7,6 +7,7 @@ export interface UserInterface {
     type: string
 }
 
+
 export interface UserLogin {
     username: string,
     password: string
@@ -26,11 +27,13 @@ export interface UserRegister{
     gender: string 
 }
 
-export interface fetchReturn{
+
+export interface FetchReturn{
     data: JSON|null,
     err: string|null,
     loading: boolean
 }
+
 
 export interface ReportInterface{
     id:number,
@@ -39,7 +42,24 @@ export interface ReportInterface{
     url:string,
 }
 
-export interface Location{
+
+export interface ContextInterface {
+    loggedIn: boolean,
+    setLoggedIn: (userLoggedIn: boolean, user: UserInterface | null) => void,
+    updateTokens: () => void,
+    user: UserInterface | null,
+    isLoaded: boolean
+};
+
+
+export interface LocationInterface{
     lat: string | undefined,
     lng: string | undefined
+};
+
+
+export interface IssueElementTemplate{
+    name: string,
+    description: string | undefined;
 }
+

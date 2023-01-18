@@ -1,4 +1,5 @@
 from flask import jsonify
+import random
 import bcrypt
 
 from routes.baseRoute import BaseRoute
@@ -33,3 +34,14 @@ def genSalt() -> bytes:
 def hashPassword(password: str, salt: bytes) -> str:
     password = password.encode("UTF-8")
     return bcrypt.hashpw(password, salt)
+    
+def get_random_alphanumerical(_len = 16):
+    asciiCodes = []
+    alphanumerical = ""
+    asciiCodes += random.sample(range(97, 122), int(round(0.375 * _len)))
+    asciiCodes += random.sample(range(65, 90), int(round(0.375 * _len)))
+    asciiCodes += random.sample(range(48, 57), int(round(0.25 * _len)))
+    random.shuffle(asciiCodes)
+    for char in asciiCodes:
+        alphanumerical += chr(char)
+    return alphanumerical

@@ -1,33 +1,57 @@
 import { FetchRefreshToken, methodType } from "../utils";
 
-export const reportRequest = (url: string, method: methodType) => {
+
+export const reportRequest = (url: string, method: methodType, body: BodyInit | undefined, updateTokens: any, presentAlert: any, contentType: string | undefined) => {
     let myHeaders = new Headers();
         
     myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
-    myHeaders.append("Content-Type", "application/json");
+    if (contentType !== "form") myHeaders.append("Content-Type", "application/json");
 
     fetch(url, {
         method: method,
         headers: myHeaders,
+        body: body
     })
-    .then(response => {
-        if (response.status === 401 || response.status === 422){
-            let refreshHeaders = new Headers();
-                        
-            refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
-            refreshHeaders.append("Content-Type", "application/json");
-                            
-            FetchRefreshToken(url, method, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "report");
+    .then(res => {
+        if (res.status === 429){
+            presentAlert({
+                subHeader: 'Fail',
+                message: 'To many requests sent... Slow down!',
+                buttons: [{
+                  text: 'OK',
+                  role: 'confirm',
+                },],
+            });
+            
+            throw Error("Too many requests sent!")
+        }
+        if (res.status === 401 || res.status === 422){
+            if (contentType === "form") FetchRefreshToken(url, method, undefined, body, undefined, undefined, undefined, undefined, undefined, undefined, "create_report", updateTokens, presentAlert, contentType);
+            else FetchRefreshToken(url, method, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "report", updateTokens, undefined, undefined);
         } else {
-            if(!response.ok){
+            if(!res.ok){
                 throw Error("Something went wrong!")
             }
-            return response.json();
+            return res.json();
         }
     })
     .then(json => {
-        if(json.msg === "success") window.location.reload();
+        if (json.msg !== "success") throw Error("Something went wrong!")
+
+        if (presentAlert !== undefined){
+            presentAlert({
+                subHeader: 'Success!',
+                message: 'Report sent successfully!',
+                buttons: [{
+                text: 'OK',
+                role: 'confirm',
+                handler: () => {
+                    window.location.reload();
+                },
+                },],
+            });
+        } else window.location.reload();  
     })
-    .catch(err => Error(err.message))
+    .catch(err => Error(err))
 
 }

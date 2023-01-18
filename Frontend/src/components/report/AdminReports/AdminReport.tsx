@@ -1,20 +1,28 @@
+import React, { useContext, useState } from "react";
+
 import { IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar } from "@ionic/react";
 import { checkmarkOutline, closeOutline } from "ionicons/icons";
-import React, { useState } from "react";
-import { ReportInterface } from "../../../interfaces/interfaces";
+
+import { GlobalContext } from "../../../context/Context";
+
+import { ContextInterface, ReportInterface } from "../../../interfaces/interfaces";
+
 import { reportRequest } from "../../../utils/hooks/reportRequest";
-import { domain, STATIC_URL } from "../../../utils/utils";
+import { DOMAIN, STATIC_URL } from "../../../utils/utils";
+
 
 const AdminReport: React.FC<{report: ReportInterface}> = ({report}) => {
+
+    const { updateTokens } = useContext(GlobalContext) as ContextInterface;
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleAccept = () => {
-        reportRequest(`http://${domain}/report?id=${report.id}&user_id=${window.localStorage.getItem("id")}&status=completed`, "PUT")
+        reportRequest(`http://${DOMAIN}/report?id=${report.id}&user_id=${window.localStorage.getItem("id")}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined)
     }
 
     const handleDecline = () => {
-        reportRequest(`http://${domain}/report?id=${report.id}&user_id=${window.localStorage.getItem("id")}&status=rejected`, "PUT")
+        reportRequest(`http://${DOMAIN}/report?id=${report.id}&user_id=${window.localStorage.getItem("id")}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined)
     }
 
     return (

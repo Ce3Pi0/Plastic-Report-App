@@ -1,6 +1,9 @@
-import { IonButton } from "@ionic/react";
 import React from "react";
+
+import { IonButton } from "@ionic/react";
+
 import './NotFound.css';
+
 
 const NotFound: React.FC = () => {
     return ( 

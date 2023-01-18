@@ -1,15 +1,31 @@
-import { UserChange, UserLogin, UserRegister, Location } from "../interfaces/interfaces";
+import { UserChange, UserLogin, UserRegister, LocationInterface } from "../interfaces/interfaces";
+
 
 //constants
-export const domain: string = '127.0.0.1:5000';// needs to change to DOMAIN for better practices throughtout the whole project
+export const DOMAIN: string = '127.0.0.1:5000';
 export const STATIC_URL = "127.0.0.1:88/"
 export const UNSAFE_PASSWORD: number = 6
-export type methodType = "POST" | "PUT" | "GET" | "DELETE"
 export const MACEDONIA_CENTER = {
     lat: 41.56,
     lng: 21.8
 };
 export const DEFAULT_ZOOM = 9.5;
+const fileTypes = [
+    "image/apng",
+    "image/bmp",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
+    "image/x-icon"
+];
+
+
+//types
+export type methodType = "POST" | "PUT" | "GET" | "DELETE"
 
 
 //fetches
@@ -38,18 +54,29 @@ const FetchData = (url: string, myHeaders: Headers, AbtCnt: AbortController, set
     })
 }
 
-const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, user: UserChange | UserRegister | UserLogin, setMessage: any, setMistake: any) => {
+const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, user: UserChange | UserRegister | UserLogin, setMessage: any, setMistake: any, presentAlert: any) => {
     fetch(url, {
         method:method,
         headers:myHeaders,
         body:JSON.stringify(user),
     })
-    .then(data => {
-            if(!data.ok){
-                throw Error("Something went wrong!")
-                }
-            return data.json();
-
+    .then(res => {
+        if (res.status === 429){
+            presentAlert({
+                subHeader: 'Fail',
+                message: 'To many requests sent... Slow down!',
+                buttons: [{
+                  text: 'OK',
+                  role: 'confirm',
+                },],
+            });
+            
+            throw Error("Too many requests sent!")
+        }
+        if(!res.ok){
+            throw Error("Something went wrong!")
+        }
+        return res.json();
     })
     .then(json => {
         if(json.msg === "success"){
@@ -62,33 +89,103 @@ const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, us
     })
 }
 
-const FetchReportChange = (url: string, method: methodType, myHeaders: Headers) => {
+const FetchReportChange = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any) => {
     fetch(url, {
         method:method,
         headers:myHeaders,
+        body: body
     })
-    .then(data => {
-        if (!data.ok){
+    .then(res => {
+        if (res.status === 429){
+            presentAlert({
+                subHeader: 'Fail',
+                message: 'To many requests sent... Slow down!',
+                buttons: [{
+                  text: 'OK',
+                  role: 'confirm',
+                },],
+            });
+            
+            throw Error("Too many requests sent!")
+        }
+        if (!res.ok){
             throw Error("Something went wrong!")
         }
-        return data.json();
+        return res.json();
     })
     .then(json => {
-        if(json.msg === "success")
-            window.location.reload();
+        if (json.msg !== "success")
+            throw Error("Something went wrong!");
+        if (presentAlert !== undefined){
+            presentAlert({
+                subHeader: 'Success!',
+                message: 'Report sent successfully!',
+                buttons: [{
+                text: 'OK',
+                role: 'confirm',
+                handler: () => {
+                    window.location.reload();
+                },
+                },],
+            });
+        } else window.location.reload();  
     })
-    .catch(err => Error(err.message))
+    .catch(err => Error(err))
 }
 
-export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
-    setMessage: any, setMistake: any, fetchData: string) => {
+const FetchIssueChange = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any) => {
+    fetch(url, {
+        method:method,
+        headers:myHeaders,
+        body: body
+    })
+    .then(res => {
+        if (res.status === 429){
+            presentAlert({
+                subHeader: 'Fail',
+                message: 'To many requests sent... Slow down!',
+                buttons: [{
+                  text: 'OK',
+                  role: 'confirm',
+                },],
+            });
+            
+            throw Error("Too many requests sent!")
+        }
+        if (!res.ok){
+            throw Error("Something went wrong!")
+        }
+        return res.json();
+    })
+    .then(json => {
+        if (json.msg !== "success")
+            throw Error("Something went wrong!");
+        if (presentAlert !== undefined && method !== "PUT"){
+            presentAlert({
+                subHeader: 'Success!',
+                message: 'Issue report sent successfully!',
+                buttons: [{
+                text: 'OK',
+                role: 'confirm',
+                handler: () => {
+                    window.location.reload();
+                },
+                },],
+            });
+        } else window.location.reload();  
+    })
+    .catch(err => Error(err))
+}
+
+export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, body: undefined | BodyInit, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
+    setMessage: any, setMistake: any, fetchData: string, updateTokens: any, presentAlert: any, contentType: string | undefined) => {
         
     let refreshHeaders = new Headers();
     
     refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
     refreshHeaders.append("Content-Type", "application/json");
 
-    fetch(`http://${domain}/user/refresh_token`, {
+    fetch(`http://${DOMAIN}/user/refresh_token`, {
         method:"GET",
         headers: refreshHeaders
     })
@@ -101,16 +198,24 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
         localStorage.setItem("access_token", json.access_token);
         localStorage.setItem("refresh_token", json.refresh_token);
 
+        updateTokens();
+
         let myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${json.access_token}`);
-        myHeaders.append("Content-Type", "application/json");
+        if (contentType !== "form") myHeaders.append("Content-Type", "application/json");
 
         if (fetchData === "data")
             FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
         else if (fetchData === "report")
-            FetchReportChange(url, method!, myHeaders)
+            FetchReportChange(url, method!, myHeaders, null, undefined)
         else if (fetchData === "user")
-            FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake);
+            FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake, presentAlert);
+        else if (fetchData === "create_report")
+            FetchReportChange(url, method!, myHeaders, body, presentAlert);
+        else if (fetchData === "create_issue")
+            FetchIssueChange(url, method!, myHeaders, body, presentAlert);
+        else if (fetchData === "update_issue") 
+            FetchIssueChange(url, method!, myHeaders, null, undefined);
 
     })
     .catch(e => {
@@ -119,28 +224,17 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
             window.location.assign('/account/login');
             window.localStorage.clear();    
         }
+        window.localStorage.setItem("logged_in", "false");
     })
 }
 
-//functions
-const fileTypes = [
-    "image/apng",
-    "image/bmp",
-    "image/gif",
-    "image/jpeg",
-    "image/pjpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/tiff",
-    "image/webp",
-    "image/x-icon"
-];
 
-const validFileType = (file: File) => {
+//functions
+const ValidFileType = (file: File) => {
     return fileTypes.includes(file.type);
 }
 
-export const updateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
+export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
     const preview: Element | null = document.querySelector('.preview');
     const input: HTMLInputElement | null = document.querySelector('.upload');
 
@@ -164,16 +258,13 @@ export const updateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         for (const file in curFiles) {
             const listItem = document.createElement('li');
-            const para = document.createElement('p');
             
-            if (validFileType(curFiles[file])) {
-                para.textContent = `File name: ${curFiles[file].name}.`;
+            if (ValidFileType(curFiles[file])) {
                 const image = document.createElement('img');
                 image.src = URL.createObjectURL(curFiles[file]);
                 image.style.maxHeight = "150px";
 
                 listItem.appendChild(image);
-                listItem.appendChild(para);
             }
 
             list.appendChild(listItem);
@@ -182,7 +273,7 @@ export const updateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 }
 
-export const getLocation = (setLocation: React.Dispatch<React.SetStateAction<Location>>) => {
+export const GetLocation = (setLocation: React.Dispatch<React.SetStateAction<LocationInterface>>) => {
     navigator.geolocation.getCurrentPosition((position) => {
         let lat = position.coords.latitude.toFixed(2)
         let long = position.coords.longitude.toFixed(2)
@@ -191,4 +282,12 @@ export const getLocation = (setLocation: React.Dispatch<React.SetStateAction<Loc
             lng: long
         })
     });
+}
+
+export function InstanceOfUserChange(data: any): data is UserChange {
+    return 'new_password' in data;
+}
+
+export function InstanceOfUserRegister(data: any): data is UserRegister {
+    return 'name' in data;
 }

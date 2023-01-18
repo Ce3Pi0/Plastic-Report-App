@@ -1,18 +1,23 @@
 import React, { useContext, useState } from "react";
-import { contextInterface, GlobalContext } from "../../context/Context";
-import { IonButton, IonTitle, IonInput, IonFab, IonFabButton, IonIcon, IonList, IonRadioGroup, IonItem, IonLabel, IonRadio } from "@ionic/react";
-import { Redirect, useHistory } from "react-router";
+import { useHistory } from "react-router";
+
+import { IonButton, IonTitle, IonInput, IonFab, IonFabButton, IonIcon, IonRadioGroup, IonItem, IonLabel, IonRadio, useIonAlert } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
-import { UserRegister } from "../../interfaces/interfaces";
+
+import { GlobalContext } from "../../context/Context";
+
+import { ContextInterface, UserRegister } from "../../interfaces/interfaces";
+
 import { handleRequest } from "../../utils/hooks/userRequest";
-import { domain } from "../../utils/utils";
-import { UNSAFE_PASSWORD } from "../../utils/utils";
+import { DOMAIN, UNSAFE_PASSWORD } from "../../utils/utils";
 
 
 const Register: React.FC = () => {
 
-    const { loggedIn, setLoggedIn} = useContext(GlobalContext) as contextInterface;
-    
+    const [presentAlert] = useIonAlert();
+
+    const { updateTokens } = useContext(GlobalContext) as ContextInterface
+
     const [email, setEamil] = useState<string>('');
     const [name, setName] = useState<string>('');
     const [username, setUsername] = useState<string>('');
@@ -22,11 +27,6 @@ const Register: React.FC = () => {
     const [message, setMessage] = useState<string>("");
 
     const history = useHistory();
-
-    const logOut = () => {
-        window.localStorage.clear();
-        setLoggedIn(false, null);
-    }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -51,12 +51,12 @@ const Register: React.FC = () => {
             gender
         };
 
-        handleRequest(`http://${domain}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists);
+        handleRequest(`http://${DOMAIN}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists, updateTokens, presentAlert);
     }
 
     return (
         <div id="container">
-        {!loggedIn && <form id="form" onSubmit={handleSubmit}>
+        <form id="form" onSubmit={handleSubmit}>
             <IonFab horizontal="start" vertical="top">
                 <IonFabButton size={"small"} onClick={() =>history.push('/account/login')}>
                     <IonIcon icon={arrowBack}></IonIcon>
@@ -116,8 +116,7 @@ const Register: React.FC = () => {
             {!userExists && !message && <br />}
             
             <IonButton type="submit" expand="block" id="button">Create</IonButton>
-        </form>}
-        {loggedIn && <Redirect to="/account/login" />}
+        </form>
     </div>  
     );
 }

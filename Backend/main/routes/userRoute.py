@@ -1,9 +1,9 @@
-from config.config import db
+from config.config import db, PASS_LEN
 from routes.baseRoute import BaseRoute
 from classes.classes import User
 from utils.utils import customAbort, genSalt, hashPassword
-
 import hmac
+
 
 class UserRoute(BaseRoute):
     __privilage = {"client":1, "admin":2}
@@ -11,7 +11,7 @@ class UserRoute(BaseRoute):
 
     def __init__(self) -> None:
         self.create_req = ["current_username", "current_password", "name", "username", "email", "password", "type", "gender"]
-        self.update_req = ["username", "password"]
+        self.update_req = ["username", "password", "new_password"]
         self.delete_req = ["username", "password"]
 
     def create(self, request):
@@ -30,22 +30,23 @@ class UserRoute(BaseRoute):
         if not hmac.compare_digest(user.password, hashed_pass):
             return customAbort("Password doesn't match", 401)
 
+        if request.json["type"] not in self.__privilage.keys():
+            return customAbort("Type not allowed", 406)
+        if request.json["gender"] not in self.__genders:
+            return customAbort("gender not allowed", 406)
 
         if self.__privilage[user.type] < self.__privilage[request.json["type"]]:
             return customAbort("Cannot create a user with bigger privilage than your own", 405) 
 
-        if request.json["type"] not in self.__privilage.keys():
-            return customAbort("Type not allowed", 406)
-
-        if request.json["gender"] not in self.__genders:
-            return customAbort("gender not allowed", 4-6)
-        
         check_username = User.query.filter_by(username = request.json["username"]).first()
         check_email = User.query.filter_by(email = request.json["email"]).first()
 
-        if check_username is not None and check_email is not None:
+        if check_username is not None or check_email is not None:
             return customAbort("User already exists", 409)       
         
+        if len(request.json["password"]) < PASS_LEN:
+            return customAbort("Password to weak", 405)
+
         salt = genSalt()
         hashed_pw = hashPassword(request.json["password"], salt)
 
@@ -60,6 +61,9 @@ class UserRoute(BaseRoute):
     def read(self, request):
         if "id" not in request.args:
             all_users = User.query.all()
+
+            if all_users is None:
+                return customAbort("Users not found", 404)
 
             output = []
             for user in all_users:
@@ -92,7 +96,7 @@ class UserRoute(BaseRoute):
 
     def update(self, request):
         if "id" not in request.args:
-            return customAbort("Id not in request", 400)
+            return customAbort("Key not in request", 400)
         
         for key in self.update_req:
             if key not in request.json:
@@ -109,11 +113,11 @@ class UserRoute(BaseRoute):
         if not hmac.compare_digest(user.password, hashed_pass):
             return customAbort("Password doesn't match", 406)
 
-        if "new_password" not in request.json:
-            return customAbort("New password not in request", 400)
-
-        if self.password == self.new_password:
+        if request.json["password"] == request.json["new_password"]:
             return customAbort("New password cannot be the same as the old one", 409)
+
+        if request.json["new_password"].len < PASS_LEN:
+            return customAbort("Password to short", 409)
 
         salt = genSalt()
         new_hashed_pw = hashPassword(self.new_password, salt)
@@ -127,7 +131,7 @@ class UserRoute(BaseRoute):
 
     def delete(self, request):
         if "id" not in request.args:
-            return customAbort("Id not in request", 400)
+            return customAbort("Key not in request", 400)
 
         for key in self.delete_req:
             if key not in request.json:

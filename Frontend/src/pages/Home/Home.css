@@ -1,5 +1,5 @@
 .sponsor-image{
-    max-width: 250px;
+    max-width: 240px;
 }
 
 .bottom-right{
@@ -7,6 +7,42 @@
     float: right;
 }
 
-.sponsor-image{
-    padding-bottom: 40px;
+.links > * > *{
+    color: rgb(205, 205, 205);
+    text-decoration: none;
+}
+
+.hide-menu{
+    color: rgb(205, 205, 205);
+    padding: 6px;
+}
+
+.links > * > *:hover{
+    cursor: pointer;
+    color: var(--ion-color-light-contrast);
+}
+
+.hide-menu:hover{
+    cursor: pointer;
+    color: white;
+}
+
+textarea {
+    resize: none;
+    height: 170px;
+    width: 100%;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+#form > ion-label{
+    font-size: 17px;
+}
+
+#title {
+    font-size: 22px;
+}
+
+.back-to-top{
+    margin-right: 16px;
 }

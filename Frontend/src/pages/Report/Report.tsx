@@ -1,13 +1,20 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { useContext } from 'react';
-import SendReport from '../../components/report/SendReport';
+
+import { IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+
+/* Components */
+import SendReport from '../../components/report/ClientReport/SendReport';
 import ShowReports from '../../components/report/AdminReports/ShowReports';
-import { contextInterface, GlobalContext } from '../../context/Context';
+
+import { GlobalContext } from '../../context/Context';
+import { ContextInterface } from '../../interfaces/interfaces';
+
 import './Report.css';
+
 
 const Report: React.FC = () => {
 
-  const {loggedIn, user} = useContext(GlobalContext) as contextInterface;
+  const {user} = useContext(GlobalContext) as ContextInterface;
 
   return (
     <IonPage>
@@ -18,13 +25,6 @@ const Report: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      {!loggedIn &&
-      <IonContent> 
-        <div className="not-found">
-              <h1>You are not logged in!</h1>
-              <IonButton shape="round" href="/account/login" slot="center">Log in</IonButton>
-        </div>
-      </IonContent>}
       {user?.type === "client" && < SendReport/>}
       {user?.type === "admin" && < ShowReports/>} 
     </IonPage>

@@ -1,17 +1,22 @@
-import { IonButton, IonFab, IonFabButton, IonIcon, IonInput, IonTitle } from "@ionic/react";
+import React, { useContext, useState } from "react";
+import { useHistory } from "react-router";
+
+import { IonButton, IonFab, IonFabButton, IonIcon, IonInput, IonTitle, useIonAlert } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
-import React, { useContext } from "react";
-import { useState } from "react";
-import { Redirect, useHistory } from "react-router";
-import { contextInterface, GlobalContext } from '../../context/Context';
-import { UserChange } from "../../interfaces/interfaces";
+
+import { GlobalContext } from '../../context/Context';
+
+import { UserChange, ContextInterface } from "../../interfaces/interfaces";
+
 import { handleRequest } from "../../utils/hooks/userRequest";
-import { domain, UNSAFE_PASSWORD } from "../../utils/utils";
+import { DOMAIN, UNSAFE_PASSWORD } from "../../utils/utils";
 
 
 const Change: React.FC = () => {
 
-    const {loggedIn, user} = useContext(GlobalContext) as contextInterface;
+    const [presentAlert] = useIonAlert();
+
+    const { user, updateTokens } = useContext(GlobalContext) as ContextInterface;
 
     const [password, setPassword] = useState<string>('');
     const [newPassword, setNewPassword] = useState<string>('');
@@ -47,11 +52,11 @@ const Change: React.FC = () => {
             new_password: newPassword
         };
         
-        handleRequest(`http://${domain}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined);
+        handleRequest(`http://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert);
     }
 
     return (
-        <div id="container">{loggedIn && 
+        <div id="container"> 
             <form id="form" onSubmit={handleSubmit}>
                 <IonFab horizontal="start" vertical="top">
                     <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>
@@ -76,11 +81,10 @@ const Change: React.FC = () => {
                 }} clearInput={true} value={confirmNewPassword} id="password" placeholder="Confirm new password" required={true} />
                 <p id="warning">{!message && !mistake && <br></br>} {message} {mistake && "Incorrect password or username"}</p>
                 <IonButton type="submit" expand="block" id="button">Change</IonButton>
-            </form>}
-            {!loggedIn && <Redirect to="/account/login" />}
+            </form>
         </div>
     );
 }
  
 export default Change;
-// add option to change password without beeing lkogged in
+// add option to change password without beeing logged in

@@ -1,6 +1,7 @@
 from flask_jwt_extended import get_jwt_identity, create_access_token, create_refresh_token
 import datetime 
 
+
 class BaseRoute:
     __instance = None
 

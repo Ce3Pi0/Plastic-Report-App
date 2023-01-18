@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import { Redirect, Route, useLocation } from 'react-router-dom';
+
 import {
   IonApp,
   IonIcon,
@@ -12,11 +14,6 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { home, cart, person, locate, listOutline } from 'ionicons/icons';
-import Home from './pages/Home/Home';
-import Report from './pages/Report/Report';
-// import Shop from './interfaces/Shop/Report';
-import AccountLogin from './pages/Account/AccountLogin';
-import NotFound from './pages/NotFound/NotFound';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -36,24 +33,43 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+/* Pages */ 
+import Home from './pages/Home/Home';
+import About from './pages/Home/About';
+import Contact from './pages/Home/Contact';
+import Report from './pages/Report/Report';
+import AccountLogin from './pages/Account/AccountLogin';
 import AccountCreate from './pages/Account/AccountCreate';
 import AccountChange from './pages/Account/AccountChange';
 import Account from './pages/Account/Account';
-import { contextInterface, GlobalContext, GlobalProvider } from './context/Context';
-import { useContext } from 'react';
+import NotFound from './pages/NotFound/NotFound';
+
+
+import { GlobalContext, GlobalProvider } from './context/Context';
+import { ContextInterface } from './interfaces/interfaces';
+
 
 setupIonicReact();
 
+
 const Tabs = () => {
-  const {loggedIn, user, isLoaded} = useContext(GlobalContext) as contextInterface;
+  const {loggedIn, user, isLoaded} = useContext(GlobalContext) as ContextInterface;
   const location = useLocation();
 
-  return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : (
+  return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : loggedIn?(
     <IonTabs>
       <IonRouterOutlet>
         <Route exact path="/home">
           <Home />
         </Route>
+        <Route exact path="/home/about">
+          <About />
+        </Route>
+        <Route exact path="/home/contact">
+          <Contact />
+        </Route>
+
         <Route exact path="/report">
           <Report />
         </Route>
@@ -63,39 +79,65 @@ const Tabs = () => {
         <Route exact path="/account">
           <Account/>
         </Route>
-        <Route exact path="/account/login">
-          <AccountLogin/>
-        </Route>
         <Route exact path="/account/create">
           <AccountCreate/>
         </Route>
         <Route exact path="/account/change">
           <AccountChange />
         </Route>
-        <Redirect exact from="/" to={loggedIn === true ? "/home" : "/account/login"} />
+
+        <Redirect exact from="/account/login" to="/account" />
+        <Redirect exact from="/" to={"/home"} />
+        
         <Route>
           <NotFound />
         </Route>
       </IonRouterOutlet>
+
       <IonTabBar slot="bottom">
-        <IonTabButton tab="home" href="/home">
+        <IonTabButton tab="home" href="/home" selected={location.pathname.includes("home")}>
           <IonIcon icon={home} />
           <IonLabel>Home</IonLabel>
         </IonTabButton>
+
         <IonTabButton tab="report" href="/report">
           <IonIcon icon={user?.type === "client" || user?.type === undefined? locate:listOutline} />
           <IonLabel>{user?.type === "client" || user?.type === undefined? "Report":"Reports"}</IonLabel>
         </IonTabButton>
+
         {/* <IonTabButton tab="shop" href="/shop">
           <IonIcon icon={cart} />
           <IonLabel>E-Shop</IonLabel>
         </IonTabButton> */}
-        <IonTabButton tab={loggedIn === true ? "/account" : "/account/login"} href={loggedIn === true ? "/account" : "/account/login"} selected={location.pathname.includes("account")}>
+
+        <IonTabButton tab={"/account"} href={"/account"} selected={location.pathname.includes("account")}>
           <IonIcon icon={person} />
           <IonLabel>Account</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
+  ):(
+    <IonRouterOutlet>
+      <Route exact path="/account/login">
+        <AccountLogin/>
+      </Route>
+      <Route exact path="/account/create">
+        <AccountCreate/>
+      </Route>
+
+      <Redirect exact from="/" to="/account/login" />
+      <Redirect exact from="/home" to="/account/login" />
+      <Redirect exact from="/home/about" to="/account/login" />
+      <Redirect exact from="/home/contact" to="/account/login" />
+      <Redirect exact from="/report" to="/account/login" />
+      <Redirect exact from="/account" to="/account/login" />
+      <Redirect exact from="/account/change" to="/account/login" />
+      <Redirect exact from="/shop" to="/account/login" />
+            
+      <Route>
+        <NotFound />
+      </Route>
+    </IonRouterOutlet>
   )
 }
 

@@ -26,5 +26,16 @@ class Report(db.Model):
 
     User = db.relationship("User", backref = db.backref("Report"), lazy = True)
 
+class Issue(db.Model):
+    __tablename__ = "Issue"
+
+    id = db.Column(db.Integer, primary_key = True, nullable = False)
+    name = db.Column(db.String(256), nullable = False)
+    description = db.Column(db.String(1024))
+    fixed = db.Column(db.Boolean, nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey("User.id"), nullable = False)
+
+    User = db.relationship("User", backref = db.backref("Issue"), lazy = True)
+
 with app.app_context():
     db.create_all()

@@ -1,7 +1,10 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import Change from '../../components/account/change';
+
+/* Components */
 import Info from '../../components/account/info';
+
 import './Account.css';
+
 
 const Account: React.FC = () => {
   return (

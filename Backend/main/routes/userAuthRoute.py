@@ -1,4 +1,4 @@
-from config.config import db
+from config.config import db, PASS_LEN
 from routes.baseRoute import BaseRoute
 from classes.classes import User
 from utils.utils import customAbort, genSalt, hashPassword
@@ -6,6 +6,7 @@ from utils.utils import customAbort, genSalt, hashPassword
 from flask_jwt_extended import create_access_token, create_refresh_token
 import datetime
 import hmac
+
 
 class UserAuthRoute(BaseRoute):
     __genders = ["male", "female", "other"]
@@ -24,6 +25,9 @@ class UserAuthRoute(BaseRoute):
 
         if check_username is not None or check_email is not None:
             return customAbort("User already exists", 409)
+
+        if len(request.json["password"]) < PASS_LEN:
+            return customAbort("Password to weak", 405)
 
         salt = genSalt()
         hashed_pw = hashPassword(request.json["password"], salt)
@@ -52,7 +56,7 @@ class UserAuthRoute(BaseRoute):
         hashed_pw = hashPassword(request.json["password"], user.salt) 
 
         if not hmac.compare_digest(hashed_pw, user.password):
-            return customAbort("Password doesn't match", 401)
+            return customAbort("Password doesn't match", 405)
 
         new_token = create_access_token(identity = user.id, fresh = True, expires_delta = datetime.timedelta(days=7))
         refresh_token = create_refresh_token(identity = user.id, expires_delta = datetime.timedelta(days=30))

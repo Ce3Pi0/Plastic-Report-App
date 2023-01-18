@@ -1,15 +1,20 @@
-import { IonButton, IonInput, IonTitle } from "@ionic/react";
-import { domain } from "../../utils/utils";
 import React, { useContext, useState } from "react";
-import { Redirect, useHistory } from "react-router";
-import { contextInterface, GlobalContext } from "../../context/Context";
-import { UserLogin } from "../../interfaces/interfaces";
+
+import { IonButton, IonInput, IonTitle, useIonAlert } from "@ionic/react";
+
+import { GlobalContext } from "../../context/Context";
+
+import { UserLogin, ContextInterface } from "../../interfaces/interfaces";
+
 import { handleRequest } from "../../utils/hooks/userRequest";
+import { DOMAIN } from "../../utils/utils";
 
 
 const Login:React.FC = () => {
 
-    const {loggedIn, setLoggedIn} = useContext(GlobalContext) as contextInterface;
+    const [presentAlert] = useIonAlert();
+
+    const { setLoggedIn, updateTokens } = useContext(GlobalContext) as ContextInterface;
     
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -17,12 +22,6 @@ const Login:React.FC = () => {
     const [message, setMessage] = useState<string | null>(null);
     const [mistake, setMistake] = useState<boolean>(false);
 
-    const history = useHistory();
-
-    const logOut = () => {
-        window.localStorage.clear();
-        setLoggedIn(false, null);
-    }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();    
@@ -32,13 +31,13 @@ const Login:React.FC = () => {
             password
         } 
         
-        handleRequest(`http://${domain}/user/login`, "POST", new_user, setMessage, setMistake, setLoggedIn, undefined);        
+        handleRequest(`http://${DOMAIN}/user/login`, "POST", new_user, setMessage, setMistake, setLoggedIn, undefined, updateTokens, presentAlert);        
     }
 
 
     return ( 
         <div id="container"> 
-            {!loggedIn && <form id="form" onSubmit={handleSubmit}>
+            <form id="form" onSubmit={handleSubmit}>
                 <IonTitle id="title">Login</IonTitle>
                 
                 <br />
@@ -60,10 +59,8 @@ const Login:React.FC = () => {
                 <IonButton type="submit" expand="block" id="button">Login</IonButton>
                 
                 <a id="create" href="/account/create"><p>create an account</p></a>
-                <a id="forgot" href="/account/change"><p>change password</p></a>
-            </form>}
-
-            {loggedIn && <Redirect to="/account" />}
+                {/* <a id="forgot" href="/account/change"><p>change password</p></a> */}
+            </form>
         </div> 
     );
 }

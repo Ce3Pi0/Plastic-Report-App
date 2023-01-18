@@ -1,24 +1,33 @@
-import { IonButton, IonContent, IonIcon, IonTitle, useIonAlert } from "@ionic/react";
-import { updateImageDisplay, MACEDONIA_CENTER, DEFAULT_ZOOM } from '../../utils/utils';
-import { arrowUpOutline} from "ionicons/icons";
-import React, { useState } from "react";
-import { domain } from "../../utils/utils";
-import { Location } from "../../interfaces/interfaces";
+import React, { useContext, useState } from "react";
 import GoogleMapReact from "google-map-react";
+
+import { IonButton, IonContent, IonIcon, IonTitle, useIonAlert } from "@ionic/react";
+import { arrowUpOutline} from "ionicons/icons";
+
+/* Components */
 import Marker from "./Marker";
+
+import { GlobalContext } from "../../../context/Context";
+
+import { ContextInterface, LocationInterface } from "../../../interfaces/interfaces";
+
+import { reportRequest } from "../../../utils/hooks/reportRequest";
+import { UpdateImageDisplay, DOMAIN, MACEDONIA_CENTER, DEFAULT_ZOOM } from '../../../utils/utils';
+
 
 const SendReport: React.FC = () => {
 
+  const { updateTokens } = useContext(GlobalContext) as ContextInterface;
 
   const [presentAlert] = useIonAlert();
 
-  const [location, setLocation] = useState<Location>({ lat: undefined, lng: undefined});
+  const [location, setLocation] = useState<LocationInterface>({ lat: undefined, lng: undefined});
   const [file, setFile] = useState<File | null>(null)
 
 
   const handleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateImageDisplay(e);
-      setFile(e.target.files === null ? null : e.target.files[0]);
+    UpdateImageDisplay(e);
+    setFile(e.target.files === null ? null : e.target.files[0]);
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,35 +62,11 @@ const SendReport: React.FC = () => {
       
       myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
 
-
-      fetch(`http://${domain}/report`, {
-          method: "POST",
-          headers: myHeaders,
-          body: data
-      }).then(res =>  {
-          if (res.ok !== true){
-              return Error("Something went wrong");
-          }
-          return res.json();
-      }).then(json =>{
-          if (json.msg !== "success")
-              return Error("Something went wrong!");
-          presentAlert({
-              subHeader: 'Success!',
-              message: 'Report sent successfully!',
-              buttons: [{
-                text: 'OK',
-                role: 'confirm',
-                handler: () => {
-                  window.location.reload();
-                },
-              },],
-          });
-      }).catch(err => Error(err.message))
+      reportRequest(`http://${DOMAIN}/report`, "POST", data, updateTokens, presentAlert, "form");
   }
 
   return (
-    <IonContent>
+    <IonContent fullscreen>
         <IonTitle className="title">
           <h3>Fill the form bellow and submit it <br />to let us know the location <br/> of the plastic waste!</h3>
         </IonTitle>
@@ -97,24 +82,28 @@ const SendReport: React.FC = () => {
           {location.lat !== undefined && location.lng !== undefined && <Marker lat={location.lat} lng={location.lng} />}
         </GoogleMapReact>
 
-        <form className="report-form" onSubmit={handleSubmit}>
-          <label className="label">
-              {!file && "Select an image:"}
-              {file && "Select a different image:"}
-              <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/x-png,image/gif,image/jpeg"/>
-          </label>
+        <br />
+        </div>
 
-          <br />
+        <div className="report-form-container">
+          <form className="report-form" onSubmit={handleSubmit}>
+            <label className="label">
+                {!file && "Select an image:"}
+                {file && "Select a different image:"}
+                <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/x-png,image/gif,image/jpeg"/>
+            </label>
 
-          <div className="preview">
-              <p>No files currently selected for upload</p>
-          </div>
+            <br />
 
-          <IonButton className="submit-report" color={"success"} type="submit">
-              <IonIcon icon={arrowUpOutline}/>
-          </IonButton>
-        </form>
-      </div>
+            <div className="preview">
+                <p>No files currently selected for upload</p>
+            </div>
+
+            <IonButton className="submit-report" color={"success"} type="submit">
+                <IonIcon icon={arrowUpOutline}/>
+            </IonButton>
+          </form>
+        </div>
     </IonContent>
   );
 }

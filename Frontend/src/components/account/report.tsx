@@ -1,7 +1,11 @@
-import { IonBadge, IonCard, IonCardContent, IonCardHeader, IonCardTitle } from "@ionic/react";
 import React from "react";
+
+import { IonBadge, IonCard, IonCardContent, IonCardHeader, IonCardTitle } from "@ionic/react";
+
 import { ReportInterface } from "../../interfaces/interfaces";
+
 import { STATIC_URL } from "../../utils/utils";
+
 
 const Report: React.FC<{report: ReportInterface}> = ({report}) => {
     
@@ -20,9 +24,6 @@ const Report: React.FC<{report: ReportInterface}> = ({report}) => {
             <IonCardContent>
                 <IonBadge className="test" color={checkStatus(report.status)} slot="start"> </IonBadge>
                 
-                <br />
-                
-                Location: {report.location}
                 
                 <br />
                 

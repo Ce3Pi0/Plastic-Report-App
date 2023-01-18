@@ -1,21 +1,9 @@
-from config.config import db, app, secure_filename
+from config.config import db, app
 from routes.baseRoute import BaseRoute
 from classes.classes import User, Report
-from utils.utils import customAbort
+from utils.utils import customAbort, get_random_alphanumerical
 from flask_jwt_extended import get_jwt_identity
-from flask import jsonify
-import random 
-
-def get_random_alphanumerical(_len = 16):
-    asciiCodes = []
-    alphanumerical = ""
-    asciiCodes += random.sample(range(97, 122), int(round(0.375 * _len)))
-    asciiCodes += random.sample(range(65, 90), int(round(0.375 * _len)))
-    asciiCodes += random.sample(range(48, 57), int(round(0.25 * _len)))
-    random.shuffle(asciiCodes)
-    for char in asciiCodes:
-        alphanumerical += chr(char)
-    return alphanumerical
+import os
 
 
 class ReportRoute(BaseRoute):
@@ -33,15 +21,10 @@ class ReportRoute(BaseRoute):
             return customAbort("Key not in request", 400)
 
         user_id = get_jwt_identity()
-
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
             return customAbort("User not found", 404)
-
-        if user.type == "admin":
-            return customAbort("Admin can't send report", 405)
-
 
         if "image" not in request.files:
             return customAbort("Missing image", 400)
@@ -49,7 +32,6 @@ class ReportRoute(BaseRoute):
         img = request.files["image"]
         img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
         
-
         img_name = get_random_alphanumerical() + "." + img_ext
         img.save(app.config["UPLOAD_FOLDER"] + img_name)
         
@@ -116,61 +98,38 @@ class ReportRoute(BaseRoute):
                 output.append(data)
             
             return {"reports" : output}
-
-        if "user_id" in request.args and "status" in request.args:
-            if request.args["status"] not in self.__statuses:
-                customAbort("Invalid status", 406)
-
-            user = User.query.filter_by(id = request.args['id']).first()
-
-            if user is None:
-                return customAbort("User not found", 404)
-
-            reports = Report.query.filter_by(user_id = request.args["user_id"], status = request.args["status"])
-
-            output = []
-            for report in reports:
-                data = {
-                    "id":report.id,
-                    "location":report.location,
-                    "url":report.url,
-                    "user_id":report.user_id,
-                    "status":report.status
-                }
-                output.append(data)
-            
-            return {"reports" : output}
         
         return customAbort("Key not in request", 400)
 
     def update(self, request):
-        if "id" not in request.args or "user_id" not in request.args or "status" not in request.args:
-            return customAbort("Key not in request", 400)
+        if "id" in request.args and "status" in request.args:
 
-        if request.args["status"] not in self.__statuses:
-            return customAbort("Invalid status", 406)
+            if request.args["status"] not in self.__statuses:
+                return customAbort("Invalid status", 406)
 
-        user_id = get_jwt_identity()
-        user = User.query.filter_by(id=user_id).first()
+            user_id = get_jwt_identity()
+            user = User.query.filter_by(id=user_id).first()
 
-        if user is None:
-            return customAbort("User not found", 404)
+            if user is None:
+                return customAbort("User not found", 404)
 
-        if user.type != "admin":
-            return customAbort("User privillage to low", 405)
+            if user.type != "admin":
+                return customAbort("User privillage to low", 405)
 
-        report = Report.query.filter_by(id=request.args["id"]).first()
+            report = Report.query.filter_by(id=request.args["id"]).first()
 
-        if report is None:
-            return customAbort("Report not found", 404)
+            if report is None:
+                return customAbort("Report not found", 404)
 
-        if report.status == request.args["status"]:
-            return customAbort("Can't change to the same status", 406)
+            if report.status == request.args["status"]:
+                return customAbort("Can't change to the same status", 406)
 
-        report.status = request.args["status"]
-        db.session.commit()
+            report.status = request.args["status"]
+            db.session.commit()
 
-        return {"msg":"success"}        
+            return {"msg":"success"}   
+
+        return customAbort("Key not in request", 400)
     
     def delete(self, request):
         for key in self.delete_req:
@@ -187,6 +146,9 @@ class ReportRoute(BaseRoute):
             return customAbort("User privillage to low", 405)
 
         report = Report.query.filter_by(id=request.args["id"]).first()
+
+        if os.path.exists(app.config["UPLOAD_FOLDER"] + report.url):
+            os.remove(app.config["UPLOAD_FOLDER"] + report.url)
 
         db.session.delete(report)
         db.session.commit()

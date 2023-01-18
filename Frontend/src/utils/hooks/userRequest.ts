@@ -1,15 +1,9 @@
 import { UserLogin, UserChange, UserRegister, UserInterface } from '../../interfaces/interfaces';
-import { FetchRefreshToken, methodType } from '../utils';
 
-function instanceOfUserChange(data: any): data is UserChange {
-    return 'new_password' in data;
-}
+import { FetchRefreshToken, methodType, InstanceOfUserChange, InstanceOfUserRegister } from '../utils';
 
-function instanceOfUserRegister(data: any): data is UserRegister {
-    return 'name' in data;
-}
 
-export const handleRequest = (url: string, method: methodType, user: UserChange | UserLogin | UserRegister, setMessage:any, setMistake:any, setLoggedIn:any, setUserExists:any) => {
+export const handleRequest = (url: string, method: methodType, user: UserChange | UserLogin | UserRegister, setMessage:any, setMistake:any, setLoggedIn:any, setUserExists:any, updateTokens: any, presentAlert: any) => {
 
     let myHeaders = new Headers();
         
@@ -21,30 +15,49 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
         headers: myHeaders,
         body: JSON.stringify(user)
     })
-    .then(response => {
-        if (response.status === 401 || response.status === 422 && instanceOfUserChange(user)){
+    .then(res => {
+        if (res.status === 404){
+            if (setMessage !== undefined)
+                setMessage("User not found!");
+            throw Error("User not found!")
+        }
+        if (res.status === 429){
+            presentAlert({
+                subHeader: 'Fail',
+                message: 'To many requests sent... Slow down!',
+                buttons: [{
+                  text: 'OK',
+                  role: 'confirm',
+                },],
+            });
+            
+            throw Error("Too many requests sent!")
+        }
+        if (res.status === 405){
+            throw Error("Wrond username or password")
+        }
+        if (res.status === 401 || res.status === 422 && InstanceOfUserChange(user)){
             let refreshHeaders = new Headers();
                         
             refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
             refreshHeaders.append("Content-Type", "application/json");
                             
-            FetchRefreshToken(url, method, undefined, user, undefined, undefined, undefined, setMessage, setMistake, "user");
+            FetchRefreshToken(url, method, undefined, undefined, user, undefined, undefined, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
         } else {
-            if(!response.ok){
+            if(!res.ok){
                 throw Error("Something went wrong!")
             }
-            return response.json();
+            return res.json();
         }
     })
     .then(json => {
-        if (instanceOfUserChange(user) && json.msg === "success"){
+        if (InstanceOfUserChange(user) && json.msg === "success"){
             setMistake(false);
             setMessage('');
             window.location.assign('/');
-        } else if (instanceOfUserRegister(user)){
+        } else if (InstanceOfUserRegister(user)){
             window.location.assign('/account/login');
-        }
-         else if (!instanceOfUserChange(user) && !instanceOfUserRegister(user)){
+        } else if (!InstanceOfUserChange(user) && !InstanceOfUserRegister(user)){
             window.localStorage.setItem("id", json.id);
             window.localStorage.setItem("username", json.username);
             window.localStorage.setItem("gender", json.gender);
@@ -58,7 +71,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                 username: json.username,
                 gender: json.gender,
                 type: json.type,
-                access_token: json.acces_token,
+                access_token: json.access_token,
                 refresh_token: json.refresh_token
             }
             window.location.assign('/home');
@@ -68,18 +81,26 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
         }
     })
     .catch((err) => {
-        if (!instanceOfUserChange(user) && !instanceOfUserRegister(user) && setMistake !== undefined){
-            if(err.status === 400)
+        if (!InstanceOfUserChange(user) && !InstanceOfUserRegister(user) && setMistake !== undefined){
+            if (err.message === "User not found!"){
+                setMessage(err.message)
+                setMistake(false)
+            }
+            else if (err.message === "Wrond username or password"){
+                setMessage('')    
                 setMistake(true);
-            else
+            }
+            else{
                 setMessage("Something went wrong!");
-        } else if (instanceOfUserRegister(user)){
+                setMistake(false);
+            }
+        } else if (InstanceOfUserRegister(user)){
             if (err.name === "TypeError")
                 setMessage("An error has occured");
             else
                 setUserExists(true);
         }
-        else if (instanceOfUserChange(user))
+        else if (InstanceOfUserChange(user))
             setMistake(true)
     })
 }
