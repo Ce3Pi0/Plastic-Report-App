@@ -13,7 +13,7 @@ const AboutComponent:React.FC = () => {
     const scrollToTeam = (e: React.MouseEvent<HTMLIonFabButtonElement, MouseEvent>) => {
         e.preventDefault();
 
-        document.querySelector(".team-component")!.scrollIntoView({behavior: "smooth"});
+        document.querySelector(".team-component")!.scrollIntoView({block: "end", inline: "nearest", behavior: "smooth"});
 
         return;
     }

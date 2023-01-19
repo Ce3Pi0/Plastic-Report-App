@@ -14,7 +14,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 db = SQLAlchemy(app)
 CORS(app)
 
-app.config["UPLOAD_FOLDER"] = "D:/Projects/Plastic-Report-App/Static/" # Needs to change everytime
+# app.config["UPLOAD_FOLDER"] = "D:/Projects/Plastic-Report-App/Static/" # Desktop
+app.config["UPLOAD_FOLDER"] = "C:/projects/Plastic-Report-App/Static/" # Laptop
 
 app.config["JWT_SECRET_KEY"] = "Ce3Pi0"
 jwt = JWTManager(app)

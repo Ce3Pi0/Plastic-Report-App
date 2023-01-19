@@ -48,6 +48,7 @@ import NotFound from './pages/NotFound/NotFound';
 
 import { GlobalContext, GlobalProvider } from './context/Context';
 import { ContextInterface } from './interfaces/interfaces';
+import AccountForgot from './pages/Account/AccountForgot';
 
 
 setupIonicReact();
@@ -87,6 +88,7 @@ const Tabs = () => {
         </Route>
 
         <Redirect exact from="/account/login" to="/account" />
+        {/* <Redirect exact from="/account/forgot" to="/account" /> */}
         <Redirect exact from="/" to={"/home"} />
         
         <Route>
@@ -121,6 +123,9 @@ const Tabs = () => {
       <Route exact path="/account/login">
         <AccountLogin/>
       </Route>
+      {/* <Route exact path="/account/forgot">
+        <AccountForgot/>
+      </Route> */}
       <Route exact path="/account/create">
         <AccountCreate/>
       </Route>

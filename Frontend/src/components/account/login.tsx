@@ -59,7 +59,7 @@ const Login:React.FC = () => {
                 <IonButton type="submit" expand="block" id="button">Login</IonButton>
                 
                 <a id="create" href="/account/create"><p>create an account</p></a>
-                {/* <a id="forgot" href="/account/change"><p>change password</p></a> */}
+                {/* <a id="forgot" href="/account/forgot"><p>forgot password</p></a> */}
             </form>
         </div> 
     );

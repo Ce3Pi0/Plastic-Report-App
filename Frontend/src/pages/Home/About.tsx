@@ -1,6 +1,6 @@
 import React, { createRef, useState } from 'react';
 
-import { 
+import {
   IonButtons,
   IonContent,
   IonFab,
@@ -37,24 +37,24 @@ const About: React.FC = () => {
   return (
     <>
       {window.location.pathname.includes("home") && <Menu />}
-      
+
       <IonPage id="main-content">
         <IonHeader>
           <IonToolbar>
-              <IonButtons slot="start">
-                <IonMenuButton></IonMenuButton>
-              </IonButtons>
+            <IonButtons slot="start">
+              <IonMenuButton></IonMenuButton>
+            </IonButtons>
             <IonTitle>About</IonTitle>
           </IonToolbar>
         </IonHeader>
 
-        <IonContent 
-        scrollEvents={true}
-        onIonScroll={handleScroll}
-        fullscreen={true} 
-        ref={contentRef}>
+        <IonContent
+          scrollEvents={true}
+          onIonScroll={handleScroll}
+          fullscreen={true}
+          ref={contentRef}>
           <AboutComponent />
-          <Team /> 
+          <Team />
         </IonContent>
 
         {backToTop && <IonFab slot="fixed" vertical="bottom" horizontal="end" className='back-to-top'>

@@ -18,7 +18,7 @@ const Register: React.FC = () => {
 
     const { updateTokens } = useContext(GlobalContext) as ContextInterface
 
-    const [email, setEamil] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
     const [name, setName] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -69,7 +69,7 @@ const Register: React.FC = () => {
             
             <IonInput type="email" onIonChange={e => {
                 if(e.detail.value === undefined) return;
-                setEamil(e.detail.value!);
+                setEmail(e.detail.value!);
             }} clearInput={true} value={email} id="username" placeholder="Enter your email" required={true} />
             
             <br />
