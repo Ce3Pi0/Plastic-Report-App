@@ -24,7 +24,7 @@ const Forgot: React.FC = () => {
         <div id="container">
             <form id="form">
                 <IonFab horizontal="start" vertical="top">
-                    <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>
+                    <IonFabButton size={"small"} onClick={() => history.goBack()}>
                         <IonIcon icon={arrowBack} />
                     </IonFabButton>
                 </IonFab>

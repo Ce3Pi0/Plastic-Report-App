@@ -37,7 +37,7 @@ class UserAuthRoute(BaseRoute):
         if request.json["gender"] not in self.__genders:
             return customAbort("Gender not allowed", 406)
 
-        new_user = User(name=request.json["name"], username=request.json["username"], 
+        new_user = User(name=request.json["name"], username=request.json["username"], url = None,
         confirmed = False, email=request.json["email"], salt = salt, password=hashed_pw, gender=request.json["gender"], type="client")
 
         db.session.add(new_user)

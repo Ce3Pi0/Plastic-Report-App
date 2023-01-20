@@ -62,6 +62,7 @@ const Tabs = () => {
   return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : loggedIn ? (
     <IonTabs>
       <IonRouterOutlet>
+        
         <Route exact path="/home">
           <Home />
         </Route>
@@ -99,6 +100,7 @@ const Tabs = () => {
         <Route>
           <NotFound />
         </Route>
+
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom">
@@ -159,7 +161,7 @@ const App: React.FC = () => (
   <GlobalProvider>
     <IonApp>
       <IonReactRouter>
-      <Tabs />
+        <Tabs />
       </IonReactRouter>
     </IonApp>
   </GlobalProvider>

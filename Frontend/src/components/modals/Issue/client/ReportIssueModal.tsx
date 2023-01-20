@@ -13,9 +13,7 @@ import {
   IonTextarea,
 } from '@ionic/react';
 
-import { GlobalContext } from '../../../../context/Context';
-
-import { ContextInterface, IssueElementTemplate } from "../../../../interfaces/interfaces";
+import { IssueElementTemplate } from "../../../../interfaces/interfaces";
 
 
 const ReportIssueModal = ({ onDismiss, }: { onDismiss: (data?: IssueElementTemplate | null, role?: string) => void; }) => {
@@ -23,9 +21,6 @@ const ReportIssueModal = ({ onDismiss, }: { onDismiss: (data?: IssueElementTempl
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | null>('');
-
-  const { updateTokens } = useContext(GlobalContext) as ContextInterface;
-
 
   return (
     <IonPage>

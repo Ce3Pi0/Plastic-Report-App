@@ -9,8 +9,8 @@ import { DOMAIN, validateEmail } from '../../utils/utils';
 
 const ConfiemEmail: React.FC = () => {
 
-    //email: idkwhattodo324@outlook.com
-    //pass: testpass123
+    //email: hristijannikolovski56@outlook.com
+    //pass: TestPass123
 
 
     const queryParams = new URLSearchParams(window.location.search)

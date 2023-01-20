@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
+import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar, useIonAlert, useIonModal } from "@ionic/react";
 import { alertOutline, appsOutline, arrowDownOutline, codeWorkingOutline, checkmark } from "ionicons/icons";
 
 /* Components */
@@ -11,20 +11,29 @@ import { GlobalContext } from "../../context/Context";
 import { ReportInterface, ContextInterface } from "../../interfaces/interfaces";
 
 import useFetch from '../../utils/hooks/useFetch';
-import { DOMAIN } from '../../utils/utils';
+import { DOMAIN, STATIC_URL } from '../../utils/utils';
+import UpdateUserImageModal from "../modals/Image/imageUpdateModal";
+import openImageUpdateModal from "../modals/Image/openImageUpdateModal";
 
 
 const Info: React.FC = () => {
 
     const { setLoggedIn, updateTokens } = useContext(GlobalContext) as ContextInterface;
+
     const [status, setStatus] = useState("");
+
 
     const { data, err, loading } = useFetch(`http://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, updateTokens);
     const { data: reports, err: reports_error, loading: reports_loading } = useFetch(`http://${DOMAIN}/report?user_id=${window.localStorage.getItem("id")}`, updateTokens);
 
+    const [presentAlert] = useIonAlert();
+    const [present, dismiss] = useIonModal(UpdateUserImageModal, {
+        onDismiss: (data: string, role: string) => dismiss(data, role)
+    });
 
-    const updateUserImage = () => {
-        return;
+    const logOut = () => {
+        window.localStorage.clear();
+        setLoggedIn(false, null)
     }
 
     return (
@@ -73,9 +82,9 @@ const Info: React.FC = () => {
                     <IonCard className="account-info">
 
                         <IonCardHeader>
-                            <IonAvatar onClick={() => updateUserImage()}>
-                                <div id="avatar">
-                                    <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                            <IonAvatar >
+                                <div id="avatar" onClick={() => openImageUpdateModal(present, updateTokens, presentAlert)}>
+                                    {data && <img alt="Silhouette of a person's head" src={JSON.parse(JSON.stringify(data)).user.img_url === null ? "https://ionicframework.com/docs/img/demos/avatar.svg" : `http://${STATIC_URL}${JSON.parse(JSON.stringify(data)).user.img_url}`} />}
 
                                     <div className="middle">
                                         <p>Change image</p>
@@ -90,7 +99,7 @@ const Info: React.FC = () => {
                             Welcome to your account {JSON.parse(JSON.stringify(data)).user.gender === "male" && "mr."} {JSON.parse(JSON.stringify(data)).user.gender === "female" && "mrs."} {JSON.parse(JSON.stringify(data)).user.name}
                         </IonCardContent>
 
-                        <IonButton color={"tertiary"} fill="clear" onClick={() => setLoggedIn(false, null)}>Log out</IonButton>
+                        <IonButton color={"tertiary"} fill="clear" onClick={() => logOut()}>Log out</IonButton>
                         <IonButton color={"tertiary"} fill="clear" onClick={() => window.location.assign('/account/change')}>Change Password</IonButton>
                     </IonCard>
 

@@ -6,6 +6,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key = True, nullable = False)
     type = db.Column(db.String(128), nullable = False)
     name = db.Column(db.String(256), nullable = False)
+    url = db.Column(db.String(128))
     username = db.Column(db.String(256), unique = True, nullable = False)
     email = db.Column(db.String(2048), unique = True, nullable = False)
     confirmed = db.Column(db.Boolean, nullable = False)

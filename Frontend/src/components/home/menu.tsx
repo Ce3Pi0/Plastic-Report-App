@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonIcon, IonMenuToggle, useIonModal, useIonAlert, IonButton } from "@ionic/react";
 import { arrowBackCircleOutline, bug, home, informationCircle, mail } from "ionicons/icons";
@@ -15,7 +15,6 @@ import { ContextInterface } from "../../interfaces/interfaces";
 
 
 const Menu: React.FC = () => {
-
     const [presentAlert] = useIonAlert();
 
     const { user, updateTokens } = useContext(GlobalContext) as ContextInterface;
@@ -23,6 +22,7 @@ const Menu: React.FC = () => {
     const [present, dismiss] = useIonModal(user?.type === "client" ? ReportIssueModal : ViewIssueModal, {
         onDismiss: (data: string, role: string) => dismiss(data, role)
     });
+
 
     return (
         <IonMenu contentId="main-content">

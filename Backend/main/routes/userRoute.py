@@ -1,7 +1,7 @@
-from config.config import db, PASS_LEN
+from config.config import db, PASS_LEN, app, get_jwt_identity
 from routes.baseRoute import BaseRoute
 from classes.classes import User
-from utils.utils import customAbort, genSalt, hashPassword, checkMail
+from utils.utils import customAbort, genSalt, hashPassword, checkMail, get_random_alphanumerical
 import hmac
 
 
@@ -53,7 +53,7 @@ class UserRoute(BaseRoute):
         salt = genSalt()
         hashed_pw = hashPassword(request.json["password"], salt)
 
-        new_user = User(name = request.json["name"], username = request.json["username"],
+        new_user = User(name = request.json["name"], username = request.json["username"], url = None,
         confirmed = False, email = request.json["email"], password = hashed_pw, salt = salt, type = request.json["type"], gender = request.json["gender"])
 
         db.session.add(new_user)
@@ -74,6 +74,7 @@ class UserRoute(BaseRoute):
                     "id":user.id, 
                     "name":user.name,
                     "username":user.username,
+                    "img_url": user.url,
                     "confirmed":user.confirmed,
                     "email":user.email,
                     "type":user.type,
@@ -92,6 +93,7 @@ class UserRoute(BaseRoute):
             "id":user.id,
             "name":user.name,
             "username":user.username,
+            "img_url": user.url,
             "confirmed":user.confirmed,
             "email":user.email,
             "type":user.type,
@@ -102,15 +104,36 @@ class UserRoute(BaseRoute):
     def update(self, request):
         if "id" not in request.args:
             return customAbort("Key not in request", 400)
+
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+
+        if user is None:
+            return customAbort("User not found", 404)
+
+
+        if str(user_id) != request.args["id"] and user.type != "admin":
+            return customAbort("You cannot update this user", 405)
+
+        if user_id != request.args["id"]:
+            user = User.query.filter_by(id=request.args["id"]).first()
+
+        if "image" in request.files:
+
+            img = request.files["image"]
+            img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
+            
+            img_name = get_random_alphanumerical() + "." + img_ext
+            img.save(app.config["UPLOAD_FOLDER"] + img_name)
+            
+            user.url = img_name
+            db.session.commit()
+
+            return {"msg":"success"}
         
         for key in self.update_req:
             if key not in request.json:
                 return customAbort("Key not in reuqest", 400)
-
-        user = User.query.filter_by(id=request.args['id'], username=request.json["username"]).first()
-
-        if user is None:
-            return customAbort("User not found", 404)
 
         salt = user.salt
         hashed_pass = hashPassword(request.json["password"], salt)

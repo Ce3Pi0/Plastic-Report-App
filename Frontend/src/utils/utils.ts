@@ -177,6 +177,50 @@ const FetchIssueChange = (url: string, method: methodType, myHeaders: Headers, b
         .catch(err => Error(err))
 }
 
+const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any) => {
+    fetch(url, {
+        method: method,
+        headers: myHeaders,
+        body: body
+    })
+        .then(res => {
+            if (res.status === 429) {
+                presentAlert({
+                    subHeader: 'Fail',
+                    message: 'To many requests sent... Slow down!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                    },],
+                });
+
+                throw Error("Too many requests sent!")
+            }
+            if (!res.ok){
+                throw Error("Something went wrong!")
+            }
+            return res.json();
+        })
+        .then(json => {
+            if (json.msg !== "success") throw Error("Something went wrong!")
+
+            if (presentAlert !== undefined) {
+                presentAlert({
+                    subHeader: 'Success!',
+                    message: 'User image updated successfully!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                        handler: () => {
+                            window.location.reload();
+                        },
+                    },],
+                });
+            } else window.location.reload();
+        })
+        .catch(err => Error(err))
+}
+
 export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, body: undefined | BodyInit, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
     setMessage: any, setMistake: any, fetchData: string, updateTokens: any, presentAlert: any, contentType: string | undefined) => {
 
@@ -202,20 +246,25 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
 
             let myHeaders = new Headers();
             myHeaders.append("Authorization", `Bearer ${json.access_token}`);
+
             if (contentType !== "form") myHeaders.append("Content-Type", "application/json");
 
-            if (fetchData === "data")
-                FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
-            else if (fetchData === "report")
-                FetchReportChange(url, method!, myHeaders, null, undefined)
-            else if (fetchData === "user")
-                FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake, presentAlert);
-            else if (fetchData === "create_report")
-                FetchReportChange(url, method!, myHeaders, body, presentAlert);
-            else if (fetchData === "create_issue")
-                FetchIssueChange(url, method!, myHeaders, body, presentAlert);
-            else if (fetchData === "update_issue")
-                FetchIssueChange(url, method!, myHeaders, null, undefined);
+            switch (fetchData) {
+                case "data": FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
+                    break;
+                case "report": FetchReportChange(url, method!, myHeaders, null, undefined)
+                    break;
+                case "user": FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake, presentAlert);
+                    break;
+                case "create_report": FetchReportChange(url, method!, myHeaders, body, presentAlert);
+                    break;
+                case "create_issue": FetchIssueChange(url, method!, myHeaders, body, presentAlert);
+                    break;
+                case "update_issue": FetchIssueChange(url, method!, myHeaders, null, undefined);
+                    break;
+                case "update_image": FetchUpdateUserImage(url, method!, myHeaders, body, presentAlert);
+                    break;
+            }
 
         })
         .catch(e => {
@@ -291,7 +340,7 @@ export function InstanceOfUserRegister(data: any): data is UserRegister {
     return 'name' in data;
 }
 
-export function validateEmail(email: string): boolean{
+export function validateEmail(email: string): boolean {
     const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return res.test(String(email).toLowerCase());
 }

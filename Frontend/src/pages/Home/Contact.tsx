@@ -21,7 +21,7 @@ import Footer from '../../components/home/contact/footer';
 const Contact: React.FC = () => {
   return (
     <>
-      {window.location.pathname.includes("home") && <Menu />}
+      {/* {window.location.pathname.includes("home") && <Menu />} */}
 
       <IonPage id="main-content">
         <IonHeader>

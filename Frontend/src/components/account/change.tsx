@@ -80,6 +80,7 @@ const Change: React.FC = () => {
                     setConfirmNewPassword(e.detail.value!)
                 }} clearInput={true} value={confirmNewPassword} id="password" placeholder="Confirm new password" required={true} />
                 <p id="warning">{!message && !mistake && <br></br>} {message} {mistake && "Incorrect password or username"}</p>
+                <a id="forgot" href="/account/forgot"><p>forgot password</p></a>
                 <IonButton type="submit" expand="block" id="button">Change</IonButton>
             </form>
         </div>
@@ -87,4 +88,3 @@ const Change: React.FC = () => {
 }
 
 export default Change;
-// add option to change password without beeing logged in
