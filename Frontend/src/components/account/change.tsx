@@ -30,16 +30,16 @@ const Change: React.FC = () => {
         e.preventDefault();
         setMessage("")
 
-        if (newPassword !== confirmNewPassword){
+        if (newPassword !== confirmNewPassword) {
             setMistake(false);
             setMessage("You didn't confirm the new password correctly")
             return;
         }
-        if (newPassword.length < UNSAFE_PASSWORD){
+        if (newPassword.length < UNSAFE_PASSWORD) {
             setMessage("Password too weak!")
             return;
         }
-        if (newPassword === password){
+        if (newPassword === password) {
             setMistake(false);
             setMessage("You can't change to the same password!")
 
@@ -51,12 +51,12 @@ const Change: React.FC = () => {
             password,
             new_password: newPassword
         };
-        
+
         handleRequest(`http://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert);
     }
 
     return (
-        <div id="container"> 
+        <div id="container">
             <form id="form" onSubmit={handleSubmit}>
                 <IonFab horizontal="start" vertical="top">
                     <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>
@@ -85,6 +85,6 @@ const Change: React.FC = () => {
         </div>
     );
 }
- 
+
 export default Change;
 // add option to change password without beeing logged in

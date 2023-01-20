@@ -32,12 +32,12 @@ const Register: React.FC = () => {
         e.preventDefault();
         setMessage('');
 
-        if (gender === ''){
+        if (gender === '') {
             setMessage('Please select a gender!')
 
             return;
         }
-        if (password.length < UNSAFE_PASSWORD){
+        if (password.length < UNSAFE_PASSWORD) {
             setMessage("Password too weak!")
 
             return;
@@ -56,71 +56,71 @@ const Register: React.FC = () => {
 
     return (
         <div id="container">
-        <form id="form" onSubmit={handleSubmit}>
-            <IonFab horizontal="start" vertical="top">
-                <IonFabButton size={"small"} onClick={() =>history.push('/account/login')}>
-                    <IonIcon icon={arrowBack}></IonIcon>
-                </IonFabButton>
-            </IonFab>
+            <form id="form" onSubmit={handleSubmit}>
+                <IonFab horizontal="start" vertical="top">
+                    <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>
+                        <IonIcon icon={arrowBack}></IonIcon>
+                    </IonFabButton>
+                </IonFab>
 
-            <IonTitle id="title">Create account</IonTitle>
-            
-            <br />
-            
-            <IonInput type="email" onIonChange={e => {
-                if(e.detail.value === undefined) return;
-                setEmail(e.detail.value!);
-            }} clearInput={true} value={email} id="username" placeholder="Enter your email" required={true} />
-            
-            <br />
-            
-            <IonInput onIonChange={e => {
-                if(e.detail.value === undefined) return;
-                setName(e.detail.value!);
-            }} clearInput={true} value={name} id="username" placeholder="Enter your name" required={true} />
-            
-            <br />
-            
-            <IonInput onIonChange={e => {
-                if(e.detail.value === undefined) return;
-                setUsername(e.detail.value!);
-            }} clearInput={true} value={username} id="username" placeholder="Enter username" required={true} />
-            
-            <br />
-            
-            <IonInput type="password" onIonChange={e => {
-                if (e.detail.value === undefined) return;
-                setPassword(e.detail.value!)
-            }} clearInput={true} value={password} id="password" placeholder="Enter password" required={true} />
+                <IonTitle id="title">Create account</IonTitle>
 
-            <IonRadioGroup value={gender} onIonChange={(e) => setGender(e.detail.value)}>
-                <IonItem className="gender" color={"light"}>
-                    <IonLabel>Male</IonLabel>
-                    <IonRadio slot="end" value="male"></IonRadio>
-                </IonItem>
+                <br />
+
+                <IonInput type="email" onIonChange={e => {
+                    if (e.detail.value === undefined) return;
+                    setEmail(e.detail.value!);
+                }} clearInput={true} value={email} id="username" placeholder="Enter your email" required={true} />
+
+                <br />
+
+                <IonInput onIonChange={e => {
+                    if (e.detail.value === undefined) return;
+                    setName(e.detail.value!);
+                }} clearInput={true} value={name} id="username" placeholder="Enter your name" required={true} />
+
+                <br />
+
+                <IonInput onIonChange={e => {
+                    if (e.detail.value === undefined) return;
+                    setUsername(e.detail.value!);
+                }} clearInput={true} value={username} id="username" placeholder="Enter username" required={true} />
+
+                <br />
+
+                <IonInput type="password" onIonChange={e => {
+                    if (e.detail.value === undefined) return;
+                    setPassword(e.detail.value!)
+                }} clearInput={true} value={password} id="password" placeholder="Enter password" required={true} />
+
+                <IonRadioGroup value={gender} onIonChange={(e) => setGender(e.detail.value)}>
+                    <IonItem className="gender" color={"light"}>
+                        <IonLabel>Male</IonLabel>
+                        <IonRadio slot="end" value="male"></IonRadio>
+                    </IonItem>
 
 
-                <IonItem className="gender" color={"light"}>
-                    <IonLabel>Female</IonLabel>
-                    <IonRadio slot="end" value="female"></IonRadio>
-                </IonItem>
+                    <IonItem className="gender" color={"light"}>
+                        <IonLabel>Female</IonLabel>
+                        <IonRadio slot="end" value="female"></IonRadio>
+                    </IonItem>
 
-                <IonItem className="gender" color={"light"}>
-                    <IonLabel>Other</IonLabel>
-                    <IonRadio slot="end" value="other"></IonRadio>
-                </IonItem>
-            </IonRadioGroup>
+                    <IonItem className="gender" color={"light"}>
+                        <IonLabel>Other</IonLabel>
+                        <IonRadio slot="end" value="other"></IonRadio>
+                    </IonItem>
+                </IonRadioGroup>
 
-            {userExists && !message && <p id="warning">User already exists!</p>}
-            {!userExists && message && <p id="warning">{message}</p>}
-            {!userExists && !message && <br />}
-            
-            <IonButton type="submit" expand="block" id="button">Create</IonButton>
-        </form>
-    </div>  
+                {userExists && !message && <p id="warning">User already exists!</p>}
+                {!userExists && message && <p id="warning">{message}</p>}
+                {!userExists && !message && <br />}
+
+                <IonButton type="submit" expand="block" id="button">Create</IonButton>
+            </form>
+        </div>
     );
 }
- 
+
 export default Register;
 
 

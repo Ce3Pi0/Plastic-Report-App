@@ -1,9 +1,8 @@
-from config.config import db, PASS_LEN
+from config.config import db, PASS_LEN, get_jwt_identity, create_access_token, create_refresh_token, Mail, Message, mail, s, MY_MAIL, FRONTEND_DOMAIN, SignatureExpired, BadTimeSignature, BadSignature
 from routes.baseRoute import BaseRoute
 from classes.classes import User
-from utils.utils import customAbort, genSalt, hashPassword
+from utils.utils import customAbort, genSalt, hashPassword, checkMail
 
-from flask_jwt_extended import create_access_token, create_refresh_token
 import datetime
 import hmac
 
@@ -19,6 +18,9 @@ class UserAuthRoute(BaseRoute):
         for key in self.register_req:
             if key not in request.json:
                 return customAbort("Key not in request", 400)
+
+        if not checkMail(request.json["email"]):
+            return customAbort("Email not valid", 400)
 
         check_username = User.query.filter_by(username = request.json["username"]).first()
         check_email = User.query.filter_by(email=request.json["email"]).first()
@@ -36,7 +38,7 @@ class UserAuthRoute(BaseRoute):
             return customAbort("Gender not allowed", 406)
 
         new_user = User(name=request.json["name"], username=request.json["username"], 
-        email=request.json["email"], salt = salt, password=hashed_pw, gender=request.json["gender"], type="client")
+        confirmed = False, email=request.json["email"], salt = salt, password=hashed_pw, gender=request.json["gender"], type="client")
 
         db.session.add(new_user)
         db.session.commit()
@@ -58,9 +60,69 @@ class UserAuthRoute(BaseRoute):
         if not hmac.compare_digest(hashed_pw, user.password):
             return customAbort("Password doesn't match", 405)
 
+        if user.confirmed == False:
+            return customAbort("User email not confirmed", 406)
+
         new_token = create_access_token(identity = user.id, fresh = True, expires_delta = datetime.timedelta(days=7))
         refresh_token = create_refresh_token(identity = user.id, expires_delta = datetime.timedelta(days=30))
 
         return {'id':user.id, 'username':user.username, 'gender':user.gender, 'type':user.type, 'access_token': new_token, 'refresh_token': refresh_token}
+    
+    def send_confirm_mail(self, request):
+        if "email" not in request.args:
+            return customAbort("Key not in request", 400)
+
+        user = User.query.filter_by(email=request.args["email"]).first()
+
+        if user is None: 
+            return customAbort("User not found", 404)
+
+        if user.confirmed == True:
+            return customAbort("User email already confirmed", 405)
+
+        token = s.dumps(request.args["email"], salt='email-confirm')
+
+        msg = Message("Confirm Email", sender=MY_MAIL, recipients=[request.args["email"]])
+
+        link = f"http://{FRONTEND_DOMAIN}/account/confirm_email?token={token}"
+
+        msg.body = f"Your link is {link}"
+
+        mail.send(msg)
+
+        return {"msg":"success"}
+
+    def confirm_mail(self, request):
+        if "token" not in request.args:
+            return customAbort("Key not in request", 400)
+        
+        try:
+            email = s.loads(request.args["token"], salt="email-confirm", max_age=3600)
+        except SignatureExpired:
+            return customAbort("Token has expired", 405)
+        except BadTimeSignature:
+            return customAbort("The token you submited was incorrect", 406)
+        except BadSignature:
+            return customAbort("The token you submited was incorrect", 406)
+        
+        
+        user = User.query.filter_by(email=email).first()
+
+        if user is None:
+            return customAbort("User not found", 404)
+
+        user.confirmed = True
+
+        db.session.commit()
+
+        return {"msg":"success"}
+
+    def refresh(self):
+        current_user = get_jwt_identity()
+        # check if user changed
+        new_token = create_access_token(identity = current_user, fresh = True, expires_delta = datetime.timedelta(days=7))
+        refresh_token = create_refresh_token(current_user, expires_delta = datetime.timedelta(days=30))
+
+        return {'access_token': new_token, 'refresh_token': refresh_token}
 
 UserAuthRouteInstance = UserAuthRoute()

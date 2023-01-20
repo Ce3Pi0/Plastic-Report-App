@@ -1,7 +1,7 @@
 from config.config import db, PASS_LEN
 from routes.baseRoute import BaseRoute
 from classes.classes import User
-from utils.utils import customAbort, genSalt, hashPassword
+from utils.utils import customAbort, genSalt, hashPassword, checkMail
 import hmac
 
 
@@ -38,6 +38,9 @@ class UserRoute(BaseRoute):
         if self.__privilage[user.type] < self.__privilage[request.json["type"]]:
             return customAbort("Cannot create a user with bigger privilage than your own", 405) 
 
+        if not checkMail(request.json["email"]):
+            return customAbort("Email not valid", 400)
+
         check_username = User.query.filter_by(username = request.json["username"]).first()
         check_email = User.query.filter_by(email = request.json["email"]).first()
 
@@ -51,7 +54,7 @@ class UserRoute(BaseRoute):
         hashed_pw = hashPassword(request.json["password"], salt)
 
         new_user = User(name = request.json["name"], username = request.json["username"],
-        email = request.json["email"], password = hashed_pw, salt = salt, type = request.json["type"], gender = request.json["gender"])
+        confirmed = False, email = request.json["email"], password = hashed_pw, salt = salt, type = request.json["type"], gender = request.json["gender"])
 
         db.session.add(new_user)
         db.session.commit()
@@ -71,6 +74,7 @@ class UserRoute(BaseRoute):
                     "id":user.id, 
                     "name":user.name,
                     "username":user.username,
+                    "confirmed":user.confirmed,
                     "email":user.email,
                     "type":user.type,
                     "gender":user.gender
@@ -88,6 +92,7 @@ class UserRoute(BaseRoute):
             "id":user.id,
             "name":user.name,
             "username":user.username,
+            "confirmed":user.confirmed,
             "email":user.email,
             "type":user.type,
             "gender": user.gender

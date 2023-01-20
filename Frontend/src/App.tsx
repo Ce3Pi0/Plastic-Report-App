@@ -34,7 +34,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-/* Pages */ 
+/* Pages */
 import Home from './pages/Home/Home';
 import About from './pages/Home/About';
 import Contact from './pages/Home/Contact';
@@ -49,16 +49,17 @@ import NotFound from './pages/NotFound/NotFound';
 import { GlobalContext, GlobalProvider } from './context/Context';
 import { ContextInterface } from './interfaces/interfaces';
 import AccountForgot from './pages/Account/AccountForgot';
+import ConfiemEmail from './pages/Account/confirmEmail';
 
 
 setupIonicReact();
 
 
 const Tabs = () => {
-  const {loggedIn, user, isLoaded} = useContext(GlobalContext) as ContextInterface;
+  const { loggedIn, user, isLoaded } = useContext(GlobalContext) as ContextInterface;
   const location = useLocation();
 
-  return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : loggedIn?(
+  return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : loggedIn ? (
     <IonTabs>
       <IonRouterOutlet>
         <Route exact path="/home">
@@ -78,19 +79,23 @@ const Tabs = () => {
           <Shop />
         </Route> */}
         <Route exact path="/account">
-          <Account/>
-        </Route>
-        <Route exact path="/account/create">
-          <AccountCreate/>
+          <Account />
         </Route>
         <Route exact path="/account/change">
           <AccountChange />
         </Route>
+        <Route exact path="/account/forgot">
+          <AccountForgot />
+        </Route>
+        <Route exact path="/account/confirm_email">
+          <Account />
+        </Route>
 
+        <Redirect exact from="/account/confirm_email" to="/account" />
+        <Redirect exact from="/account/create" to="/account" />
         <Redirect exact from="/account/login" to="/account" />
-        {/* <Redirect exact from="/account/forgot" to="/account" /> */}
         <Redirect exact from="/" to={"/home"} />
-        
+
         <Route>
           <NotFound />
         </Route>
@@ -103,8 +108,8 @@ const Tabs = () => {
         </IonTabButton>
 
         <IonTabButton tab="report" href="/report">
-          <IonIcon icon={user?.type === "client" || user?.type === undefined? locate:listOutline} />
-          <IonLabel>{user?.type === "client" || user?.type === undefined? "Report":"Reports"}</IonLabel>
+          <IonIcon icon={user?.type === "client" || user?.type === undefined ? locate : listOutline} />
+          <IonLabel>{user?.type === "client" || user?.type === undefined ? "Report" : "Reports"}</IonLabel>
         </IonTabButton>
 
         {/* <IonTabButton tab="shop" href="/shop">
@@ -118,16 +123,19 @@ const Tabs = () => {
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
-  ):(
+  ) : (
     <IonRouterOutlet>
       <Route exact path="/account/login">
-        <AccountLogin/>
+        <AccountLogin />
       </Route>
-      {/* <Route exact path="/account/forgot">
-        <AccountForgot/>
-      </Route> */}
+      <Route exact path="/account/forgot">
+        <AccountForgot />
+      </Route>
       <Route exact path="/account/create">
-        <AccountCreate/>
+        <AccountCreate />
+      </Route>
+      <Route exact path="/account/confirm_email">
+        <ConfiemEmail />
       </Route>
 
       <Redirect exact from="/" to="/account/login" />
@@ -138,7 +146,7 @@ const Tabs = () => {
       <Redirect exact from="/account" to="/account/login" />
       <Redirect exact from="/account/change" to="/account/login" />
       <Redirect exact from="/shop" to="/account/login" />
-            
+
       <Route>
         <NotFound />
       </Route>
@@ -147,10 +155,11 @@ const Tabs = () => {
 }
 
 const App: React.FC = () => (
+
   <GlobalProvider>
     <IonApp>
       <IonReactRouter>
-        <Tabs />
+      <Tabs />
       </IonReactRouter>
     </IonApp>
   </GlobalProvider>

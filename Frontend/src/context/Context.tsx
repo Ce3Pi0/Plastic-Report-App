@@ -5,22 +5,22 @@ import { UserInterface, ContextInterface } from "../interfaces/interfaces";
 
 const initial_state: ContextInterface = {
     loggedIn: false,
-    setLoggedIn: () => {return},
-    updateTokens: () => {return},
+    setLoggedIn: () => { return },
+    updateTokens: () => { return },
     user: null,
     isLoaded: false
 };
 
 export const GlobalContext = React.createContext<ContextInterface | null>(initial_state);
 
-export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children} ) => {
+export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     const [state, setState] = useState<ContextInterface>(initial_state);
 
-    const setLoggedIn =(userLoggedIn: boolean, user: UserInterface | null): void => {
+    const setLoggedIn = (userLoggedIn: boolean, user: UserInterface | null): void => {
         setState({
             ...state,
-            loggedIn : userLoggedIn,
+            loggedIn: userLoggedIn,
             user
         });
         localStorage.setItem("logged_in", userLoggedIn ? "true" : "false")
@@ -44,8 +44,8 @@ export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children
         if (localStorage.getItem("logged_in") === "true") {
             setState({
                 ...state,
-                loggedIn : true,
-                user : {
+                loggedIn: true,
+                user: {
                     id: parseInt(localStorage.getItem("id")!),
                     username: localStorage.getItem("username")!,
                     gender: localStorage.getItem("gender")!,
@@ -54,7 +54,7 @@ export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children
                     type: localStorage.getItem("type")!
                 },
                 isLoaded: true
-            }); 
+            });
         }
         else {
             setState({
@@ -65,12 +65,12 @@ export const GlobalProvider: React.FC<{children: React.ReactNode}> = ( {children
         }
     }, [])
 
-    return(
+    return (
         <GlobalContext.Provider value={{
-            loggedIn : state.loggedIn,
+            loggedIn: state.loggedIn,
             setLoggedIn,
             updateTokens,
-            user : state.user,
+            user: state.user,
             isLoaded: state.isLoaded
         }}>
             {children}

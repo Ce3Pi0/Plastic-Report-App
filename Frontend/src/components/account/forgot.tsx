@@ -12,7 +12,7 @@ import { arrowBack } from "ionicons/icons";
 import { useHistory } from "react-router";
 
 
-const Forgot:React.FC = () => {
+const Forgot: React.FC = () => {
 
     const [email, setEmail] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
@@ -20,30 +20,30 @@ const Forgot:React.FC = () => {
     const history = useHistory();
 
 
-    return ( 
-        <div id="container"> 
+    return (
+        <div id="container">
             <form id="form">
                 <IonFab horizontal="start" vertical="top">
-                    <IonFabButton size={"small"} onClick={() =>history.push('/account/login')}>
+                    <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>
                         <IonIcon icon={arrowBack} />
                     </IonFabButton>
                 </IonFab>
                 <IonTitle id="title">Forgot password</IonTitle>
-                
+
                 <br />
 
                 <IonInput type="email" onIonChange={e => {
-                if(e.detail.value === undefined) return;
+                    if (e.detail.value === undefined) return;
                     setEmail(e.detail.value!);
                 }} clearInput={true} value={email} id="username" placeholder="Enter your email" required={true} />
 
                 <p id="warning">{!message && <br></br>} {message}</p>
-                
+
                 <IonButton type="submit" expand="block" id="button">Reset</IonButton>
-                
+
             </form>
-        </div> 
+        </div>
     );
 }
- 
+
 export default Forgot;

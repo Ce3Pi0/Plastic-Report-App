@@ -17,7 +17,7 @@ const AccountLogin: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Login/>
+        <Login />
       </IonContent>
     </IonPage>
   );

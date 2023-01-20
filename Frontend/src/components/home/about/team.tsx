@@ -15,27 +15,27 @@ import AnaImg from '../../../images/Ana.png'
 import HristijanImg from '../../../images/Hristijan.png'
 
 
-const Team:React.FC = () => {
+const Team: React.FC = () => {
 
     const HristijanText: string = "Coordinator of all activities and responsible for concluding partnerships of various types and customer relationships.";
     const BobanText: string = "Responsible for research and development of the mobile application";
     const EvaText: string = "Responsible for research and development of the 3D printer.";
     const AnaText: string = "Responsible for research and development of the recycling machine";
 
-    return ( 
-        <div className="team-component">
+    return (
+        <div className="team-component" id="test">
             <h1 className="h1-text">
-                <IonIcon size="large" icon={peopleOutline}/>Team Members
+                <IonIcon size="large" icon={peopleOutline} />Team Members
             </h1>
 
             <div className="about-container container">
-                <Member MemberIcon={RiTeamFill} msg={HristijanText} img={HristijanImg} name="Hristijan Nikolovski" email="hristijannikolovski16@gmail.com"/>
-                <Member MemberIcon={FaMobileAlt} msg={BobanText} img={BobanImg} name="Boban Boshevski" email="ibprod8333@gmail.com "/>
-                <Member MemberIcon={GiSewingMachine} msg={EvaText} img={EvaImg} name="Eva Acevska" email="kk.evaacevska@gmail.com"/>
-                <Member MemberIcon={FaRecycle} msg={AnaText} img={AnaImg} name="Ana Acevska"email="ana1308006@gmail.com "/>
+                <Member MemberIcon={RiTeamFill} msg={HristijanText} img={HristijanImg} name="Hristijan Nikolovski" email="hristijannikolovski16@gmail.com" />
+                <Member MemberIcon={FaMobileAlt} msg={BobanText} img={BobanImg} name="Boban Boshevski" email="ibprod8333@gmail.com " />
+                <Member MemberIcon={GiSewingMachine} msg={EvaText} img={EvaImg} name="Eva Acevska" email="kk.evaacevska@gmail.com" />
+                <Member MemberIcon={FaRecycle} msg={AnaText} img={AnaImg} name="Ana Acevska" email="ana1308006@gmail.com " />
             </div>
         </div>
     );
 }
- 
+
 export default Team;

@@ -14,7 +14,7 @@ import './Report.css';
 
 const Report: React.FC = () => {
 
-  const {user} = useContext(GlobalContext) as ContextInterface;
+  const { user } = useContext(GlobalContext) as ContextInterface;
 
   return (
     <IonPage>
@@ -25,8 +25,8 @@ const Report: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      {user?.type === "client" && < SendReport/>}
-      {user?.type === "admin" && < ShowReports/>} 
+      {user?.type === "client" && < SendReport />}
+      {user?.type === "admin" && < ShowReports />}
     </IonPage>
   );
 };

@@ -1,19 +1,19 @@
-.title{
+.title {
     text-align: center;
 }
 
-.container{
+.container {
     position: relative;
 }
 
-.send-report-container{
+.send-report-container {
     position: relative;
-    
+
 }
 
 @media screen and (max-width: 500px) {
-    .map{
-        height: 40%;
+    .map {
+        height: 35%;
         width: 70%;
         margin-left: 15%;
         margin-top: 2%;
@@ -21,7 +21,7 @@
         border-radius: 5px;
     }
 
-    .report-form{
+    .report-form {
         width: 70%;
         display: flex;
         flex-direction: column;
@@ -34,13 +34,14 @@
         left: 50%;
         transform: translate(-50%, 10%);
     }
-    .report-form-container{
-        height: 70%;
-    }    
+
+    .report-form-container {
+        padding-bottom: 90%;
+    }
 }
 
 @media screen and (min-width: 500px) {
-    .map{
+    .map {
         height: 50%;
         width: 40%;
         margin-left: 30%;
@@ -49,7 +50,7 @@
         border-radius: 5px;
     }
 
-    .report-form{
+    .report-form {
         min-width: 30%;
         display: flex;
         flex-direction: column;
@@ -62,18 +63,19 @@
         left: 50%;
         transform: translate(-50%, 5%);
     }
-    .report-form-container{
-        height: 70%;
+
+    .report-form-container {
+        padding-bottom: 450px;
     }
 }
 
-.report-form > *{
+.report-form>* {
     margin: 10px;
     align-self: center;
     text-align: center;
 }
 
-.label{
+.label {
     display: inline-block;
     padding: 7px 15px;
     cursor: pointer;
@@ -82,32 +84,33 @@
     color: var(--ion-text-color);
 }
 
-.label:active{
+.label:active {
     background-color: var(--ion-color-step-300);
-} 
+}
 
-.upload{
+.upload {
     display: none;
 }
 
-.submit-report{
+.submit-report {
     width: 30%;
 }
 
-ol{
-    margin: 0; padding: 0;
-    list-style-position:inside;
+ol {
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
 }
 
-ol li{
+ol li {
     list-style: none;
 }
 
-.trash-image{
+.trash-image {
     max-height: 350px;
 }
 
-.marker{
+.marker {
     position: absolute;
     margin-left: -15px;
     margin-top: -35px;

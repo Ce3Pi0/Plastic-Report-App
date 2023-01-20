@@ -1,6 +1,7 @@
 from flask import jsonify
 import random
 import bcrypt
+import re
 
 from routes.baseRoute import BaseRoute
 
@@ -45,3 +46,9 @@ def get_random_alphanumerical(_len = 16):
     for char in asciiCodes:
         alphanumerical += chr(char)
     return alphanumerical
+
+def checkMail(email) -> bool:
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    if re.fullmatch(regex, email):
+        return True
+    return False

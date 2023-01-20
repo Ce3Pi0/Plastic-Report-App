@@ -13,14 +13,15 @@ import {
   IonToolbar,
   ScrollDetail
 } from '@ionic/react';
-import { chevronUpOutline } from 'ionicons/icons';
+import { arrowBackCircle, chevronUpOutline } from 'ionicons/icons';
 
 /* Components */
+import AboutComponent from '../../components/home/about/about';
+import Team from '../../components/home/about/team';
 import Menu from '../../components/home/menu';
 
 import './Home.css';
-import AboutComponent from '../../components/home/about/about';
-import Team from '../../components/home/about/team';
+import './About.css';
 
 
 const About: React.FC = () => {
@@ -51,7 +52,7 @@ const About: React.FC = () => {
         <IonContent
           scrollEvents={true}
           onIonScroll={handleScroll}
-          fullscreen={true}
+          // fullscreen={true} why does this break the scroll to bottom???
           ref={contentRef}>
           <AboutComponent />
           <Team />

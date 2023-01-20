@@ -6,7 +6,7 @@ import Create from '../../components/account/create';
 import './Account.css';
 
 
-const AccountCreate: React.FC = ()=> {
+const AccountCreate: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -15,7 +15,7 @@ const AccountCreate: React.FC = ()=> {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Create/>
+        <Create />
       </IonContent>
     </IonPage>
   );

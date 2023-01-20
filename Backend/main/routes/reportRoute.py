@@ -35,7 +35,7 @@ class ReportRoute(BaseRoute):
         img_name = get_random_alphanumerical() + "." + img_ext
         img.save(app.config["UPLOAD_FOLDER"] + img_name)
         
-        report = Report(location = f'{self.lat}&{self.lon}', url=img_name, status="pending", user_id = user_id)
+        report = Report(lat=self.lat, lon=self.lon, url=img_name, status="pending", user_id = user_id)
 
         db.session.add(report)
         db.session.commit()
@@ -51,7 +51,8 @@ class ReportRoute(BaseRoute):
 
             data = {
                 "id":report.id,
-                "location":report.location,
+                "lat":report.lat,
+                "lon":report.lon,
                 "url":report.url,
                 "user_id":report.user_id,
                 "status":report.status
@@ -69,7 +70,8 @@ class ReportRoute(BaseRoute):
             for report in reports:
                 data = {
                     "id":report.id,
-                    "location":report.location,
+                    "lat":report.lat,
+                    "lon":report.lon,
                     "url":report.url,
                     "user_id":report.user_id,
                     "status":report.status
@@ -90,7 +92,8 @@ class ReportRoute(BaseRoute):
             for report in reports:
                 data = {
                     "id":report.id,
-                    "location":report.location,
+                    "lat":report.lat,
+                    "lon":report.lon,
                     "url":report.url,
                     "user_id":report.user_id,
                     "status":report.status

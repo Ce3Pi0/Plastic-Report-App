@@ -36,198 +36,197 @@ const FetchData = (url: string, myHeaders: Headers, AbtCnt: AbortController, set
         body: null,
         signal: AbtCnt.signal
     })
-    .then(data => {
-        setLoading(false);
-        if (!data.ok){
-            throw Error("Something went wrong!")
-        }
-        return data.json()
-    })
-    .then(json => {
-        setLoading(false);
-        setData(json);
-        setErr(null);
-    })
-    .catch(err => {
-        setLoading(false);
-        setErr(err.message);
-    })
+        .then(data => {
+            setLoading(false);
+            if (!data.ok) {
+                throw Error("Something went wrong!")
+            }
+            return data.json()
+        })
+        .then(json => {
+            setLoading(false);
+            setData(json);
+            setErr(null);
+        })
+        .catch(err => {
+            setLoading(false);
+            setErr(err.message);
+        })
 }
 
 const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, user: UserChange | UserRegister | UserLogin, setMessage: any, setMistake: any, presentAlert: any) => {
     fetch(url, {
-        method:method,
-        headers:myHeaders,
-        body:JSON.stringify(user),
+        method: method,
+        headers: myHeaders,
+        body: JSON.stringify(user),
     })
-    .then(res => {
-        if (res.status === 429){
-            presentAlert({
-                subHeader: 'Fail',
-                message: 'To many requests sent... Slow down!',
-                buttons: [{
-                  text: 'OK',
-                  role: 'confirm',
-                },],
-            });
-            
-            throw Error("Too many requests sent!")
-        }
-        if(!res.ok){
-            throw Error("Something went wrong!")
-        }
-        return res.json();
-    })
-    .then(json => {
-        if(json.msg === "success"){
-            setMistake(false);
-            setMessage('');
-        }
-    })
-    .catch((err) => {
-        setMistake(true)
-    })
+        .then(res => {
+            if (res.status === 429) {
+                presentAlert({
+                    subHeader: 'Fail',
+                    message: 'To many requests sent... Slow down!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                    },],
+                });
+
+                throw Error("Too many requests sent!")
+            }
+            if (!res.ok) {
+                throw Error("Something went wrong!")
+            }
+            return res.json();
+        })
+        .then(json => {
+            if (json.msg === "success") {
+                setMistake(false);
+                setMessage('');
+            }
+        })
+        .catch((err) => {
+            setMistake(true)
+        })
 }
 
 const FetchReportChange = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any) => {
     fetch(url, {
-        method:method,
-        headers:myHeaders,
+        method: method,
+        headers: myHeaders,
         body: body
     })
-    .then(res => {
-        if (res.status === 429){
-            presentAlert({
-                subHeader: 'Fail',
-                message: 'To many requests sent... Slow down!',
-                buttons: [{
-                  text: 'OK',
-                  role: 'confirm',
-                },],
-            });
-            
-            throw Error("Too many requests sent!")
-        }
-        if (!res.ok){
-            throw Error("Something went wrong!")
-        }
-        return res.json();
-    })
-    .then(json => {
-        if (json.msg !== "success")
-            throw Error("Something went wrong!");
-        if (presentAlert !== undefined){
-            presentAlert({
-                subHeader: 'Success!',
-                message: 'Report sent successfully!',
-                buttons: [{
-                text: 'OK',
-                role: 'confirm',
-                handler: () => {
-                    window.location.reload();
-                },
-                },],
-            });
-        } else window.location.reload();  
-    })
-    .catch(err => Error(err))
+        .then(res => {
+            if (res.status === 429) {
+                presentAlert({
+                    subHeader: 'Fail',
+                    message: 'To many requests sent... Slow down!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                    },],
+                });
+
+                throw Error("Too many requests sent!")
+            }
+            if (!res.ok) {
+                throw Error("Something went wrong!")
+            }
+            return res.json();
+        })
+        .then(json => {
+            if (json.msg !== "success")
+                throw Error("Something went wrong!");
+            if (presentAlert !== undefined) {
+                presentAlert({
+                    subHeader: 'Success!',
+                    message: 'Report sent successfully!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                        handler: () => {
+                            window.location.reload();
+                        },
+                    },],
+                });
+            } else window.location.reload();
+        })
+        .catch(err => Error(err))
 }
 
 const FetchIssueChange = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any) => {
     fetch(url, {
-        method:method,
-        headers:myHeaders,
+        method: method,
+        headers: myHeaders,
         body: body
     })
-    .then(res => {
-        if (res.status === 429){
-            presentAlert({
-                subHeader: 'Fail',
-                message: 'To many requests sent... Slow down!',
-                buttons: [{
-                  text: 'OK',
-                  role: 'confirm',
-                },],
-            });
-            
-            throw Error("Too many requests sent!")
-        }
-        if (!res.ok){
-            throw Error("Something went wrong!")
-        }
-        return res.json();
-    })
-    .then(json => {
-        if (json.msg !== "success")
-            throw Error("Something went wrong!");
-        if (presentAlert !== undefined && method !== "PUT"){
-            presentAlert({
-                subHeader: 'Success!',
-                message: 'Issue report sent successfully!',
-                buttons: [{
-                text: 'OK',
-                role: 'confirm',
-                handler: () => {
-                    window.location.reload();
-                },
-                },],
-            });
-        } else window.location.reload();  
-    })
-    .catch(err => Error(err))
+        .then(res => {
+            if (res.status === 429) {
+                presentAlert({
+                    subHeader: 'Fail',
+                    message: 'To many requests sent... Slow down!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                    },],
+                });
+
+                throw Error("Too many requests sent!")
+            }
+            if (!res.ok) {
+                throw Error("Something went wrong!")
+            }
+            return res.json();
+        })
+        .then(json => {
+            if (json.msg !== "success")
+                throw Error("Something went wrong!");
+            if (presentAlert !== undefined && method !== "PUT") {
+                presentAlert({
+                    subHeader: 'Success!',
+                    message: 'Issue report sent successfully!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                        handler: () => {
+                            window.location.reload();
+                        },
+                    },],
+                });
+            } else window.location.reload();
+        })
+        .catch(err => Error(err))
 }
 
 export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, body: undefined | BodyInit, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
     setMessage: any, setMistake: any, fetchData: string, updateTokens: any, presentAlert: any, contentType: string | undefined) => {
-        
+
     let refreshHeaders = new Headers();
-    
+
     refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
     refreshHeaders.append("Content-Type", "application/json");
 
     fetch(`http://${DOMAIN}/user/refresh_token`, {
-        method:"GET",
+        method: "GET",
         headers: refreshHeaders
     })
-    .then(data => {
-        if (!data.ok)
-            throw Error("There was a mistake!")
-        return data.json();
-    })
-    .then(json => {
-        localStorage.setItem("access_token", json.access_token);
-        localStorage.setItem("refresh_token", json.refresh_token);
+        .then(data => {
+            if (!data.ok)
+                throw Error("There was a mistake!")
+            return data.json();
+        })
+        .then(json => {
+            localStorage.setItem("access_token", json.access_token);
+            localStorage.setItem("refresh_token", json.refresh_token);
 
-        updateTokens();
+            updateTokens();
 
-        let myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${json.access_token}`);
-        if (contentType !== "form") myHeaders.append("Content-Type", "application/json");
+            let myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${json.access_token}`);
+            if (contentType !== "form") myHeaders.append("Content-Type", "application/json");
 
-        if (fetchData === "data")
-            FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
-        else if (fetchData === "report")
-            FetchReportChange(url, method!, myHeaders, null, undefined)
-        else if (fetchData === "user")
-            FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake, presentAlert);
-        else if (fetchData === "create_report")
-            FetchReportChange(url, method!, myHeaders, body, presentAlert);
-        else if (fetchData === "create_issue")
-            FetchIssueChange(url, method!, myHeaders, body, presentAlert);
-        else if (fetchData === "update_issue") 
-            FetchIssueChange(url, method!, myHeaders, null, undefined);
+            if (fetchData === "data")
+                FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
+            else if (fetchData === "report")
+                FetchReportChange(url, method!, myHeaders, null, undefined)
+            else if (fetchData === "user")
+                FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake, presentAlert);
+            else if (fetchData === "create_report")
+                FetchReportChange(url, method!, myHeaders, body, presentAlert);
+            else if (fetchData === "create_issue")
+                FetchIssueChange(url, method!, myHeaders, body, presentAlert);
+            else if (fetchData === "update_issue")
+                FetchIssueChange(url, method!, myHeaders, null, undefined);
 
-    })
-    .catch(e => {
-        if (window.localStorage.getItem('logged_in') === "true"){
-            window.alert("Session expired!");
-            window.location.assign('/account/login');
-            window.localStorage.clear();    
-        }
-        window.localStorage.setItem("logged_in", "false");
-    })
+        })
+        .catch(e => {
+            if (window.localStorage.getItem('logged_in') === "true") {
+                window.alert("Session expired!");
+                window.location.assign('/account/login');
+                window.localStorage.clear();
+            }
+            window.localStorage.setItem("logged_in", "false");
+        })
 }
-
 
 //functions
 const ValidFileType = (file: File) => {
@@ -240,7 +239,7 @@ export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     if (preview === null || input === null) return;
 
-    while(preview.firstChild) {
+    while (preview.firstChild) {
         preview.removeChild(preview.firstChild);
     }
 
@@ -258,7 +257,7 @@ export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         for (const file in curFiles) {
             const listItem = document.createElement('li');
-            
+
             if (ValidFileType(curFiles[file])) {
                 const image = document.createElement('img');
                 image.src = URL.createObjectURL(curFiles[file]);
@@ -290,4 +289,9 @@ export function InstanceOfUserChange(data: any): data is UserChange {
 
 export function InstanceOfUserRegister(data: any): data is UserRegister {
     return 'name' in data;
+}
+
+export function validateEmail(email: string): boolean{
+    const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return res.test(String(email).toLowerCase());
 }

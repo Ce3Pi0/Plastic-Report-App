@@ -17,7 +17,7 @@ const AccountForgot: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Forgot/>
+        <Forgot />
       </IonContent>
     </IonPage>
   );

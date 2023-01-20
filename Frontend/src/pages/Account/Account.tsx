@@ -15,7 +15,7 @@ const Account: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Info/>
+        <Info />
       </IonContent>
     </IonPage>
   );

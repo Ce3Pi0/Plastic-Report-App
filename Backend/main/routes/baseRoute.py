@@ -35,11 +35,3 @@ class BaseRoute:
 
     def login(self, request):
         pass
-
-    def refresh(self):
-        current_user = get_jwt_identity()
-        # check if user changed
-        new_token = create_access_token(identity = current_user, fresh = True, expires_delta = datetime.timedelta(days=7))
-        refresh_token = create_refresh_token(current_user, expires_delta = datetime.timedelta(days=30))
-
-        return {'access_token': new_token, 'refresh_token': refresh_token}

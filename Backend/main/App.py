@@ -54,11 +54,19 @@ def user_register():
 def user_login():
     return UserAuthRouteInstance.login(request)
 
-# Token route #
+# Token routes #
 @app.route('/user/refresh_token', methods=["GET"])
 @jwt_required(refresh=True)
 def get_token():
     return UserAuthRouteInstance.refresh()
+
+@app.route('/user/send_confirm_email_token', methods=["POST"])
+def send_token():
+    return UserAuthRouteInstance.send_confirm_mail(request)
+
+@app.route('/user/confirm_email', methods=["POST"])
+def confirm_email():
+    return UserAuthRouteInstance.confirm_mail(request)
 
 # Not found route #
 @app.errorhandler(404)

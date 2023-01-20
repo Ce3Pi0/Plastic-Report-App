@@ -1,28 +1,28 @@
-.sponsor-image{
+.sponsor-image {
     max-width: 240px;
 }
 
-.bottom-right{
+.bottom-right {
     display: flex;
     float: right;
 }
 
-.links > * > *{
+.links>*>* {
     color: rgb(205, 205, 205);
     text-decoration: none;
 }
 
-.hide-menu{
+.hide-menu {
     color: rgb(205, 205, 205);
     padding: 6px;
 }
 
-.links > * > *:hover{
+.links>*>*:hover {
     cursor: pointer;
     color: var(--ion-color-light-contrast);
 }
 
-.hide-menu:hover{
+.hide-menu:hover {
     cursor: pointer;
     color: white;
 }
@@ -35,7 +35,7 @@ textarea {
     padding: 10px;
 }
 
-#form > ion-label{
+#form>ion-label {
     font-size: 17px;
 }
 
@@ -43,6 +43,6 @@ textarea {
     font-size: 22px;
 }
 
-.back-to-top{
+.back-to-top {
     margin-right: 16px;
 }

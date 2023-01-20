@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { 
+import {
   IonButtons,
   IonContent,
   IonHeader,
@@ -22,19 +22,19 @@ const Contact: React.FC = () => {
   return (
     <>
       {window.location.pathname.includes("home") && <Menu />}
-      
+
       <IonPage id="main-content">
         <IonHeader>
           <IonToolbar>
-              <IonButtons slot="start">
-                <IonMenuButton></IonMenuButton>
-              </IonButtons>
+            <IonButtons slot="start">
+              <IonMenuButton></IonMenuButton>
+            </IonButtons>
             <IonTitle>Contact</IonTitle>
           </IonToolbar>
         </IonHeader>
 
-        <IonContent 
-        fullscreen={true}>
+        <IonContent
+          fullscreen={true}>
           <ContactComponent />
           <br />
           <br />

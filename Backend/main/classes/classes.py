@@ -8,6 +8,7 @@ class User(db.Model):
     name = db.Column(db.String(256), nullable = False)
     username = db.Column(db.String(256), unique = True, nullable = False)
     email = db.Column(db.String(2048), unique = True, nullable = False)
+    confirmed = db.Column(db.Boolean, nullable = False)
     password = db.Column(db.String(256), nullable = False)
     salt = db.Column(db.String(256), unique = True, nullable = False)
     gender = db.Column(db.String(48))
@@ -19,7 +20,8 @@ class Report(db.Model):
     __tablename__ = "Report"
 
     id = db.Column(db.Integer, primary_key = True, nullable = False)
-    location = db.Column(db.String(256), nullable = False)
+    lat = db.Column(db.String(256), nullable = False)
+    lon = db.Column(db.String(256), nullable = False)
     url = db.Column(db.String(128))
     status = db.Column(db.String(128), nullable = False)
     user_id = db.Column(db.Integer, db.ForeignKey("User.id"), nullable = False)
