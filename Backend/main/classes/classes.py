@@ -40,6 +40,16 @@ class Issue(db.Model):
 
     User = db.relationship("User", backref = db.backref("Issue"), lazy = True)
 
+class Request(db.Model):
+    __tablename__ = "Request"
+
+    id = db.Column(db.Integer, primary_key = True, nullable = False)
+    type = db.Column(db.String(128), nullable = False)
+    time = db.Column(db.String(512))
+    user_id = db.Column(db.Integer, db.ForeignKey("User.id"), nullable = False)
+
+    User = db.relationship("User", backref = db.backref("Request"), lazy = True)
+
 
 with app.app_context():
     db.create_all()

@@ -81,6 +81,7 @@ const SendReport: React.FC = () => {
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
           defaultCenter={MACEDONIA_CENTER}
           defaultZoom={DEFAULT_ZOOM}
+          options={{fullscreenControl: true}}
         >
           {location.lat !== undefined && location.lng !== undefined && <Marker lat={location.lat} lng={location.lng} />}
         </GoogleMapReact>

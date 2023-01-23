@@ -12,7 +12,7 @@ SECRET_KEY: str = "Ce3Pi0"
 MAIL_SERVER: str = 'smtp-mail.outlook.com'
 MY_MAIL: str = "hristijannikolovski56@outlook.com"
 MAIL_PASSWORD: str = "TestPass123"
-FRONTEND_DOMAIN: str = "192.168.0.179:8100"
+FRONTEND_DOMAIN: str = "192.168.120.192:8100"
 
 app = Flask(__name__)
 

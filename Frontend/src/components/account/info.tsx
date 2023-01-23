@@ -21,6 +21,7 @@ const Info: React.FC = () => {
     const { setLoggedIn, updateTokens } = useContext(GlobalContext) as ContextInterface;
 
     const [status, setStatus] = useState("");
+    const [hidden, setHidden] = useState<boolean>(false);
 
 
     const { data, err, loading } = useFetch(`http://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, updateTokens);
@@ -30,25 +31,33 @@ const Info: React.FC = () => {
     const [present, dismiss] = useIonModal(UpdateUserImageModal, {
         onDismiss: (data: string, role: string) => dismiss(data, role)
     });
-    
+
     const logOut = () => {
         window.localStorage.clear();
         setLoggedIn(false, null)
+    }
+
+    const hideTooltip = () => {
+        if (hidden)
+            document.getElementById("first_tooltip_text")!.style.visibility = "hidden";
+        else 
+            document.getElementById("first_tooltip_text")!.style.visibility = "visible";
+        setHidden(!hidden);
     }
 
     return (
         <div>
             {data &&
                 <>
-                    <IonFab slot="fixed" horizontal="end" vertical="top" >
-                        <div className="tooltip">
+                    <IonFab slot="fixed" horizontal="end" vertical="top">
+                        <div className="first_tooltip" onClick={e => hideTooltip()}>
                             <IonFabButton size="small"  >
                                 <IonIcon icon={arrowDownOutline} />
                             </IonFabButton>
-                            <span className="tooltiptext">Filter reports</span>
+                            <span id="first_tooltip_text" className="tooltiptext">Filter reports</span>
                         </div>
 
-                        <IonFabList className="tooltips" side="bottom">
+                        <IonFabList className="tooltips" side="bottom" >
                             <div className="tooltip">
                                 <IonFabButton size="small" color="success" onClick={() => setStatus("completed")}>
                                     <IonIcon icon={checkmark} />

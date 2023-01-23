@@ -1,6 +1,6 @@
 from config.config import db, PASS_LEN, get_jwt_identity, create_access_token, create_refresh_token, Mail, Message, mail, s, MY_MAIL, FRONTEND_DOMAIN, SignatureExpired, BadTimeSignature, BadSignature
 from routes.baseRoute import BaseRoute
-from classes.classes import User
+from classes.classes import User, Request
 from utils.utils import customAbort, genSalt, hashPassword, checkMail
 
 import datetime
@@ -81,6 +81,8 @@ class UserAuthRoute(BaseRoute):
         if user.confirmed == True:
             return customAbort("User email already confirmed", 405)
 
+        # get current user email request type and calc time diff and throw error when neccessary
+
         token = s.dumps(request.args["email"], salt='email-confirm')
 
         msg = Message("Confirm Email", sender=MY_MAIL, recipients=[request.args["email"]])
@@ -126,6 +128,8 @@ class UserAuthRoute(BaseRoute):
 
         if user is None: 
             return customAbort("User not found", 404)
+
+        # get current user email request type and calc time diff and throw error when neccessary
 
         token = s.dumps(request.args["email"], salt='password-forgot')
 

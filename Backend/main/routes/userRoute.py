@@ -54,7 +54,7 @@ class UserRoute(BaseRoute):
         hashed_pw = hashPassword(request.json["password"], salt)
 
         new_user = User(name = request.json["name"], username = request.json["username"], url = None,
-        confirmed = False, email = request.json["email"], password = hashed_pw, salt = salt, type = request.json["type"], gender = request.json["gender"])
+        confirmed = True, email = request.json["email"], password = hashed_pw, salt = salt, type = request.json["type"], gender = request.json["gender"])
 
         db.session.add(new_user)
         db.session.commit()
@@ -158,25 +158,28 @@ class UserRoute(BaseRoute):
         return {"msg":"success"}
 
     def delete(self, request):
-        if "id" not in request.args:
-            return customAbort("Key not in request", 400)
+        user_id = get_jwt_identity()
 
-        for key in self.delete_req:
-            if key not in request.json:
-                return customAbort("Key not in request", 400)
-
-        user = User.query.filter_by(id=request.args["id"], username=request.json["username"]).first()
+        user = User.query.filter_by(id=user_id).first()
 
         if user is None:
             return customAbort("User not found", 404)
 
-        salt = user.salt
-        hashed_pass = hashPassword(request.json["password"], salt)
-        
-        if not hmac.compare_digest(user.password, hashed_pass):
-            return customAbort("Password doesn't match", 406)
+        if user.type != "admin":
+            return customAbort("Clients cannot delete account", 405)
+                
+        if "id" not in request.args:
+            return customAbort("Key not in request", 400)
 
-        db.session.delete(user)
+        user_to_delete = User.query.filter_by(id=request.args["id"]).first()
+
+        if user_to_delete is None:
+            return customAbort("User not found", 404)
+
+        if user_to_delete.type == "admin":
+            return customAbort("Cannot delete and admin user", 405)
+
+        db.session.delete(user_to_delete)
         db.session.commit()  
 
         return {"msg":"success"}

@@ -7,6 +7,7 @@ from routes.userRoute import UserRouteInstance
 from routes.reportRoute import ReportRouteInstance
 from routes.issueRoute import IssueRouteInstance 
 from routes.userAuthRoute import UserAuthRouteInstance
+from routes.requestRoute import RequestRouteInstance
 
 # POST routes (limited) #
 @app.route('/user', methods=["POST", "PUT"])
@@ -42,6 +43,11 @@ def report():
 @jwt_required()
 def issue():
     return createReqeust(request, IssueRouteInstance)
+
+@app.route('/request', methods=["POST", "GET", "PUT", "DELETE"])
+@jwt_required()
+def user_request():
+    return createReqeust(request, RequestRouteInstance)
 
 # User auth routes #
 @app.route('/user/register', methods=["POST"])
