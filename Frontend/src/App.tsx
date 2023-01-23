@@ -50,6 +50,7 @@ import { GlobalContext, GlobalProvider } from './context/Context';
 import { ContextInterface } from './interfaces/interfaces';
 import AccountForgot from './pages/Account/AccountForgot';
 import ConfiemEmail from './pages/Account/confirmEmail';
+import AccountForgotChange from './pages/Account/AccountForgotChange';
 
 
 setupIonicReact();
@@ -62,7 +63,7 @@ const Tabs = () => {
   return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : loggedIn ? (
     <IonTabs>
       <IonRouterOutlet>
-        
+
         <Route exact path="/home">
           <Home />
         </Route>
@@ -87,6 +88,9 @@ const Tabs = () => {
         </Route>
         <Route exact path="/account/forgot">
           <AccountForgot />
+        </Route>
+        <Route exact path="/account/forgot_change">
+          <AccountForgotChange />
         </Route>
         <Route exact path="/account/confirm_email">
           <Account />
@@ -132,6 +136,9 @@ const Tabs = () => {
       </Route>
       <Route exact path="/account/forgot">
         <AccountForgot />
+      </Route>
+      <Route exact path="/account/forgot_change">
+        <AccountForgotChange />
       </Route>
       <Route exact path="/account/create">
         <AccountCreate />

@@ -27,6 +27,10 @@ export interface UserRegister {
     gender: string
 }
 
+export interface ForgotInterface{
+    password: string
+}
+
 
 export interface FetchReturn {
     data: JSON | null,

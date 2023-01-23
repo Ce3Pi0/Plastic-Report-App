@@ -13,6 +13,7 @@ class UserAuthRoute(BaseRoute):
     def __init__(self) -> None:
         self.register_req = ["name", "username", "email", "password", "gender"]
         self.login_req = ["username", "password"]
+        self.verify_reset_token_req = ["token", "password"]
 
     def register(self, request):
         for key in self.register_req:
@@ -117,11 +118,72 @@ class UserAuthRoute(BaseRoute):
 
         return {"msg":"success"}
 
+    def get_reset_token(self, request):
+        if "email" not in request.args:
+            return customAbort("Key not in request", 400)
+
+        user = User.query.filter_by(email=request.args["email"]).first()
+
+        if user is None: 
+            return customAbort("User not found", 404)
+
+        token = s.dumps(request.args["email"], salt='password-forgot')
+
+        msg = Message("Change your password", sender=MY_MAIL, recipients=[request.args["email"]])
+
+        link = f"http://{FRONTEND_DOMAIN}/account/forgot_change?token={token}"
+
+        msg.body = f"Your link is {link}"
+
+        mail.send(msg)
+
+        return {"msg":"success"}
+        
+    def verify_reset_token(self, request):
+        for key in self.verify_reset_token_req:
+            if key not in request.args:
+                return customAbort("Key not in request", 400)
+
+        try:
+            email = s.loads(request.args["token"], salt="password-forgot", max_age=500)
+        except SignatureExpired:
+            return customAbort("Token has expired", 405)
+        except BadTimeSignature:
+            return customAbort("The token you submited was incorrect", 406)
+        except BadSignature:
+            return customAbort("The token you submited was incorrect", 406)
+        
+        
+        user = User.query.filter_by(email=email).first()
+
+        if user is None:
+            return customAbort("User not found", 404)
+
+        if len(request.args["password"]) < PASS_LEN:
+            return customAbort("Password to weak", 405)
+
+        salt = genSalt()
+        password = request.args["password"]
+
+        hashed_test_pw = hashPassword(password, user.salt)
+
+        if hmac.compare_digest(hashed_test_pw, user.password):
+            return customAbort("New password cannot be the same as the old one", 409)
+
+        hashed_pw = hashPassword(password, salt)
+
+        user.password = hashed_pw
+        user.salt = salt
+
+        db.session.commit()
+
+        return {"msg":"success"}
+
+
     def refresh(self):
-        current_user = get_jwt_identity()
-        # check if user changed
-        new_token = create_access_token(identity = current_user, fresh = True, expires_delta = datetime.timedelta(days=7))
-        refresh_token = create_refresh_token(current_user, expires_delta = datetime.timedelta(days=30))
+        user_id = get_jwt_identity()
+        new_token = create_access_token(identity = user_id, fresh = True, expires_delta = datetime.timedelta(days=7))
+        refresh_token = create_refresh_token(user_id, expires_delta = datetime.timedelta(days=30))
 
         return {'access_token': new_token, 'refresh_token': refresh_token}
 

@@ -60,7 +60,8 @@ def user_login():
 def get_token():
     return UserAuthRouteInstance.refresh()
 
-@app.route('/user/send_confirm_email_token', methods=["POST"])
+@app.route('/user/send_confirm_email_token', methods=["GET"])
+# @limiter.limit('10/hour;2/minute')
 def send_token():
     return UserAuthRouteInstance.send_confirm_mail(request)
 
@@ -68,10 +69,19 @@ def send_token():
 def confirm_email():
     return UserAuthRouteInstance.confirm_mail(request)
 
+@app.route('/user/forgot_password_token', methods=["GET"])
+# @limiter.limit('1/hour')
+def send_reset_token():
+    return UserAuthRouteInstance.get_reset_token(request)
+
+@app.route('/user/forgot_password', methods=["POST"])
+def confirm_reset_token():
+    return UserAuthRouteInstance.verify_reset_token(request)
+
 # Not found route #
 @app.errorhandler(404)
 def not_found():
     return customAbort("Page not found!", 404)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

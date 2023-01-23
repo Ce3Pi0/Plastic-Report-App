@@ -132,7 +132,7 @@
 }
 
 .tooltip:hover .tooltiptext {
-    visibility: visible;
+    visibility:visible;
 }
 
 .account-info {

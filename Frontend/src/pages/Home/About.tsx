@@ -37,7 +37,7 @@ const About: React.FC = () => {
 
   return (
     <>
-      {/* {window.location.pathname.includes("home") && <Menu />} */}
+      {window.location.pathname.includes("home") && <Menu />}
 
       <IonPage id="main-content">
         <IonHeader>
@@ -52,7 +52,6 @@ const About: React.FC = () => {
         <IonContent
           scrollEvents={true}
           onIonScroll={handleScroll}
-          // fullscreen={true} why does this break the scroll to bottom???
           ref={contentRef}>
           <AboutComponent />
           <Team />

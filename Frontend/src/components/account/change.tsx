@@ -79,9 +79,9 @@ const Change: React.FC = () => {
                     if (e.detail.value === undefined) return;
                     setConfirmNewPassword(e.detail.value!)
                 }} clearInput={true} value={confirmNewPassword} id="password" placeholder="Confirm new password" required={true} />
-                <p id="warning">{!message && !mistake && <br></br>} {message} {mistake && "Incorrect password or username"}</p>
-                <a id="forgot" href="/account/forgot"><p>forgot password</p></a>
+                <p id="warning">{!message && !mistake && <br></br>} {message} {mistake && "Incorrect password"}</p>
                 <IonButton type="submit" expand="block" id="button">Change</IonButton>
+                <a id="forgot" href="/account/forgot"><p>forgot password</p></a>
             </form>
         </div>
     );

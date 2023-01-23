@@ -21,7 +21,7 @@ import './Home.css';
 const Home: React.FC = () => {
   return (
     <>
-      {/* {window.location.pathname.includes("home") && <Menu />} */}
+      {window.location.pathname.includes("home") && <Menu />}
 
       <IonPage id="main-content">
         <IonHeader>

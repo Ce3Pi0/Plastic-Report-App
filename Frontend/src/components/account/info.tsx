@@ -30,7 +30,7 @@ const Info: React.FC = () => {
     const [present, dismiss] = useIonModal(UpdateUserImageModal, {
         onDismiss: (data: string, role: string) => dismiss(data, role)
     });
-
+    
     const logOut = () => {
         window.localStorage.clear();
         setLoggedIn(false, null)
@@ -42,7 +42,7 @@ const Info: React.FC = () => {
                 <>
                     <IonFab slot="fixed" horizontal="end" vertical="top" >
                         <div className="tooltip">
-                            <IonFabButton size="small">
+                            <IonFabButton size="small"  >
                                 <IonIcon icon={arrowDownOutline} />
                             </IonFabButton>
                             <span className="tooltiptext">Filter reports</span>

@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import GoogleMapReact from "google-map-react";
+import googleMapReact from "google-map-react";
 
-import { IonButton, IonContent, IonIcon, IonTitle, useIonAlert } from "@ionic/react";
+import { IonButton, IonContent, IonFab, IonIcon, IonTitle, useIonAlert } from "@ionic/react";
 import { arrowUpOutline } from "ionicons/icons";
 
 /* Components */
@@ -72,7 +73,9 @@ const SendReport: React.FC = () => {
       </IonTitle>
 
       <div className="map">
-
+        <IonFab>
+          <IonButton size="small" onClick={() => setLocation({lat: undefined, lng: undefined})}>Reset</IonButton>
+        </IonFab>
         <GoogleMapReact
           onClick={(e) => setLocation({ lat: `${e.lat}`, lng: `${e.lng}` })}
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
@@ -81,7 +84,6 @@ const SendReport: React.FC = () => {
         >
           {location.lat !== undefined && location.lng !== undefined && <Marker lat={location.lat} lng={location.lng} />}
         </GoogleMapReact>
-
         <br />
       </div>
 

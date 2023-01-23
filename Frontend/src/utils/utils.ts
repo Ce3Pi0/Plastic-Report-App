@@ -2,8 +2,8 @@ import { UserChange, UserLogin, UserRegister, LocationInterface } from "../inter
 
 
 //constants
-export const DOMAIN: string = '127.0.0.1:5000';
-export const STATIC_URL = "127.0.0.1:88/"
+export const DOMAIN: string = '192.168.0.41:5000';
+export const STATIC_URL = "192.168.0.41:88/"
 export const UNSAFE_PASSWORD: number = 6
 export const MACEDONIA_CENTER = {
     lat: 41.56,
@@ -196,7 +196,7 @@ const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Header
 
                 throw Error("Too many requests sent!")
             }
-            if (!res.ok){
+            if (!res.ok) {
                 throw Error("Something went wrong!")
             }
             return res.json();
@@ -220,6 +220,7 @@ const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Header
         })
         .catch(err => Error(err))
 }
+
 
 export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, body: undefined | BodyInit, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
     setMessage: any, setMistake: any, fetchData: string, updateTokens: any, presentAlert: any, contentType: string | undefined) => {

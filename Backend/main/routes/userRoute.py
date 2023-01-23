@@ -139,16 +139,16 @@ class UserRoute(BaseRoute):
         hashed_pass = hashPassword(request.json["password"], salt)
         
         if not hmac.compare_digest(user.password, hashed_pass):
-            return customAbort("Password doesn't match", 406)
+            return customAbort("Password doesn't match", 405)
 
         if request.json["password"] == request.json["new_password"]:
             return customAbort("New password cannot be the same as the old one", 409)
 
-        if request.json["new_password"].len < PASS_LEN:
+        if len(request.json["new_password"]) < PASS_LEN:
             return customAbort("Password to short", 409)
 
         salt = genSalt()
-        new_hashed_pw = hashPassword(self.new_password, salt)
+        new_hashed_pw = hashPassword(request.json["new_password"], salt)
 
         user.salt = salt
         user.password = new_hashed_pw

@@ -40,5 +40,6 @@ class Issue(db.Model):
 
     User = db.relationship("User", backref = db.backref("Issue"), lazy = True)
 
+
 with app.app_context():
     db.create_all()

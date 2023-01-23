@@ -76,11 +76,6 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                 throw Error("Wrond username or password")
             }
             if (res.status === 401 || res.status === 422 && InstanceOfUserChange(user)) {
-                let refreshHeaders = new Headers();
-
-                refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
-                refreshHeaders.append("Content-Type", "application/json");
-
                 FetchRefreshToken(url, method, undefined, undefined, user, undefined, undefined, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
             } else {
                 if (!res.ok) {
@@ -99,7 +94,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                 setUserExists(false);
                 
                 fetch(`http://${DOMAIN}/user/send_confirm_email_token?email=${user.email}`, {
-                    method: "POST"
+                    method: "GET"
                 })
                     .then((res) => {
                         if (!res.ok) {
