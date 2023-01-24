@@ -7,7 +7,7 @@
     float: right;
 }
 
-.links>*>* {
+.links>* {
     color: rgb(205, 205, 205);
     text-decoration: none;
 }
@@ -17,7 +17,7 @@
     padding: 6px;
 }
 
-.links>*>*:hover {
+.links>*:hover {
     cursor: pointer;
     color: var(--ion-color-light-contrast);
 }

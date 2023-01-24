@@ -2,7 +2,7 @@ from routes.baseRoute import BaseRoute
 from config.config import get_jwt_identity, db
 from classes.classes import User, Request
 from utils.utils import customAbort
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class RequestRoute(BaseRoute):
     __types = ["password_request", "email_request"]
@@ -24,7 +24,18 @@ class RequestRoute(BaseRoute):
         if user is None:
             return customAbort("User not found", 404)
 
-        user_request = Request(type=request.args["type"], time=None, user_id=user_id)
+        if user.type != "admin":
+            return customAbort("Client cannot create reuqest tables", 406)
+
+        if "user_id" not in request.json:
+            return customAbort("Key not in request", 400)
+
+        test_request = Request.query.filter_by(user_id=request.json["user_id"], type=request.args['type']).first()
+
+        if test_request is not None:
+            return customAbort("Cannot create another table of this type for this user", 405)
+
+        user_request = Request(type=request.args["type"], time=None, user_id=request.json["user_id"])
 
         db.session.add(user_request)
         db.session.commit()
@@ -32,38 +43,49 @@ class RequestRoute(BaseRoute):
         return {"msg":"success"}
 
     def read(self, request):
-        user_id = get_jwt_identity()
-
-        user = User.query.filter_by(id=user_id).first()
-
-        if user is None:
-            return customAbort("User not found", 404)
-
         if "id" in request.args:
-            current_request = Request.query.filter_by(id=request.args["id"], user_id=user_id).first()
+            current_request = Request.query.filter_by(id=request.args["id"]).first()
 
             if current_request is None:
                 return customAbort("Request not found", 404)
 
             return {"request":{
-                request.id,
-                request.type,
-                request.time,
-                request.user_id
+                current_request.id,
+                current_request.type,
+                current_request.time,
+                current_request.user_id
             }}
 
-        current_user_requests = Request.query.filter_by(user_id=user_id)
+        if "user_id" in request.args:
+            current_user_requests = Request.query.filter_by(id=request.args["user_id"])
 
-        if current_user_requests is None:
+            if current_user_requests is None:
+                return customAbort("Request not found", 404)
+
+            output = []
+            for current_user_request in current_user_requests:
+                data = {
+                    current_user_request.id,
+                    current_user_request.type,
+                    current_user_request.time,
+                    current_user_request.user_id
+                }
+                output.append(data)
+
+            return {"requests": output}
+
+        all_requests = Request.query.all()
+
+        if all_requests is None:
             return customAbort("Request not found", 404)
 
         output = []
-        for current_request in current_user_requests:
+        for current_request in all_requests:
             data = {
-                request.id,
-                request.type,
-                request.time,
-                request.user_id
+                "id": current_request.id,
+                "type": current_request.type,
+                "time": current_request.time,
+                "user_id": current_request.user_id
             }
             output.append(data)
 
@@ -80,13 +102,15 @@ class RequestRoute(BaseRoute):
         if "id" not in request.args:
             return customAbort("Key not in request", 400)
 
-        current_request = Request.query.filter_by(id=request.args["id"], user_id=user_id)
+        current_request = Request.query.filter_by(id=request.args["id"], user_id=user_id).first()
 
         if current_request.time is not None:
-            return current_request.time - datetime.time()
-            # current_request.time = datetime.time() if current_request.time - datetime.time()
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=1):
+                current_request.time = datetime.now()
+            else:
+                return customAbort("Too many requests", 429)
         else:
-            current_request.time = datetime.time()
+            current_request.time = datetime.now()
 
         db.session.commit()
 
@@ -100,10 +124,13 @@ class RequestRoute(BaseRoute):
         if user is None:
             return customAbort("User not found", 404)
 
+        if user.type != "admin":
+            return customAbort("Client cannot delete requests", 405)
+
         if "id" not in request.args:
             return customAbort("Key not in request", 400)
 
-        current_request = Request.query.filter_by(id=request.args["id"], user_id=user_id).first()
+        current_request = Request.query.filter_by(id=request.args["id"]).first()
 
         if current_request is None:
             return customAbort("Request not found", 404)

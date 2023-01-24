@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import GoogleMapReact from "google-map-react";
-import googleMapReact from "google-map-react";
 
 import { IonButton, IonContent, IonFab, IonIcon, IonTitle, useIonAlert } from "@ionic/react";
 import { arrowUpOutline } from "ionicons/icons";
@@ -81,8 +80,9 @@ const SendReport: React.FC = () => {
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
           defaultCenter={MACEDONIA_CENTER}
           defaultZoom={DEFAULT_ZOOM}
-          options={{fullscreenControl: true}}
+          options={{fullscreenControl: false}}
         >
+          
           {location.lat !== undefined && location.lng !== undefined && <Marker lat={location.lat} lng={location.lng} />}
         </GoogleMapReact>
         <br />
@@ -93,7 +93,7 @@ const SendReport: React.FC = () => {
           <label className="label">
             {!file && "Select an image:"}
             {file && "Select a different image:"}
-            <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/x-png,image/gif,image/jpeg" />
+            <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/*" capture="environment"/>
           </label>
 
           <br />

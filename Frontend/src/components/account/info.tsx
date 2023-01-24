@@ -23,9 +23,10 @@ const Info: React.FC = () => {
     const [status, setStatus] = useState("");
     const [hidden, setHidden] = useState<boolean>(false);
 
+    const { user } = useContext(GlobalContext) as ContextInterface;
 
     const { data, err, loading } = useFetch(`http://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, updateTokens);
-    const { data: reports, err: reports_error, loading: reports_loading } = useFetch(`http://${DOMAIN}/report?user_id=${window.localStorage.getItem("id")}`, updateTokens);
+    const { data: reports, err: reports_error, loading: reports_loading } = useFetch(`http://${DOMAIN}/report`, updateTokens);
 
     const [presentAlert] = useIonAlert();
     const [present, dismiss] = useIonModal(UpdateUserImageModal, {
@@ -40,7 +41,7 @@ const Info: React.FC = () => {
     const hideTooltip = () => {
         if (hidden)
             document.getElementById("first_tooltip_text")!.style.visibility = "hidden";
-        else 
+        else
             document.getElementById("first_tooltip_text")!.style.visibility = "visible";
         setHidden(!hidden);
     }
@@ -50,8 +51,8 @@ const Info: React.FC = () => {
             {data &&
                 <>
                     <IonFab slot="fixed" horizontal="end" vertical="top">
-                        <div className="first_tooltip" onClick={e => hideTooltip()}>
-                            <IonFabButton size="small"  >
+                        <div className="first_tooltip">
+                            <IonFabButton size="small" onClick={e => hideTooltip()}>
                                 <IonIcon icon={arrowDownOutline} />
                             </IonFabButton>
                             <span id="first_tooltip_text" className="tooltiptext">Filter reports</span>
@@ -59,28 +60,40 @@ const Info: React.FC = () => {
 
                         <IonFabList className="tooltips" side="bottom" >
                             <div className="tooltip">
-                                <IonFabButton size="small" color="success" onClick={() => setStatus("completed")}>
+                                <IonFabButton size="small" color="success" onClick={() => {
+                                    setStatus("completed")
+                                    hideTooltip()
+                                }}>
                                     <IonIcon icon={checkmark} />
                                 </IonFabButton>
                                 <span className="tooltiptext">Completed</span>
                             </div>
 
                             <div className="tooltip">
-                                <IonFabButton size="small" color="warning" onClick={() => setStatus("pending")}>
+                                <IonFabButton size="small" color="warning" onClick={() => {
+                                    setStatus("pending")
+                                    hideTooltip()
+                                }}>
                                     <IonIcon icon={codeWorkingOutline} />
                                 </IonFabButton>
                                 <span className="tooltiptext">Pending</span>
                             </div>
 
                             <div className="tooltip">
-                                <IonFabButton size="small" color="danger" onClick={() => setStatus("rejected")}>
+                                <IonFabButton size="small" color="danger" onClick={() => {
+                                    setStatus("rejected")
+                                    hideTooltip()
+                                }}>
                                     <IonIcon icon={alertOutline} />
                                 </IonFabButton>
                                 <span className="tooltiptext">Rejected</span>
                             </div>
 
                             <div className="tooltip">
-                                <IonFabButton size="small" onClick={() => setStatus("")}>
+                                <IonFabButton size="small" onClick={() => {
+                                    setStatus("")
+                                    hideTooltip()
+                                }}>
                                     <IonIcon icon={appsOutline} />
                                 </IonFabButton>
                                 <span className="tooltiptext">All</span>
@@ -118,13 +131,19 @@ const Info: React.FC = () => {
                         </div>
                     </div>
 
-                    {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.status === status || status === "").map((report: ReportInterface) => (<Report key={report.id} report={report} />))}
+                    {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.user_id === user!.id && (report.status === status || status === "")).map((report: ReportInterface) => (<Report key={report.id} report={report} />))}
                     {reports_loading && <div>...Loading</div>}
                     {reports_error && <div>Error while fetching data</div>}
                 </>
             }
             {loading && <div>...Loading</div>}
-            {err && <div>Error while fetching data</div>}
+            {err &&
+                <div>
+                    <p style={{ textAlign: "center" }}>Error while fetching user data</p>
+                    <IonFab horizontal="center">
+                        <IonButton onClick={() => logOut()}>Logout</IonButton>
+                    </IonFab>
+                </div>}
         </div>
     );
 }

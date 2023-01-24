@@ -49,12 +49,16 @@ class ReportRoute(BaseRoute):
             if report is None:
                 return customAbort("Report not found", 404)
 
+            user = User.query.filter_by(id=report.user_id).first()
+            username = user.username
+
             data = {
                 "id":report.id,
                 "lat":report.lat,
                 "lon":report.lon,
                 "url":report.url,
-                "user_id":report.user_id,
+                "usernam":username,
+                "user_id":report.id,
                 "status":report.status
             }
 
@@ -68,41 +72,41 @@ class ReportRoute(BaseRoute):
 
             output = []
             for report in reports:
+                user = User.query.filter_by(id=report.user_id).first()
+                username = user.username
+
                 data = {
                     "id":report.id,
                     "lat":report.lat,
                     "lon":report.lon,
                     "url":report.url,
-                    "user_id":report.user_id,
+                    "username":username,
+                    "user_id":report.id,
                     "status":report.status
                 }
                 output.append(data)
             
             return {request.args["status"] : output}
-
-        if "user_id" in request.args:
-            user = User.query.filter_by(id = request.args["user_id"]).first()
-
-            if user is None:
-                return customAbort("User not found", 404)
-
-            reports = Report.query.filter_by(user_id = request.args["user_id"])
-
-            output = []
-            for report in reports:
-                data = {
-                    "id":report.id,
-                    "lat":report.lat,
-                    "lon":report.lon,
-                    "url":report.url,
-                    "user_id":report.user_id,
-                    "status":report.status
-                }
-                output.append(data)
-            
-            return {"reports" : output}
         
-        return customAbort("Key not in request", 400)
+        all_reports = Report.query.all()
+
+        output = []
+        for report in all_reports:
+            user = User.query.filter_by(id=report.user_id).first()
+            username = user.username
+
+            data = {
+                "id":report.id,
+                "lat":report.lat,
+                "lon":report.lon,
+                "url":report.url,
+                "username":username,
+                "user_id":report.id,
+                "status":report.status
+            }
+            output.append(data)
+        
+        return {"reports" : output}
 
     def update(self, request):
         if "id" in request.args and "status" in request.args:

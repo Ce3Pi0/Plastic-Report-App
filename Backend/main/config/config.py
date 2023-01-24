@@ -12,7 +12,7 @@ SECRET_KEY: str = "Ce3Pi0"
 MAIL_SERVER: str = 'smtp-mail.outlook.com'
 MY_MAIL: str = "hristijannikolovski56@outlook.com"
 MAIL_PASSWORD: str = "TestPass123"
-FRONTEND_DOMAIN: str = "192.168.120.192:8100"
+FRONTEND_DOMAIN: str = "192.168.0.41:8100"
 
 app = Flask(__name__)
 
@@ -36,8 +36,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 db = SQLAlchemy(app)
 CORS(app)
 
-# app.config["UPLOAD_FOLDER"] = "D:/Projects/Plastic-Report-App/Static/" # Desktop
-app.config["UPLOAD_FOLDER"] = "C:/projects/Plastic-Report-App/Static/" # Laptop
+app.config["UPLOAD_FOLDER"] = "D:/Projects/Plastic-Report-App/Static/" # Desktop
+# app.config["UPLOAD_FOLDER"] = "C:/projects/Plastic-Report-App/Static/" # Laptop
 
 app.config["JWT_SECRET_KEY"] = SECRET_KEY
 jwt = JWTManager(app)

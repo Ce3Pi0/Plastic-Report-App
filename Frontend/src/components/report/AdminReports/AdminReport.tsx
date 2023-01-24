@@ -15,18 +15,18 @@ import useAddressFetch from "../../../utils/hooks/requestAddress";
 const AdminReport: React.FC<{ report: ReportInterface }> = ({ report }) => {
 
     const { updateTokens } = useContext(GlobalContext) as ContextInterface;
-    
+
     //geoapify.com
-    const { data, err, loading} = useAddressFetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${report.lat}&lon=${report.lon}&apiKey=93ef976230904f26bf7ff03fd45f39aa`);
+    const { data, err, loading } = useAddressFetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${report.lat}&lon=${report.lon}&apiKey=93ef976230904f26bf7ff03fd45f39aa`);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleAccept = () => {
-        reportRequest(`http://${DOMAIN}/report?id=${report.id}&user_id=${window.localStorage.getItem("id")}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined)
+        reportRequest(`http://${DOMAIN}/report?id=${report.id}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined)
     }
 
     const handleDecline = () => {
-        reportRequest(`http://${DOMAIN}/report?id=${report.id}&user_id=${window.localStorage.getItem("id")}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined)
+        reportRequest(`http://${DOMAIN}/report?id=${report.id}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined)
     }
 
     return (
@@ -36,12 +36,15 @@ const AdminReport: React.FC<{ report: ReportInterface }> = ({ report }) => {
             </IonCardHeader>
 
             <IonCardContent>
-                <IonBadge className="test" color={"warning"} slot="start"> </IonBadge>
+                <IonBadge className="test" color={report.status === "pending"? "warning": report.status ==="completed"? "success":"danger"} slot="start"> </IonBadge>
                 <br />
-                Location: {loading && "...Loading"}{err && err}{data && JSON.parse(JSON.stringify(data)).features[0].properties.address_line1}
+                Location: {loading && "...Loading"}{err && `${report.lat} ${report.lon}`}{data && JSON.parse(JSON.stringify(data)).features[0].properties.address_line1}
                 <br />
-                Status: {report.status}{}{}
+                Status: {report.status}{ }{ }
                 <br />
+                User: {report.username}{ }{ }
+                <br />
+
 
                 <IonButton size="small" color={"primary"} onClick={() => setIsOpen(true)}>
                     Show image
@@ -67,17 +70,20 @@ const AdminReport: React.FC<{ report: ReportInterface }> = ({ report }) => {
                 </IonContent>
             </IonModal>
 
-            <IonFab horizontal="end" vertical="top">
-                <IonFabButton size="small" color={"success"} onClick={() => { handleAccept() }}>
-                    <IonIcon icon={checkmarkOutline} />
-                </IonFabButton>
-            </IonFab>
+            {report.status === "pending" &&
+                <>
+                    <IonFab horizontal="end" vertical="top">
+                        <IonFabButton size="small" color={"success"} onClick={() => { handleAccept() }}>
+                            <IonIcon icon={checkmarkOutline} />
+                        </IonFabButton>
+                    </IonFab>
 
-            <IonFab horizontal="end" vertical="bottom">
-                <IonFabButton size="small" color={"danger"} onClick={() => { handleDecline() }}>
-                    <IonIcon icon={closeOutline} />
-                </IonFabButton>
-            </IonFab>
+                    <IonFab horizontal="end" vertical="bottom">
+                        <IonFabButton size="small" color={"danger"} onClick={() => { handleDecline() }}>
+                            <IonIcon icon={closeOutline} />
+                        </IonFabButton>
+                    </IonFab>
+                </>}
         </IonCard>)
 }
 

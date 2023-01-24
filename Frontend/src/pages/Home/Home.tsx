@@ -1,8 +1,10 @@
 import React from 'react';
 
 import {
+  IonButton,
   IonButtons,
   IonContent,
+  IonFab,
   IonHeader,
   IonMenuButton,
   IonMenuToggle,
@@ -10,6 +12,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { menuController } from "@ionic/core"
 
 /* Components */
 import Menu from '../../components/home/menu';
@@ -19,6 +22,8 @@ import './Home.css';
 
 
 const Home: React.FC = () => {
+
+
   return (
     <>
       {window.location.pathname.includes("home") && <Menu />}

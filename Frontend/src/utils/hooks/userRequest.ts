@@ -48,9 +48,12 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                                 return;
                             }
                             fetch(`http://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`, {
-                                method: "POST"
+                                method: "GET"
                             })
                                 .then((res) => {
+                                    if (res.status === 429){
+                                        throw Error("To many requests!")
+                                    }
                                     if (!res.ok) {
                                         throw Error("Something went wrong!")
                                     }
@@ -61,7 +64,11 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                                         new Error("Something went wrong")
                                     }
                                 })
-                                .catch((err) => new Error("Something went wrong"))
+                                .catch((err) => {
+                                    if (err.message === "To many requests!"){
+                                        setMessage("To many requests!")
+                                    }
+                                })
                         }
                     },],
                     inputs: [{

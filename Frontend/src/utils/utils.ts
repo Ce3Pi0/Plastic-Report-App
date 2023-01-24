@@ -2,8 +2,8 @@ import { UserChange, UserLogin, UserRegister, LocationInterface } from "../inter
 
 
 //constants
-export const DOMAIN: string = '192.168.120.192:5000';
-export const STATIC_URL = "192.168.120.192:88/"
+export const DOMAIN: string = '192.168.0.41:5000';
+export const STATIC_URL = "192.168.0.41:88/"
 export const UNSAFE_PASSWORD: number = 6
 export const MACEDONIA_CENTER = {
     lat: 41.56,

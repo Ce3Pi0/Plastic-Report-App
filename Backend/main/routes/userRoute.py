@@ -1,6 +1,6 @@
 from config.config import db, PASS_LEN, app, get_jwt_identity
 from routes.baseRoute import BaseRoute
-from classes.classes import User
+from classes.classes import User, Request
 from utils.utils import customAbort, genSalt, hashPassword, checkMail, get_random_alphanumerical
 import hmac
 
@@ -56,7 +56,18 @@ class UserRoute(BaseRoute):
         new_user = User(name = request.json["name"], username = request.json["username"], url = None,
         confirmed = True, email = request.json["email"], password = hashed_pw, salt = salt, type = request.json["type"], gender = request.json["gender"])
 
+        user_request_email = Request(type="password_request", time=None, user_id=new_user.id)
+        user_request_password = Request(type="email_request", time=None, user_id=new_user.id)
+        
         db.session.add(new_user)
+        db.session.commit()
+
+        user_request_email = Request(type="password_request", time=None, user_id=new_user.id)
+        user_request_password = Request(type="email_request", time=None, user_id=new_user.id)
+
+        db.session.add(user_request_email)
+        db.session.add(user_request_password)
+
         db.session.commit()
 
         return {"msg":"success"}

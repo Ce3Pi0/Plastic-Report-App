@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonIcon, IonMenuToggle, useIonModal, useIonAlert, IonButton } from "@ionic/react";
+import { IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonIcon, IonMenuToggle, useIonModal, useIonAlert, IonButton, IonFab } from "@ionic/react";
 import { arrowBackCircleOutline, bug, home, informationCircle, mail } from "ionicons/icons";
+import { menuController } from "@ionic/core"
 
 import ReportIssueModal from "../modals/Issue/client/ReportIssueModal";
 import openReportIssueModal from "../modals/Issue/client/openReportIssueModal";
@@ -36,35 +37,27 @@ const Menu: React.FC = () => {
             </IonHeader>
             <IonContent className="ion-padding">
                 <div className="links">
-                    <IonMenuToggle autoHide={false}>
                         <Link to="/home">
                             <h3>
                                 <IonIcon icon={home} size={"small"} />       Home
                             </h3>
                         </Link>
-                    </IonMenuToggle>
 
-                    <IonMenuToggle>
                         <Link to="/home/about">
                             <h3>
                                 <IonIcon icon={informationCircle} size={"small"} />       About
                             </h3>
                         </Link>
-                    </IonMenuToggle>
 
-                    <IonMenuToggle>
                         <Link to="/home/contact">
                             <h3>
                                 <IonIcon icon={mail} size={"small"} />       Contact
                             </h3>
                         </Link>
-                    </IonMenuToggle>
 
-                    <IonMenuToggle onClick={() => user?.type === "client" ? openReportIssueModal(present, updateTokens, presentAlert) : openViewIssueModal(present)}>
-                        <h3>
+                        <h3 onClick={() => user?.type === "client" ? openReportIssueModal(present, updateTokens, presentAlert) : openViewIssueModal(present)}>
                             <IonIcon icon={bug} size={"small"} />       Report a problem
                         </h3>
-                    </IonMenuToggle>
                 </div>
             </IonContent>
         </IonMenu>

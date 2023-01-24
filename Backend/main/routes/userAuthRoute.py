@@ -3,7 +3,7 @@ from routes.baseRoute import BaseRoute
 from classes.classes import User, Request
 from utils.utils import customAbort, genSalt, hashPassword, checkMail
 
-import datetime
+from datetime import datetime, timedelta
 import hmac
 
 
@@ -44,6 +44,14 @@ class UserAuthRoute(BaseRoute):
         db.session.add(new_user)
         db.session.commit()
 
+        user_request_email = Request(type="password_request", time=None, user_id=new_user.id)
+        user_request_password = Request(type="email_request", time=None, user_id=new_user.id)
+
+        db.session.add(user_request_email)
+        db.session.add(user_request_password)
+
+        db.session.commit()
+
         return {"msg":"success"}
 
     def login(self, request):
@@ -64,8 +72,8 @@ class UserAuthRoute(BaseRoute):
         if user.confirmed == False:
             return customAbort("User email not confirmed", 406)
 
-        new_token = create_access_token(identity = user.id, fresh = True, expires_delta = datetime.timedelta(days=7))
-        refresh_token = create_refresh_token(identity = user.id, expires_delta = datetime.timedelta(days=30))
+        new_token = create_access_token(identity = user.id, fresh = True, expires_delta = timedelta(days=7))
+        refresh_token = create_refresh_token(identity = user.id, expires_delta = timedelta(days=30))
 
         return {'id':user.id, 'username':user.username, 'gender':user.gender, 'type':user.type, 'access_token': new_token, 'refresh_token': refresh_token}
     
@@ -81,7 +89,16 @@ class UserAuthRoute(BaseRoute):
         if user.confirmed == True:
             return customAbort("User email already confirmed", 405)
 
-        # get current user email request type and calc time diff and throw error when neccessary
+
+        current_request = Request.query.filter_by(user_id = user.id, type="email_request").first()
+        if current_request.time is not None:
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=1):
+                current_request.time = datetime.now()
+            else:
+                return customAbort("Too many requests", 429)
+        else:
+            current_request.time = datetime.now()
+        db.session.commit()
 
         token = s.dumps(request.args["email"], salt='email-confirm')
 
@@ -129,7 +146,15 @@ class UserAuthRoute(BaseRoute):
         if user is None: 
             return customAbort("User not found", 404)
 
-        # get current user email request type and calc time diff and throw error when neccessary
+        current_request = Request.query.filter_by(user_id = user.id, type="password_request").first()
+        if current_request.time is not None:
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=1):
+                current_request.time = datetime.now()
+            else:
+                return customAbort("Too many requests", 429)
+        else:
+            current_request.time = datetime.now()
+        db.session.commit()
 
         token = s.dumps(request.args["email"], salt='password-forgot')
 

@@ -15,7 +15,7 @@ const ConfirmEmailComp = () => {
     return (
         <IonContent fullscreen>
             <h2 className='middle-confirm-text'>
-                {token !== null && "Click this button to confirm your email"}
+                {token !== null && "Confirm your email"}
                 {token === null && "Token not specified"}
             </h2>
             {token !== null && <IonFab horizontal='center' vertical='center' className='center-align-text'>

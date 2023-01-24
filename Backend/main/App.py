@@ -67,7 +67,6 @@ def get_token():
     return UserAuthRouteInstance.refresh()
 
 @app.route('/user/send_confirm_email_token', methods=["GET"])
-# @limiter.limit('10/hour;2/minute')
 def send_token():
     return UserAuthRouteInstance.send_confirm_mail(request)
 
@@ -76,7 +75,6 @@ def confirm_email():
     return UserAuthRouteInstance.confirm_mail(request)
 
 @app.route('/user/forgot_password_token', methods=["GET"])
-# @limiter.limit('1/hour')
 def send_reset_token():
     return UserAuthRouteInstance.get_reset_token(request)
 

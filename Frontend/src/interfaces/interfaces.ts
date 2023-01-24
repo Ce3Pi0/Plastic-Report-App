@@ -44,6 +44,8 @@ export interface ReportInterface {
     lat: string,
     lon: string,
     status: string,
+    user_id: number,
+    username: string,
     url: string,
 }
 
