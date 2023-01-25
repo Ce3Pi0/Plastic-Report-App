@@ -26,7 +26,7 @@ const Info: React.FC = () => {
     const { user } = useContext(GlobalContext) as ContextInterface;
 
     const { data, err, loading } = useFetch(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, updateTokens);
-    const { data: reports, err: reports_error, loading: reports_loading } = useFetch(`http://${DOMAIN}/report`, updateTokens);
+    const { data: reports, err: reports_error, loading: reports_loading } = useFetch(`https://${DOMAIN}/report`, updateTokens);
 
     const [presentAlert] = useIonAlert();
     const [present, dismiss] = useIonModal(UpdateUserImageModal, {
