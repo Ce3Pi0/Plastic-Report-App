@@ -15,6 +15,9 @@ class ReportRoute(BaseRoute):
 
     def create(self, request):
         for key in self.create_req:
+            # add this to the server
+            if key not in request.form:
+                return customAbort("Key not in request", 400)
             setattr(self, key, request.form[key])
 
         if not self.lat or not self.lon:
@@ -33,6 +36,7 @@ class ReportRoute(BaseRoute):
         img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
         
         img_name = get_random_alphanumerical() + "." + img_ext
+        img.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
         img.save(app.config["UPLOAD_FOLDER"] + img_name)
         
         report = Report(lat=self.lat, lon=self.lon, url=img_name, status="pending", user_id = user_id)

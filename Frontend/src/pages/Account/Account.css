@@ -70,7 +70,7 @@
     }
 
     #form {
-        background-color: #1e2023;
+        background-color: var(--ion-color-light);
         width: 70%;
         border-radius: 10px;
         padding: 20px;

@@ -3,6 +3,7 @@ from routes.baseRoute import BaseRoute
 from classes.classes import User, Request
 from utils.utils import customAbort, genSalt, hashPassword, checkMail, get_random_alphanumerical
 import hmac
+import os
 
 
 class UserRoute(BaseRoute):
@@ -136,6 +137,9 @@ class UserRoute(BaseRoute):
             img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
             
             img_name = get_random_alphanumerical() + "." + img_ext
+
+            # change this on the server
+            img.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
             img.save(app.config["UPLOAD_FOLDER"] + img_name)
             
             user.url = img_name
