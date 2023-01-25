@@ -80,7 +80,8 @@ const SendReport: React.FC = () => {
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
           defaultCenter={MACEDONIA_CENTER}
           defaultZoom={DEFAULT_ZOOM}
-          options={{fullscreenControl: true}}
+          options={{fullscreenControl: false}}
+          // change fullscreenControl to true when you fix the issue
         >
           
           {location.lat !== undefined && location.lng !== undefined && <Marker lat={location.lat} lng={location.lng} />}
