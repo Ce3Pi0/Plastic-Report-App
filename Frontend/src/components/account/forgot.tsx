@@ -20,7 +20,7 @@ const Forgot: React.FC = () => {
     const sendResetToken = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        changePasswordRequest(`http://${DOMAIN}/user/forgot_password_token?email=${email}`, setMessage, presentAlert);
+        changePasswordRequest(`https://${DOMAIN}/user/forgot_password_token?email=${email}`, setMessage, presentAlert);
     }
 
     return (

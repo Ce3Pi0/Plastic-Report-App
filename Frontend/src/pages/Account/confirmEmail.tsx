@@ -15,7 +15,7 @@ const ConfiemEmail: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Confirm your email:</IonTitle>
+                    <IonTitle>Confirm email:</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <ConfirmEmailComp />

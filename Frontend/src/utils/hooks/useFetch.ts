@@ -21,7 +21,6 @@ const useFetch = (url: string, updateTokens: any): FetchReturn => {
         fetch(url, {
             method: "GET",
             headers: myHeaders,
-            body: null,
             signal: AbtCnt.signal
         })
             .then(data => {

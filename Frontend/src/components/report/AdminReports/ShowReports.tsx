@@ -11,7 +11,7 @@ import { ContextInterface, ReportInterface } from "../../../interfaces/interface
 
 import useFetch from "../../../utils/hooks/useFetch";
 import { DOMAIN } from "../../../utils/utils";
-import { alertOutline, appsOutline, arrowDownOutline, checkmark, codeWorkingOutline } from "ionicons/icons";
+import { alertOutline, appsOutline, arrowBackOutline, checkmark, codeWorkingOutline } from "ionicons/icons";
 
 const ShowReports: React.FC = () => {
 
@@ -20,7 +20,7 @@ const ShowReports: React.FC = () => {
 
     const { updateTokens } = useContext(GlobalContext) as ContextInterface;
 
-    const { data: reports, err, loading } = useFetch(`http://${DOMAIN}/report`, updateTokens);
+    const { data: reports, err, loading } = useFetch(`https://${DOMAIN}/report`, updateTokens);
 
     const hideTooltip = () => {
         if (hidden)
@@ -35,12 +35,12 @@ const ShowReports: React.FC = () => {
             <IonFab slot="fixed" horizontal="end" vertical="top">
                 <div className="first_tooltip">
                     <IonFabButton size="small" onClick={e => hideTooltip()}>
-                        <IonIcon icon={arrowDownOutline} />
+                        <IonIcon icon={arrowBackOutline} />
                     </IonFabButton>
-                    <span id="first_tooltip_text" className="tooltiptext">Filter reports</span>
+                    <span id="first_tooltip_text" className="tooltiptext-left">Filter</span>
                 </div>
 
-                <IonFabList className="tooltips" side="bottom" >
+                <IonFabList className="tooltips" side="start" >
                     <div className="tooltip">
                         <IonFabButton size="small" color="success" onClick={() => {
                             setStatus("completed")
@@ -48,7 +48,7 @@ const ShowReports: React.FC = () => {
                         }}>
                             <IonIcon icon={checkmark} />
                         </IonFabButton>
-                        <span className="tooltiptext">Completed</span>
+                        <span className="tooltiptext-left">Completed</span>
                     </div>
 
                     <div className="tooltip">
@@ -58,7 +58,7 @@ const ShowReports: React.FC = () => {
                         }}>
                             <IonIcon icon={codeWorkingOutline} />
                         </IonFabButton>
-                        <span className="tooltiptext">Pending</span>
+                        <span className="tooltiptext-left">Pending</span>
                     </div>
 
                     <div className="tooltip">
@@ -68,7 +68,7 @@ const ShowReports: React.FC = () => {
                         }}>
                             <IonIcon icon={alertOutline} />
                         </IonFabButton>
-                        <span className="tooltiptext">Rejected</span>
+                        <span className="tooltiptext-left">Rejected</span>
                     </div>
 
                     <div className="tooltip">
@@ -78,13 +78,15 @@ const ShowReports: React.FC = () => {
                         }}>
                             <IonIcon icon={appsOutline} />
                         </IonFabButton>
-                        <span className="tooltiptext">All</span>
+                        <span className="tooltiptext-left">All</span>
                     </div>
                 </IonFabList>
             </IonFab>
+            <div style={{marginTop: "100px"}}>
             {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.status === status || status === "").map((report: ReportInterface) => (<AdminReport key={report.id} report={report} />))}
             {loading && <div>...Loading</div>}
             {err && <div>Couldn't fetch data for reports!</div>}
+            </div>
         </IonContent>
     );
 }

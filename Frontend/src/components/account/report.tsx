@@ -31,7 +31,7 @@ const Report: React.FC<{ report: ReportInterface }> = ({ report }) => {
 
                 <br />
 
-                <img className="trash-image-info" src={`http://${STATIC_URL}${report.url}`} alt="Image not found" />
+                <img className="trash-image-info" src={`https://${STATIC_URL}${report.url}`} alt="Image not found" />
             </IonCardContent>
         </IonCard>
     );

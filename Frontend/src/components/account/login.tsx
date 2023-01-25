@@ -31,7 +31,7 @@ const Login: React.FC = () => {
             password
         }
 
-        handleRequest(`http://${DOMAIN}/user/login`, "POST", new_user, setMessage, setMistake, setLoggedIn, undefined, updateTokens, presentAlert);
+        handleRequest(`https://${DOMAIN}/user/login`, "POST", new_user, setMessage, setMistake, setLoggedIn, undefined, updateTokens, presentAlert);
     }
 
 

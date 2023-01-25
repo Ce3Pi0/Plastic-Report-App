@@ -52,7 +52,7 @@ const Change: React.FC = () => {
             new_password: newPassword
         };
 
-        handleRequest(`http://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert);
+        handleRequest(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert);
     }
 
     return (

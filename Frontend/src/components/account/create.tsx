@@ -51,7 +51,7 @@ const Register: React.FC = () => {
             gender
         };
 
-        handleRequest(`http://${DOMAIN}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists, updateTokens, presentAlert);
+        handleRequest(`https://${DOMAIN}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists, updateTokens, presentAlert);
     }
 
     return (

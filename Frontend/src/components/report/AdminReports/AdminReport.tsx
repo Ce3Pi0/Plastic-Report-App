@@ -22,11 +22,11 @@ const AdminReport: React.FC<{ report: ReportInterface }> = ({ report }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleAccept = () => {
-        reportRequest(`http://${DOMAIN}/report?id=${report.id}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined)
+        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined)
     }
 
     const handleDecline = () => {
-        reportRequest(`http://${DOMAIN}/report?id=${report.id}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined)
+        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined)
     }
 
     return (
@@ -65,7 +65,7 @@ const AdminReport: React.FC<{ report: ReportInterface }> = ({ report }) => {
 
                 <IonContent className="ion-padding">
                     <div className="container">
-                        <img className="trash-image" src={`http://${STATIC_URL}${report.url}`} alt="Image not found" />
+                        <img className="trash-image" src={`https://${STATIC_URL}${report.url}`} alt="Image not found" />
                     </div>
                 </IonContent>
             </IonModal>

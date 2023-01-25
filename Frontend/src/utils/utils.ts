@@ -2,8 +2,8 @@ import { UserChange, UserLogin, UserRegister, LocationInterface } from "../inter
 
 
 //constants
-export const DOMAIN: string = '192.168.0.41:5000';
-export const STATIC_URL = "192.168.0.41:88/"
+export const DOMAIN: string = 'api.3dfactory.mk';
+export const STATIC_URL = "static.3dfactory.mk/"
 export const UNSAFE_PASSWORD: number = 6
 export const MACEDONIA_CENTER = {
     lat: 41.56,
@@ -230,7 +230,7 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
     refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
     refreshHeaders.append("Content-Type", "application/json");
 
-    fetch(`http://${DOMAIN}/user/refresh_token`, {
+    fetch(`https://${DOMAIN}/user/refresh_token`, {
         method: "GET",
         headers: refreshHeaders
     })

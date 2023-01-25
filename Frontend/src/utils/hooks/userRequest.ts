@@ -47,7 +47,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                             if (!validateEmail(e[0])) {
                                 return;
                             }
-                            fetch(`http://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`, {
+                            fetch(`https://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`, {
                                 method: "GET"
                             })
                                 .then((res) => {
@@ -100,7 +100,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                 setMessage("")
                 setUserExists(false);
                 
-                fetch(`http://${DOMAIN}/user/send_confirm_email_token?email=${user.email}`, {
+                fetch(`https://${DOMAIN}/user/send_confirm_email_token?email=${user.email}`, {
                     method: "GET"
                 })
                     .then((res) => {

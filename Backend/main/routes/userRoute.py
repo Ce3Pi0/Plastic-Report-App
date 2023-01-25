@@ -10,6 +10,7 @@ class UserRoute(BaseRoute):
     __genders = ["male", "female", "other"]
 
     def __init__(self) -> None:
+        # self.create_req = ["name", "username", "email", "password", "type", "gender"]
         self.create_req = ["current_username", "current_password", "name", "username", "email", "password", "type", "gender"]
         self.update_req = ["username", "password", "new_password"]
         self.delete_req = ["username", "password"]

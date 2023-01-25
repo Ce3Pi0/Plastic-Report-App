@@ -31,12 +31,12 @@ const ViewIssueModal = ({ onDismiss, }: { onDismiss: (data?: null, role?: string
 
   const { updateTokens } = useContext(GlobalContext) as ContextInterface;
 
-  const { data, err, loading } = useFetch(`http://${DOMAIN}/issue`, updateTokens);
+  const { data, err, loading } = useFetch(`https://${DOMAIN}/issue`, updateTokens);
 
   const updateIssue = (e: React.MouseEvent<HTMLIonFabButtonElement, MouseEvent>, id: number) => {
     e.preventDefault();
 
-    reportIssueRequest(`http://${DOMAIN}/issue?id=${id}&fixed=True`, "PUT", undefined, updateTokens, undefined);
+    reportIssueRequest(`https://${DOMAIN}/issue?id=${id}&fixed=True`, "PUT", undefined, updateTokens, undefined);
 
     return;
   }

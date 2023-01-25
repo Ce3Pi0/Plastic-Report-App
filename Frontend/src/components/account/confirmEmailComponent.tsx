@@ -19,7 +19,7 @@ const ConfirmEmailComp = () => {
                 {token === null && "Token not specified"}
             </h2>
             {token !== null && <IonFab horizontal='center' vertical='center' className='center-align-text'>
-                <IonFabButton color={"success"} onClick={() => sendConfirmEmail(`http://${DOMAIN}/user/confirm_email?token=${token}`, presentAlert)}>
+                <IonFabButton color={"success"} onClick={() => sendConfirmEmail(`https://${DOMAIN}/user/confirm_email?token=${token}`, presentAlert)}>
                     <IonIcon icon={checkmark} />
                 </IonFabButton>
             </IonFab>}

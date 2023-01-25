@@ -20,7 +20,7 @@ const openReportIssueModal = (present: any, updateTokens: Function, presentAlert
         myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
         myHeaders.append("Content-Type", "application/json");
 
-        reportIssueRequest(`http://${DOMAIN}/issue`, "POST", JSON.stringify(newIssueReport), updateTokens, presentAlert);
+        reportIssueRequest(`https://${DOMAIN}/issue`, "POST", JSON.stringify(newIssueReport), updateTokens, presentAlert);
       }
     }
   });

@@ -25,7 +25,7 @@ const Info: React.FC = () => {
 
     const { user } = useContext(GlobalContext) as ContextInterface;
 
-    const { data, err, loading } = useFetch(`http://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, updateTokens);
+    const { data, err, loading } = useFetch(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, updateTokens);
     const { data: reports, err: reports_error, loading: reports_loading } = useFetch(`http://${DOMAIN}/report`, updateTokens);
 
     const [presentAlert] = useIonAlert();
@@ -55,7 +55,7 @@ const Info: React.FC = () => {
                             <IonFabButton size="small" onClick={e => hideTooltip()}>
                                 <IonIcon icon={arrowDownOutline} />
                             </IonFabButton>
-                            <span id="first_tooltip_text" className="tooltiptext">Filter reports</span>
+                            <span id="first_tooltip_text" className="tooltiptext">Filter</span>
                         </div>
 
                         <IonFabList className="tooltips" side="bottom" >

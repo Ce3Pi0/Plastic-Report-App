@@ -62,7 +62,7 @@ const SendReport: React.FC = () => {
 
     myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
 
-    reportRequest(`http://${DOMAIN}/report`, "POST", data, updateTokens, presentAlert, "form");
+    reportRequest(`https://${DOMAIN}/report`, "POST", data, updateTokens, presentAlert, "form");
   }
 
   return (
@@ -80,7 +80,7 @@ const SendReport: React.FC = () => {
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
           defaultCenter={MACEDONIA_CENTER}
           defaultZoom={DEFAULT_ZOOM}
-          options={{fullscreenControl: false}}
+          options={{fullscreenControl: true}}
         >
           
           {location.lat !== undefined && location.lng !== undefined && <Marker lat={location.lat} lng={location.lng} />}
@@ -93,7 +93,7 @@ const SendReport: React.FC = () => {
           <label className="label">
             {!file && "Select an image:"}
             {file && "Select a different image:"}
-            <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/*" capture="environment"/>
+            <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/*" />
           </label>
 
           <br />
