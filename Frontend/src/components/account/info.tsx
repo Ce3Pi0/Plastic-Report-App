@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar, useIonAlert, useIonModal } from "@ionic/react";
+import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLoading, IonModal, IonTitle, IonToolbar, useIonAlert, useIonModal } from "@ionic/react";
 import { alertOutline, appsOutline, arrowDownOutline, codeWorkingOutline, checkmark } from "ionicons/icons";
 
 /* Components */
@@ -132,11 +132,10 @@ const Info: React.FC = () => {
                     </div>
 
                     {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.user_id === user!.id && (report.status === status || status === "")).map((report: ReportInterface) => (<Report key={report.id} report={report} />))}
-                    {reports_loading && <div>...Loading</div>}
                     {reports_error && <div>Error while fetching data</div>}
                 </>
             }
-            {loading && <div>...Loading</div>}
+            {loading && <IonLoading isOpen={reports_loading || loading} message={"Loading data... Please wait."} />}
             {err &&
                 <div>
                     <p style={{ textAlign: "center" }}>Error while fetching user data</p>

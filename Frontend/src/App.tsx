@@ -51,6 +51,7 @@ import { ContextInterface } from './interfaces/interfaces';
 import AccountForgot from './pages/Account/AccountForgot';
 import ConfiemEmail from './pages/Account/confirmEmail';
 import AccountForgotChange from './pages/Account/AccountForgotChange';
+import ConfirmEmailComp from './components/account/confirmEmailComponent';
 
 
 setupIonicReact();
@@ -93,10 +94,9 @@ const Tabs = () => {
           <AccountForgotChange />
         </Route>
         <Route exact path="/account/confirm_email">
-          <Account />
+          <ConfirmEmailComp />          
         </Route>
 
-        <Redirect exact from="/account/confirm_email" to="/account" />
         <Redirect exact from="/account/create" to="/account" />
         <Redirect exact from="/account/login" to="/account" />
         <Redirect exact from="/" to={"/home"} />

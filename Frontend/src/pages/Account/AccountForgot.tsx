@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/react';
 
 /* Components */
 import Forgot from '../../components/account/forgot';
 
 import './Account.css';
+import { handleRefresh } from '../../utils/utils';
 
 
 const AccountForgot: React.FC = () => {
@@ -17,6 +18,9 @@ const AccountForgot: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
         <Forgot />
       </IonContent>
     </IonPage>

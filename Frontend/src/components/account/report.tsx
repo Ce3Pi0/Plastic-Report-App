@@ -18,7 +18,9 @@ const Report: React.FC<{ report: ReportInterface }> = ({ report }) => {
     return (
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Report {report.id}</IonCardTitle>
+                <IonCardTitle>
+                    Report
+                </IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>

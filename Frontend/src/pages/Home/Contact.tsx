@@ -9,6 +9,8 @@ import {
   IonIcon,
   IonMenuButton,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonTitle,
   IonToolbar,
   ScrollDetail,
@@ -21,10 +23,11 @@ import './Home.css';
 import ContactComponent from '../../components/home/contact/contact';
 import Footer from '../../components/home/contact/footer';
 import { chevronUpOutline } from 'ionicons/icons';
+import { handleRefresh } from '../../utils/utils';
 
 
 const Contact: React.FC = () => {
-  
+
   const contentRef = createRef<HTMLIonContentElement>();
   const [backToTop, setBackToTop] = useState<boolean>(false);
 
@@ -34,7 +37,7 @@ const Contact: React.FC = () => {
     if (ev.detail.scrollTop > 20) setBackToTop(true);
     else setBackToTop(false);
   }
-  
+
   return (
     <>
       {window.location.pathname.includes("home") && <Menu />}
@@ -53,6 +56,9 @@ const Contact: React.FC = () => {
           scrollEvents={true}
           onIonScroll={handleScroll}
           ref={contentRef}>
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+            <IonRefresherContent />
+          </IonRefresher>
           <ContactComponent />
           <br />
           <br />

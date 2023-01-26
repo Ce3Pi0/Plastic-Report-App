@@ -1,3 +1,4 @@
+import { RefresherEventDetail } from "@ionic/react";
 import { UserChange, UserLogin, UserRegister, LocationInterface } from "../interfaces/interfaces";
 
 
@@ -89,7 +90,7 @@ const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, us
         })
 }
 
-const FetchReportChange = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any) => {
+const FetchReportChange = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any, setLoading: any) => {
     fetch(url, {
         method: method,
         headers: myHeaders,
@@ -97,6 +98,7 @@ const FetchReportChange = (url: string, method: methodType, myHeaders: Headers, 
     })
         .then(res => {
             if (res.status === 429) {
+                setLoading(false);
                 presentAlert({
                     subHeader: 'Fail',
                     message: 'To many requests sent... Slow down!',
@@ -109,11 +111,13 @@ const FetchReportChange = (url: string, method: methodType, myHeaders: Headers, 
                 throw Error("Too many requests sent!")
             }
             if (!res.ok) {
+                setLoading(false);
                 throw Error("Something went wrong!")
             }
             return res.json();
         })
         .then(json => {
+            setLoading(false);
             if (json.msg !== "success")
                 throw Error("Something went wrong!");
             if (presentAlert !== undefined) {
@@ -253,11 +257,11 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
             switch (fetchData) {
                 case "data": FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
                     break;
-                case "report": FetchReportChange(url, method!, myHeaders, null, undefined)
+                case "report": FetchReportChange(url, method!, myHeaders, null, undefined, setLoading)
                     break;
                 case "user": FetchUserChange(url, method!, myHeaders, user!, setMessage, setMistake, presentAlert);
                     break;
-                case "create_report": FetchReportChange(url, method!, myHeaders, body, presentAlert);
+                case "create_report": FetchReportChange(url, method!, myHeaders, body, presentAlert, setLoading);
                     break;
                 case "create_issue": FetchIssueChange(url, method!, myHeaders, body, presentAlert);
                     break;
@@ -279,6 +283,13 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
 }
 
 //functions
+export const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
+    setTimeout(() => {
+      event.detail.complete();
+    }, 2000);
+    window.location.reload();
+  }
+
 const ValidFileType = (file: File) => {
     return fileTypes.includes(file.type);
 }

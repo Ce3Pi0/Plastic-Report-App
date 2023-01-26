@@ -1,19 +1,22 @@
-import { IonContent, IonFab, IonFabButton, IonIcon, useIonAlert } from "@ionic/react";
+import { IonContent, IonFab, IonFabButton, IonIcon, IonRefresher, IonRefresherContent, useIonAlert } from "@ionic/react";
 import { arrowBack, checkmark } from "ionicons/icons";
 
 import { sendConfirmEmail } from "../../utils/hooks/sendConfirmMail";
-import { DOMAIN } from "../../utils/utils";
+import { DOMAIN, handleRefresh } from "../../utils/utils";
 
 
 const ConfirmEmailComp = () => {
 
-    const queryParams = new URLSearchParams(window.location.search)
-    const token = queryParams.get("token")
+    const queryParams = new URLSearchParams(window.location.search);
+    const token = queryParams.get("token");
 
     const [presentAlert] = useIonAlert();
 
     return (
         <IonContent fullscreen>
+            <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                <IonRefresherContent />
+            </IonRefresher>
             <h2 className='middle-confirm-text'>
                 {token !== null && "Confirm your email"}
                 {token === null && "Token not specified"}

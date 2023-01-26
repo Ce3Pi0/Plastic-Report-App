@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar } from "@ionic/react";
+import { IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonLoading, IonModal, IonTitle, IonToolbar } from "@ionic/react";
 import { checkmarkOutline, closeOutline } from "ionicons/icons";
 
 import { GlobalContext } from "../../../context/Context";
@@ -15,18 +15,19 @@ import useAddressFetch from "../../../utils/hooks/requestAddress";
 const AdminReport: React.FC<{ report: ReportInterface }> = ({ report }) => {
 
     const { updateTokens } = useContext(GlobalContext) as ContextInterface;
+    const [loading, setLoading] = useState<boolean>(false);
 
     //geoapify.com
-    const { data, err, loading } = useAddressFetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${report.lat}&lon=${report.lon}&apiKey=93ef976230904f26bf7ff03fd45f39aa`);
+    const { data, err, loading:location_loading } = useAddressFetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${report.lat}&lon=${report.lon}&apiKey=93ef976230904f26bf7ff03fd45f39aa`);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleAccept = () => {
-        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined)
+        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined, setLoading)
     }
 
     const handleDecline = () => {
-        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined)
+        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined, setLoading)
     }
 
     return (
@@ -36,9 +37,10 @@ const AdminReport: React.FC<{ report: ReportInterface }> = ({ report }) => {
             </IonCardHeader>
 
             <IonCardContent>
+                <IonLoading isOpen={loading} message={"Applying changes..."} />
                 <IonBadge className="test" color={report.status === "pending"? "warning": report.status ==="completed"? "success":"danger"} slot="start"> </IonBadge>
                 <br />
-                Location: {loading && "...Loading"}{err && `${report.lat} ${report.lon}`}{data && JSON.parse(JSON.stringify(data)).features[0].properties.address_line1}
+                Location: {location_loading && "...Loading location"}{err && `${report.lat} ${report.lon}`}{data && JSON.parse(JSON.stringify(data)).features[0].properties.address_line1}
                 <br />
                 Status: {report.status}{ }{ }
                 <br />

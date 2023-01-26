@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { IonContent, IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
+import { IonContent, IonFab, IonFabButton, IonFabList, IonIcon, IonRefresher, IonRefresherContent } from "@ionic/react";
 
 /* Components */
 import AdminReport from "./AdminReport";
@@ -10,7 +10,7 @@ import { GlobalContext } from "../../../context/Context";
 import { ContextInterface, ReportInterface } from "../../../interfaces/interfaces";
 
 import useFetch from "../../../utils/hooks/useFetch";
-import { DOMAIN } from "../../../utils/utils";
+import { DOMAIN, handleRefresh } from "../../../utils/utils";
 import { alertOutline, appsOutline, arrowBackOutline, checkmark, codeWorkingOutline } from "ionicons/icons";
 
 const ShowReports: React.FC = () => {
@@ -32,6 +32,9 @@ const ShowReports: React.FC = () => {
 
     return (
         <IonContent>
+            <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+                <IonRefresherContent />
+            </IonRefresher>
             <IonFab slot="fixed" horizontal="end" vertical="top">
                 <div className="first_tooltip">
                     <IonFabButton size="small" onClick={e => hideTooltip()}>
@@ -82,10 +85,10 @@ const ShowReports: React.FC = () => {
                     </div>
                 </IonFabList>
             </IonFab>
-            <div style={{marginTop: "100px"}}>
-            {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.status === status || status === "").map((report: ReportInterface) => (<AdminReport key={report.id} report={report} />))}
-            {loading && <div>...Loading</div>}
-            {err && <div>Couldn't fetch data for reports!</div>}
+            <div style={{ marginTop: "100px" }}>
+                {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: ReportInterface) => report.status === status || status === "").map((report: ReportInterface) => (<AdminReport key={report.id} report={report} />))}
+                {loading && <div>...Loading</div>}
+                {err && <div>Couldn't fetch data for reports!</div>}
             </div>
         </IonContent>
     );

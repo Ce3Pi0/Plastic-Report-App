@@ -61,8 +61,8 @@ class ReportRoute(BaseRoute):
                 "lat":report.lat,
                 "lon":report.lon,
                 "url":report.url,
-                "usernam":username,
-                "user_id":report.id,
+                "username":username,
+                "user_id":user.id,
                 "status":report.status
             }
 

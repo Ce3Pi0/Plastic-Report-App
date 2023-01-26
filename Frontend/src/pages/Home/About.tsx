@@ -9,6 +9,8 @@ import {
   IonIcon,
   IonMenuButton,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonTitle,
   IonToolbar,
   ScrollDetail
@@ -22,6 +24,7 @@ import Menu from '../../components/home/menu';
 
 import './Home.css';
 import './About.css';
+import { handleRefresh } from '../../utils/utils';
 
 
 const About: React.FC = () => {
@@ -53,6 +56,9 @@ const About: React.FC = () => {
           scrollEvents={true}
           onIonScroll={handleScroll}
           ref={contentRef}>
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+            <IonRefresherContent />
+          </IonRefresher>
           <AboutComponent />
           <Team />
         </IonContent>
