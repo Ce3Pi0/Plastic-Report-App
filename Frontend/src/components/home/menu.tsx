@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 import { IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonIcon, IonMenuToggle, useIonModal, useIonAlert, IonButton, IonFab } from "@ionic/react";
 import { arrowBackCircleOutline, bug, home, informationCircle, mail } from "ionicons/icons";
-import { menuController } from "@ionic/core"
 
 import ReportIssueModal from "../modals/Issue/client/ReportIssueModal";
 import openReportIssueModal from "../modals/Issue/client/openReportIssueModal";
@@ -17,6 +16,7 @@ import { ContextInterface } from "../../interfaces/interfaces";
 
 const Menu: React.FC = () => {
     const [presentAlert] = useIonAlert();
+    const menuRef = useRef<any>(undefined);
 
     const { user, updateTokens } = useContext(GlobalContext) as ContextInterface;
 
@@ -24,9 +24,8 @@ const Menu: React.FC = () => {
         onDismiss: (data: string, role: string) => dismiss(data, role)
     });
 
-
     return (
-        <IonMenu contentId="main-content">
+        <IonMenu contentId="main-content" menuId="test" ref={menuRef}>
             <IonHeader>
                 <IonToolbar>
                     <IonTitle>Menu</IonTitle>
@@ -37,19 +36,19 @@ const Menu: React.FC = () => {
             </IonHeader>
             <IonContent className="ion-padding">
                 <div className="links">
-                        <Link to="/home">
+                        <Link to="/home" onClick={() => menuRef.current?.isOpen().then((res: any) => {if(res === true) menuRef.current?.close()})}>
                             <h3>
                                 <IonIcon icon={home} size={"small"} />       Home
                             </h3>
                         </Link>
 
-                        <Link to="/home/about">
+                        <Link to="/home/about" onClick={() => menuRef.current?.isOpen().then((res: any) => {if(res === true) menuRef.current?.close()})}>
                             <h3>
                                 <IonIcon icon={informationCircle} size={"small"} />       About
                             </h3>
                         </Link>
 
-                        <Link to="/home/contact">
+                        <Link to="/home/contact" onClick={() => menuRef.current?.isOpen().then((res: any) => {if(res === true) menuRef.current?.close()})}>
                             <h3>
                                 <IonIcon icon={mail} size={"small"} />       Contact
                             </h3>
