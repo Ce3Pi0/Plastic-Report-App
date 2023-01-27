@@ -83,7 +83,6 @@ const SendReport: React.FC = () => {
         </IonFab>
         <GoogleMapReact
           onClick={(e) => {
-            console.log(e);
             setLocation({ lat: `${e.lat}`, lng: `${e.lng}` })
           }}
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
@@ -112,7 +111,7 @@ const SendReport: React.FC = () => {
             {file && "Select a different image from camera:"}
             <br />
             <IonIcon icon={camera} />
-            <input className="upload" type="file" onChange={e => handleSetFile(e)} accept="image/*" capture="environment" />
+            <input className="upload camera" type="file" onChange={e => handleSetFile(e)} accept="image/*" capture="environment" />
           </label>
 
           <br />

@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
 
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLoading, IonModal, IonTitle, IonToolbar, useIonAlert, useIonModal } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonFab, IonFabButton, IonFabList, IonIcon, IonLoading, useIonAlert, useIonModal } from "@ionic/react";
 import { alertOutline, appsOutline, arrowDownOutline, codeWorkingOutline, checkmark } from "ionicons/icons";
+
+import { Avatar } from "@mui/material";
 
 /* Components */
 import Report from "./report";
@@ -104,21 +106,23 @@ const Info: React.FC = () => {
                     <IonCard className="account-info">
 
                         <IonCardHeader>
-                            <IonAvatar >
-                                <div id="avatar" onClick={() => openImageUpdateModal(present, updateTokens, presentAlert)}>
-                                    {data && <img alt="Silhouette of a person's head" src={JSON.parse(JSON.stringify(data)).user.img_url === null ? "https://ionicframework.com/docs/img/demos/avatar.svg" : `http://${STATIC_URL}${JSON.parse(JSON.stringify(data)).user.img_url}`} />}
+                            <div id="avatar" onClick={() => openImageUpdateModal(present, updateTokens, presentAlert)}>
+                                <Avatar
+                                    sx={{ width: 56, height: 56 }}
+                                    src={JSON.parse(JSON.stringify(data)).user.img_url === null || undefined ? "https://ionicframework.com/docs/img/demos/avatar.svg" : `https://${STATIC_URL}${JSON.parse(JSON.stringify(data)).user.img_url}`}
+                                    alt="Silhouette of a person's head">
 
-                                    <div className="middle">
-                                        <p>Change image</p>
-                                    </div>
+                                </Avatar>
+                                <div className="middle">
+                                    Change image
                                 </div>
-                            </IonAvatar>
+                            </div>
                             <IonCardTitle><h1>{JSON.parse(JSON.stringify(data)).user.username}</h1></IonCardTitle>
                             <IonCardSubtitle>{JSON.parse(JSON.stringify(data)).user.email}</IonCardSubtitle>
                         </IonCardHeader>
 
                         <IonCardContent>
-                            Welcome to your account {JSON.parse(JSON.stringify(data)).user.gender === "male" && "mr."} {JSON.parse(JSON.stringify(data)).user.gender === "female" && "mrs."} {JSON.parse(JSON.stringify(data)).user.name}
+                            Welcome to your account {JSON.parse(JSON.stringify(data)).user.gender === "male" && "mr."}{JSON.parse(JSON.stringify(data)).user.gender === "female" && "mrs."}{JSON.parse(JSON.stringify(data)).user.name}!
                         </IonCardContent>
 
                         <IonButton color={"tertiary"} fill="clear" onClick={() => logOut()}>Log out</IonButton>

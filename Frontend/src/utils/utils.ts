@@ -285,26 +285,36 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
 //functions
 export const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     setTimeout(() => {
-      event.detail.complete();
+        event.detail.complete();
     }, 2000);
     window.location.reload();
-  }
+}
 
 const ValidFileType = (file: File) => {
     return fileTypes.includes(file.type);
 }
 
 export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
+
     const preview: Element | null = document.querySelector('.preview');
     const input: HTMLInputElement | null = document.querySelector('.upload');
+    const cameraInput: HTMLInputElement | null = document.querySelector('.camera');
 
-    if (preview === null || input === null) return;
+    if (preview === null || input === null || cameraInput === null) return;
 
     while (preview.firstChild) {
         preview.removeChild(preview.firstChild);
     }
 
-    const curFiles = input.files;
+    const curFiles = input.value === e.target.value ? input.files : cameraInput.value === e.target.value ? cameraInput.files : null;
+
+    if (input.value === e.target.value) {
+        cameraInput.value = "";
+    } else if (cameraInput.value === e.target.value) {
+        input.value = "";
+    }
+
+    console.log(input.value, cameraInput.value);
 
     if (curFiles === null) return;
 
@@ -330,7 +340,6 @@ export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
             list.appendChild(listItem);
         }
     }
-
 }
 
 export const GetLocation = (setLocation: React.Dispatch<React.SetStateAction<LocationInterface>>) => {
