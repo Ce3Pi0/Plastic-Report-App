@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Redirect, Route, useLocation } from 'react-router-dom';
+import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
 
 import {
   IonApp,
@@ -53,13 +53,20 @@ import ConfiemEmail from './pages/Account/confirmEmail';
 import AccountForgotChange from './pages/Account/AccountForgotChange';
 import ConfirmEmailComp from './components/account/confirmEmailComponent';
 
-
 setupIonicReact();
 
 
 const Tabs = () => {
   const { loggedIn, user, isLoaded } = useContext(GlobalContext) as ContextInterface;
   const location = useLocation();
+
+  const history = useHistory();
+
+  document.addEventListener('ionBackButton', (ev: any) => {
+    ev.detail.register(10, () => {
+      history.goBack();
+    });
+  });
 
   return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : loggedIn ? (
     <IonTabs>
@@ -94,7 +101,7 @@ const Tabs = () => {
           <AccountForgotChange />
         </Route>
         <Route exact path="/account/confirm_email">
-          <ConfirmEmailComp />          
+          <ConfirmEmailComp />
         </Route>
 
         <Redirect exact from="/account/create" to="/account" />
@@ -113,7 +120,7 @@ const Tabs = () => {
           <IonLabel>Home</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="report" href="/report">
+        <IonTabButton tab="report" href="/report" selected={location.pathname.includes("report")}>
           <IonIcon icon={user?.type === "client" || user?.type === undefined ? locate : listOutline} />
           <IonLabel>{user?.type === "client" || user?.type === undefined ? "Report" : "Reports"}</IonLabel>
         </IonTabButton>
