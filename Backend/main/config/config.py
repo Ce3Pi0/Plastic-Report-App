@@ -10,8 +10,8 @@ from itsdangerous import URLSafeSerializer, SignatureExpired, URLSafeTimedSerial
 
 SECRET_KEY: str = "Ce3Pi0"
 MAIL_SERVER: str = 'smtp-mail.outlook.com'
-MY_MAIL: str = "hristijannikolovski56@outlook.com"
-MAIL_PASSWORD: str = "TestPass123"
+MY_MAIL: str = "art3dfactoryapp@outlook.com"
+MAIL_PASSWORD: str = "PlasticKillers"
 FRONTEND_DOMAIN: str = "3dfactory.mk"
 
 app = Flask(__name__)
