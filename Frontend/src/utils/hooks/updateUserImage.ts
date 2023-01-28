@@ -1,12 +1,14 @@
 import { FetchRefreshToken, methodType } from "../utils";
 
 
-export const updateUserImage = (url: string, method: methodType, body: BodyInit | undefined, updateTokens: any, presentAlert: any, contentType: string | undefined) => {
+export const updateUserImage = (url: string, method: methodType, body: BodyInit | undefined, updateTokens: any, presentAlert: any,updatingUserImage: any, contentType: string | undefined) => {
     let myHeaders = new Headers();
 
     myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
     if (contentType !== "form") myHeaders.append("Content-Type", "application/json");
 
+    if (updatingUserImage !== undefined)
+        updatingUserImage(true);
     fetch(url, {
         method: method,
         headers: myHeaders,
@@ -23,10 +25,12 @@ export const updateUserImage = (url: string, method: methodType, body: BodyInit 
                     },],
                 });
 
+                if (updatingUserImage !== undefined)
+                    updatingUserImage(false);
                 throw Error("Too many requests sent!")
             }
             if (res.status === 401 || res.status === 422) {
-                if (contentType === "form") FetchRefreshToken(url, method, undefined, body, undefined, undefined, undefined, undefined, undefined, undefined, "update_image", updateTokens, presentAlert, contentType);
+                if (contentType === "form") FetchRefreshToken(url, method, undefined, body, undefined, undefined, updatingUserImage, undefined, undefined, undefined, "update_image", updateTokens, presentAlert, contentType);
             } else {
                 if (!res.ok) {
                     throw Error("Something went wrong!")
@@ -38,6 +42,8 @@ export const updateUserImage = (url: string, method: methodType, body: BodyInit 
             if (json.msg !== "success") throw Error("Something went wrong!")
 
             if (presentAlert !== undefined) {
+                if (updatingUserImage !== undefined)
+                    updatingUserImage(false);
                 presentAlert({
                     subHeader: 'Success!',
                     message: 'User image updated successfully!',
@@ -51,6 +57,10 @@ export const updateUserImage = (url: string, method: methodType, body: BodyInit 
                 });
             } else window.location.reload();
         })
-        .catch(err => Error(err))
+        .catch(err => {
+            if (updatingUserImage !== undefined)
+                updatingUserImage(false);
+            throw Error(err)
+        })
 
 }

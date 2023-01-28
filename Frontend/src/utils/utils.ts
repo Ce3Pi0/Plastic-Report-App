@@ -181,7 +181,7 @@ const FetchIssueChange = (url: string, method: methodType, myHeaders: Headers, b
         .catch(err => Error(err))
 }
 
-const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any) => {
+const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any, updatingUserImage: any) => {
     fetch(url, {
         method: method,
         headers: myHeaders,
@@ -189,6 +189,8 @@ const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Header
     })
         .then(res => {
             if (res.status === 429) {
+                if (updatingUserImage !== undefined)
+                    updatingUserImage(false)
                 presentAlert({
                     subHeader: 'Fail',
                     message: 'To many requests sent... Slow down!',
@@ -209,6 +211,8 @@ const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Header
             if (json.msg !== "success") throw Error("Something went wrong!")
 
             if (presentAlert !== undefined) {
+                if (updatingUserImage !== undefined)
+                    updatingUserImage(false);
                 presentAlert({
                     subHeader: 'Success!',
                     message: 'User image updated successfully!',
@@ -222,7 +226,11 @@ const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Header
                 });
             } else window.location.reload();
         })
-        .catch(err => Error(err))
+        .catch(err => {
+            if (updatingUserImage !== undefined)
+                updatingUserImage(false)
+            throw Error(err)
+        })
 }
 
 
@@ -267,7 +275,7 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
                     break;
                 case "update_issue": FetchIssueChange(url, method!, myHeaders, null, undefined);
                     break;
-                case "update_image": FetchUpdateUserImage(url, method!, myHeaders, body, presentAlert);
+                case "update_image": FetchUpdateUserImage(url, method!, myHeaders, body, presentAlert, setLoading);
                     break;
             }
 

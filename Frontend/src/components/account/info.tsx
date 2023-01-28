@@ -24,6 +24,7 @@ const Info: React.FC = () => {
 
     const [status, setStatus] = useState("");
     const [hidden, setHidden] = useState<boolean>(false);
+    const [updatingUserImage, setUpdatingUserImage] = useState<boolean>(false);
 
     const { user } = useContext(GlobalContext) as ContextInterface;
 
@@ -104,9 +105,9 @@ const Info: React.FC = () => {
                     </IonFab>
 
                     <IonCard className="account-info">
-
+                        <IonLoading isOpen={updatingUserImage} message="Updating image ... Please wait." />
                         <IonCardHeader>
-                            <div id="avatar" onClick={() => openImageUpdateModal(present, updateTokens, presentAlert)}>
+                            <div id="avatar" onClick={() => openImageUpdateModal(present, updateTokens, presentAlert, setUpdatingUserImage)}>
                                 <Avatar
                                     sx={{ width: 56, height: 56 }}
                                     src={JSON.parse(JSON.stringify(data)).user.img_url === null || undefined ? "https://ionicframework.com/docs/img/demos/avatar.svg" : `https://${STATIC_URL}${JSON.parse(JSON.stringify(data)).user.img_url}`}

@@ -4,7 +4,7 @@ import { updateUserImage } from "../../../utils/hooks/updateUserImage";
 import { DOMAIN } from "../../../utils/utils";
 
 
-const openImageUpdateModal = (present: any, updateTokens: Function, presentAlert: any) => {
+const openImageUpdateModal = (present: any, updateTokens: Function, presentAlert: any, updatingUserImage: any) => {
 
   present({
     onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
@@ -12,7 +12,7 @@ const openImageUpdateModal = (present: any, updateTokens: Function, presentAlert
         const data = new FormData();
         data.append("image", ev.detail.data.file);
 
-        updateUserImage(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")!}`, "PUT", data, updateTokens, presentAlert, "form");
+        updateUserImage(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")!}`, "PUT", data, updateTokens, presentAlert, updatingUserImage, "form");
       }
     }
   });
