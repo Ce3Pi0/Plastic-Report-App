@@ -322,8 +322,6 @@ export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
         input.value = "";
     }
 
-    console.log(input.value, cameraInput.value);
-
     if (curFiles === null) return;
 
     if (curFiles.length === 0) {

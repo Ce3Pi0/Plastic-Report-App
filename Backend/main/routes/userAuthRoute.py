@@ -102,9 +102,9 @@ class UserAuthRoute(BaseRoute):
 
         token = s.dumps(request.args["email"], salt='email-confirm')
 
-        msg = Message("Confirm Email", sender=MY_MAIL, recipients=[request.args["email"]])
+        msg = Message("Welcome new user! When you click this link, you will be able to confirm your email!", sender=MY_MAIL, recipients=[request.args["email"]])
 
-        link = f"http://{FRONTEND_DOMAIN}/account/confirm_email?token={token}"
+        link = f"https://{FRONTEND_DOMAIN}/account/confirm_email?token={token}"
 
         msg.body = f"Your link is {link}"
 
@@ -158,9 +158,9 @@ class UserAuthRoute(BaseRoute):
 
         token = s.dumps(request.args["email"], salt='password-forgot')
 
-        msg = Message("Change your password", sender=MY_MAIL, recipients=[request.args["email"]])
+        msg = Message("Welcome user! When you click this link, you will be able to change your password!", sender=MY_MAIL, recipients=[request.args["email"]])
 
-        link = f"http://{FRONTEND_DOMAIN}/account/forgot_change?token={token}"
+        link = f"https://{FRONTEND_DOMAIN}/account/forgot_change?token={token}"
 
         msg.body = f"Your link is {link}"
 

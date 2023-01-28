@@ -10,10 +10,12 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
+  useIonRouter
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { home, cart, person, locate, listOutline } from 'ionicons/icons';
+import { App as ExitApp } from '@capacitor/app';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -60,11 +62,14 @@ const Tabs = () => {
   const { loggedIn, user, isLoaded } = useContext(GlobalContext) as ContextInterface;
   const location = useLocation();
 
-  const history = useHistory();
-
+  const ionRouter = useIonRouter();
   document.addEventListener('ionBackButton', (ev: any) => {
     ev.detail.register(10, () => {
-      history.goBack();
+      if (ionRouter.canGoBack()){
+        window.history.back();
+      } else {
+        ExitApp.exitApp();
+      }
     });
   });
 

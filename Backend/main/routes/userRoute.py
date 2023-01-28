@@ -138,10 +138,14 @@ class UserRoute(BaseRoute):
             
             img_name = get_random_alphanumerical() + "." + img_ext
 
-            # change this on the server
             img.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
             img.save(app.config["UPLOAD_FOLDER"] + img_name)
             
+            if user.url is not None:
+                if os.path.exists(os.path.join(app.config["UPLOAD_FOLDER"], user.url)):
+                    os.remove(os.path.join(app.config["UPLOAD_FOLDER"], user.url))
+
+
             user.url = img_name
             db.session.commit()
 
