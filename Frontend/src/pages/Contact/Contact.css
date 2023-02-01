@@ -1,0 +1,19 @@
+textarea {
+    resize: none;
+    height: 170px;
+    width: 100%;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+#form>ion-label {
+    font-size: 17px;
+}
+
+#title {
+    font-size: 22px;
+}
+
+.back-to-top {
+    margin-right: 16px;
+}

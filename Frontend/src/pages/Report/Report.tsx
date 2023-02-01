@@ -3,18 +3,19 @@ import { useContext } from 'react';
 import { IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 
 /* Components */
-import SendReport from '../../components/report/ClientReport/SendReport';
-import ShowReports from '../../components/report/AdminReports/ShowReports';
+import SendReportComponent from '../../components/Report/ClientReports/SendReportComponent';
+import ShowReportsComponent from '../../components/Report/AdminReports/ShowReportsComponent';
 
 import { GlobalContext } from '../../context/Context';
-import { ContextInterface } from '../../interfaces/interfaces';
+
+import { IContext } from '../../interfaces/interfaces';
 
 import './Report.css';
 
 
 const Report: React.FC = () => {
 
-  const { user } = useContext(GlobalContext) as ContextInterface;
+  const { user } = useContext(GlobalContext) as IContext;
 
   return (
     <IonPage>
@@ -25,8 +26,8 @@ const Report: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      {user?.type === "client" && < SendReport />}
-      {user?.type === "admin" && < ShowReports />}
+      {user?.type === "client" && < SendReportComponent />}
+      {user?.type === "admin" && < ShowReportsComponent />}
     </IonPage>
   );
 };

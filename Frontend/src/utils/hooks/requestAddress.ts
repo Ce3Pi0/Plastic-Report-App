@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
-import { FetchReturn } from "../../interfaces/interfaces";
+import { IFetch } from "../../interfaces/interfaces";
 
 
-const useAddressFetch = (url: string): FetchReturn => {
+const useAddressFetch = (url: string): IFetch => {
     const [data, setData] = useState<JSON | null>(null);
     const [err, setErr] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);

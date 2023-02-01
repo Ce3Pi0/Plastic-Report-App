@@ -1,5 +1,5 @@
-import { RefresherEventDetail } from "@ionic/react";
-import { UserChange, UserLogin, UserRegister, LocationInterface } from "../interfaces/interfaces";
+import { RefresherEventDetail, ScrollDetail } from "@ionic/react";
+import { IUserChange, IUserLogin, IUserRegister, ILocation } from "../interfaces/interfaces";
 
 
 //constants
@@ -55,7 +55,7 @@ const FetchData = (url: string, myHeaders: Headers, AbtCnt: AbortController, set
         })
 }
 
-const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, user: UserChange | UserRegister | UserLogin, setMessage: any, setMistake: any, presentAlert: any) => {
+const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, user: IUserChange | IUserRegister | IUserLogin, setMessage: any, setMistake: any, presentAlert: any) => {
     fetch(url, {
         method: method,
         headers: myHeaders,
@@ -87,6 +87,7 @@ const FetchUserChange = (url: string, method: methodType, myHeaders: Headers, us
         })
         .catch((err) => {
             setMistake(true)
+            setMessage('');
         })
 }
 
@@ -181,7 +182,7 @@ const FetchIssueChange = (url: string, method: methodType, myHeaders: Headers, b
         .catch(err => Error(err))
 }
 
-const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any, updatingUserImage: any) => {
+const FetchUserImageChange = (url: string, method: methodType, myHeaders: Headers, body: BodyInit | undefined | null, presentAlert: any, updatingUserImage: any) => {
     fetch(url, {
         method: method,
         headers: myHeaders,
@@ -234,7 +235,7 @@ const FetchUpdateUserImage = (url: string, method: methodType, myHeaders: Header
 }
 
 
-export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, body: undefined | BodyInit, user: UserChange | UserRegister | UserLogin | undefined, setData: any, setLoading: any, setErr: any,
+export const FetchRefreshToken = (url: string, method: methodType | undefined, AbtCnt: AbortController | undefined, body: undefined | BodyInit, user: IUserChange | IUserRegister | IUserLogin | undefined, setData: any, setLoading: any, setErr: any,
     setMessage: any, setMistake: any, fetchData: string, updateTokens: any, presentAlert: any, contentType: string | undefined) => {
 
     let refreshHeaders = new Headers();
@@ -275,7 +276,7 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
                     break;
                 case "update_issue": FetchIssueChange(url, method!, myHeaders, null, undefined);
                     break;
-                case "update_image": FetchUpdateUserImage(url, method!, myHeaders, body, presentAlert, setLoading);
+                case "update_image": FetchUserImageChange(url, method!, myHeaders, body, presentAlert, setLoading);
                     break;
             }
 
@@ -291,7 +292,7 @@ export const FetchRefreshToken = (url: string, method: methodType | undefined, A
 }
 
 //functions
-export const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
+export const HandleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     setTimeout(() => {
         event.detail.complete();
     }, 2000);
@@ -348,7 +349,7 @@ export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
 }
 
-export const GetLocation = (setLocation: React.Dispatch<React.SetStateAction<LocationInterface>>) => {
+export const GetLocation = (setLocation: React.Dispatch<React.SetStateAction<ILocation>>) => {
     navigator.geolocation.getCurrentPosition((position) => {
         let lat = position.coords.latitude.toFixed(2)
         let long = position.coords.longitude.toFixed(2)
@@ -359,15 +360,15 @@ export const GetLocation = (setLocation: React.Dispatch<React.SetStateAction<Loc
     });
 }
 
-export function InstanceOfUserChange(data: any): data is UserChange {
+export function InstanceOfUserChange(data: any): data is IUserChange {
     return 'new_password' in data;
 }
 
-export function InstanceOfUserRegister(data: any): data is UserRegister {
+export function InstanceOfUserRegister(data: any): data is IUserRegister {
     return 'name' in data;
 }
 
-export function validateEmail(email: string): boolean {
+export function ValidateEmail(email: string): boolean {
     const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return res.test(String(email).toLowerCase());
 }

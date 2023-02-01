@@ -1,4 +1,4 @@
-import { DOMAIN, validateEmail } from "../utils"
+import { DOMAIN, ValidateEmail } from "../utils"
 
 
 export const sendConfirmEmail = (url: string, presentAlert: any) => {
@@ -36,7 +36,7 @@ export const sendConfirmEmail = (url: string, presentAlert: any) => {
                         text: 'OK',
                         role: 'confirm',
                         handler: (e: any) => {
-                            if (!validateEmail(e[0])) {
+                            if (!ValidateEmail(e[0])) {
                                 return;
                             }
                             fetch(`https://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`, {

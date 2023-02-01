@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-import { UserInterface, ContextInterface } from "../interfaces/interfaces";
+import { IUser, IContext } from "../interfaces/interfaces";
 
 
-const initial_state: ContextInterface = {
+const initial_state: IContext = {
     loggedIn: false,
     setLoggedIn: () => { return },
     updateTokens: () => { return },
@@ -11,13 +11,13 @@ const initial_state: ContextInterface = {
     isLoaded: false
 };
 
-export const GlobalContext = React.createContext<ContextInterface | null>(initial_state);
+export const GlobalContext = React.createContext<IContext | null>(initial_state);
 
 export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
-    const [state, setState] = useState<ContextInterface>(initial_state);
+    const [state, setState] = useState<IContext>(initial_state);
 
-    const setLoggedIn = (userLoggedIn: boolean, user: UserInterface | null): void => {
+    const setLoggedIn = (userLoggedIn: boolean, user: IUser | null): void => {
         setState({
             ...state,
             loggedIn: userLoggedIn,

@@ -1,0 +1,19 @@
+.links>* {
+    color: rgb(205, 205, 205);
+    text-decoration: none;
+}
+
+.hide-menu {
+    color: rgb(205, 205, 205);
+    padding: 6px;
+}
+
+.links>*:hover {
+    cursor: pointer;
+    color: var(--ion-color-light-contrast);
+}
+
+.hide-menu:hover {
+    cursor: pointer;
+    color: white;
+}

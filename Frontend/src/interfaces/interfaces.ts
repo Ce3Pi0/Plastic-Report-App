@@ -1,4 +1,4 @@
-export interface UserInterface {
+export interface IUser {
     id: number,
     username: string,
     gender: string,
@@ -8,18 +8,18 @@ export interface UserInterface {
 }
 
 
-export interface UserLogin {
+export interface IUserLogin {
     username: string,
     password: string
 }
 
-export interface UserChange {
+export interface IUserChange {
     username: string,
     password: string,
     new_password: string
 }
 
-export interface UserRegister {
+export interface IUserRegister {
     name: string,
     username: string,
     email: string,
@@ -27,19 +27,19 @@ export interface UserRegister {
     gender: string
 }
 
-export interface ForgotInterface{
+export interface IForgot{
     password: string
 }
 
 
-export interface FetchReturn {
+export interface IFetch {
     data: JSON | null,
     err: string | null,
     loading: boolean
 }
 
 
-export interface ReportInterface {
+export interface IReport {
     id: number,
     lat: string,
     lon: string,
@@ -50,22 +50,22 @@ export interface ReportInterface {
 }
 
 
-export interface ContextInterface {
+export interface IContext {
     loggedIn: boolean,
-    setLoggedIn: (userLoggedIn: boolean, user: UserInterface | null) => void,
+    setLoggedIn: (userLoggedIn: boolean, user: IUser | null) => void,
     updateTokens: () => void,
-    user: UserInterface | null,
+    user: IUser | null,
     isLoaded: boolean
 };
 
 
-export interface LocationInterface {
+export interface ILocation {
     lat: string | undefined,
     lng: string | undefined
 };
 
 
-export interface IssueElementTemplate {
+export interface IIssue {
     name: string,
     description: string | undefined;
 }

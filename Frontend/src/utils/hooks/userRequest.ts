@@ -1,9 +1,9 @@
-import { UserLogin, UserChange, UserRegister, UserInterface } from '../../interfaces/interfaces';
+import { IUserLogin, IUserChange, IUserRegister, IUser } from '../../interfaces/interfaces';
 
-import { FetchRefreshToken, methodType, InstanceOfUserChange, InstanceOfUserRegister, DOMAIN, validateEmail } from '../utils';
+import { FetchRefreshToken, methodType, InstanceOfUserChange, InstanceOfUserRegister, DOMAIN, ValidateEmail } from '../utils';
 
 
-export const handleRequest = (url: string, method: methodType, user: UserChange | UserLogin | UserRegister, setMessage: any, setMistake: any, setLoggedIn: any, setUserExists: any, updateTokens: any, presentAlert: any) => {
+export const userRequest = (url: string, method: methodType, user: IUserChange | IUserLogin | IUserRegister, setMessage: any, setMistake: any, setLoggedIn: any, setUserExists: any, updateTokens: any, presentAlert: any) => {
 
     let myHeaders = new Headers();
 
@@ -44,7 +44,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                         text: 'OK',
                         role: 'confirm',
                         handler: (e: string) => {
-                            if (!validateEmail(e[0])) {
+                            if (!ValidateEmail(e[0])) {
                                 return;
                             }
                             fetch(`https://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`, {
@@ -134,7 +134,7 @@ export const handleRequest = (url: string, method: methodType, user: UserChange 
                 window.localStorage.setItem("refresh_token", json.refresh_token);
                 window.localStorage.setItem("logged_in", "true");
 
-                const current_user: UserInterface = {
+                const current_user: IUser = {
                     id: json.id,
                     username: json.username,
                     gender: json.gender,
