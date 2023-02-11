@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import { IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonIcon, IonMenuToggle, useIonModal, useIonAlert, IonButton, IonFab } from "@ionic/react";
+import { IonHeader, IonMenu, IonTitle, IonToolbar, IonContent, IonIcon, IonMenuToggle, useIonModal, useIonAlert } from "@ionic/react";
 import { arrowBackCircleOutline, bug, home, informationCircle, mail } from "ionicons/icons";
 
 import ReportIssueModal from "../Modals/Issue/client/ReportIssueModal";

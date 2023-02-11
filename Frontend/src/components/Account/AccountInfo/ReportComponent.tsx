@@ -26,14 +26,11 @@ const ReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
             <IonCardContent>
                 <IonBadge className="test" color={checkStatus(report.status)} slot="start"> </IonBadge>
 
-
                 <br />
-
                 Status: {report.status}
-
                 <br />
 
-                <img className="trash-image-info" src={`https://${STATIC_URL}${report.url}`} alt="Image not found" />
+                <img className="trash-image-info" src={`https://${STATIC_URL}${report.url}`} alt="Not found" />
             </IonCardContent>
         </IonCard>
     );

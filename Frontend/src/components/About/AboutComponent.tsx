@@ -20,7 +20,7 @@ const AboutComponent: React.FC = () => (
             </h4>
         </IonText>
 
-        <img className="about-logo" src={logo} />
+        <img className="about-logo" src={logo} alt="3D factory"/>
 
 
         <div id="container">

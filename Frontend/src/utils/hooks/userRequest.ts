@@ -82,7 +82,7 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
             if (res.status === 405) {
                 throw Error("Wrond username or password")
             }
-            if (res.status === 401 || res.status === 422 && InstanceOfUserChange(user)) {
+            if ((res.status === 401 || res.status === 422) && InstanceOfUserChange(user)) {
                 FetchRefreshToken(url, method, undefined, undefined, user, undefined, undefined, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
             } else {
                 if (!res.ok) {

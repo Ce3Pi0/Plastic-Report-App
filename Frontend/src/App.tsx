@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Redirect, Route, useLocation } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
 import {
   IonApp,
@@ -14,7 +14,7 @@ import {
   useIonRouter
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { home, cart, person, locate, listOutline } from 'ionicons/icons';
+import { home, person, locate, listOutline } from 'ionicons/icons';
 import { App as ExitApp } from '@capacitor/app';
 
 /* Core CSS required for Ionic components to work properly */
@@ -53,6 +53,7 @@ import AccountConfirmEmailPage from './pages/Account/AccountConfirmEmailPage';
 import { GlobalContext, GlobalProvider } from './context/Context';
 
 import { IContext } from './interfaces/interfaces';
+import AppUrlListener from './AppUrlListener';
 
 setupIonicReact();
 
@@ -178,6 +179,7 @@ const App: React.FC = () => (
   <GlobalProvider>
     <IonApp>
       <IonReactRouter>
+        <AppUrlListener/>
         <Tabs />
       </IonReactRouter>
     </IonApp>

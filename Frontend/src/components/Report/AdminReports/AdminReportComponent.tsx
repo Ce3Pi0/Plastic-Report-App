@@ -67,7 +67,7 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
 
                 <IonContent className="ion-padding">
                     <div className="container">
-                        <img className="trash-image" src={`https://${STATIC_URL}${report.url}`} alt="Image not found" />
+                        <img className="trash-image" src={`https://${STATIC_URL}${report.url}`} alt="Not found" />
                     </div>
                 </IonContent>
             </IonModal>

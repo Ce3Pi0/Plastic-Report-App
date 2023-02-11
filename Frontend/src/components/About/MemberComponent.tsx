@@ -25,7 +25,7 @@ const MemberComponent: React.FC<{ name: string, email: string, img: string, msg:
                 <p><a href={`mailto:${email}`}>{email}</a></p>
             </div>
             <div className="btn" onClick={() => setIsOpen(true)}>
-                <a>Info</a>
+                Info
             </div>
             <MemberModal name={name} message={msg} isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>

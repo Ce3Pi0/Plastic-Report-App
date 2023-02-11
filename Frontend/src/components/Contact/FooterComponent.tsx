@@ -22,7 +22,7 @@ const FooterComponent: React.FC = () => (
 				<p className="footer-company-name">Be part of the solution, not pollution © 2023</p>
 
 				<Link to="/home">
-					<img id="company-logo" src={logo} />
+					<img id="company-logo" src={logo} alt="3D factory logo"/>
 				</Link>
 			</div>
 
@@ -48,11 +48,11 @@ const FooterComponent: React.FC = () => (
 			<div className="footer-right">
 
 				<div className="footer-icons">
-					<a href="https://www.facebook.com/profile.php?id=100085664212659" target="_blank"><IonIcon size="large" icon={logoFacebook} /></a>
-					<a href="https://instagram.com/3dprints_art?igshid=YmMyMTA2M2Y=" target="_blank"><IonIcon size="large" icon={logoInstagram} /></a>
-					<a href="https://www.youtube.com/channel/UCO95fXFiVyZ3ifiX2ixsiUw" target="_blank"><IonIcon size="large" icon={logoYoutube} /></a>
+					<a href="https://www.facebook.com/profile.php?id=100085664212659" target="_blank" rel="noreferrer"><IonIcon size="large" icon={logoFacebook} /></a>
+					<a href="https://instagram.com/3dprints_art?igshid=YmMyMTA2M2Y=" target="_blank" rel="noreferrer"><IonIcon size="large" icon={logoInstagram} /></a>
+					<a href="https://www.youtube.com/channel/UCO95fXFiVyZ3ifiX2ixsiUw" target="_blank" rel="noreferrer"><IonIcon size="large" icon={logoYoutube} /></a>
 				</div>
-				<a target="_blank"><img className="rcc-logo-contact"src={EuRcc} /></a>
+				<a href="https://www.rcc.int" target="_blank" rel="noreferrer"><img className="rcc-logo-contact"src={EuRcc} alt="RCC logo"/></a>
 			</div>
 
 		</footer>

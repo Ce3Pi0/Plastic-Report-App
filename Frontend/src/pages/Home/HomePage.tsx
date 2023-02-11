@@ -1,18 +1,15 @@
 import React from 'react';
 
 import {
-  IonButton,
   IonButtons,
   IonContent,
-  IonFab,
   IonHeader,
   IonMenuButton,
-  IonMenuToggle,
   IonPage,
   IonRefresher,
   IonRefresherContent,
   IonTitle,
-  IonToolbar,
+  IonToolbar
 } from '@ionic/react';
 
 /* Components */

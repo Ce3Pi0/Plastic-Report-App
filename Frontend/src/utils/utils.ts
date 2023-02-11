@@ -1,4 +1,4 @@
-import { RefresherEventDetail, ScrollDetail } from "@ionic/react";
+import { RefresherEventDetail } from "@ionic/react";
 import { IUserChange, IUserLogin, IUserRegister, ILocation } from "../interfaces/interfaces";
 
 
