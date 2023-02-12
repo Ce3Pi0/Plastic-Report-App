@@ -3,13 +3,14 @@ import { IUserLogin, IUserChange, IUserRegister, IUser } from '../../interfaces/
 import { FetchRefreshToken, methodType, InstanceOfUserChange, InstanceOfUserRegister, DOMAIN, ValidateEmail } from '../utils';
 
 
-export const userRequest = (url: string, method: methodType, user: IUserChange | IUserLogin | IUserRegister, setMessage: any, setMistake: any, setLoggedIn: any, setUserExists: any, updateTokens: any, presentAlert: any) => {
+export const userRequest = (url: string, method: methodType, user: IUserChange | IUserLogin | IUserRegister, setMessage: any, setMistake: any, setLoggedIn: any, setUserExists: any, updateTokens: any, presentAlert: any, setLoading: any) => {
 
     let myHeaders = new Headers();
 
     myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
     myHeaders.append("Content-Type", "application/json");
 
+    setLoading(true);
     fetch(url, {
         method: method,
         headers: myHeaders,
@@ -17,11 +18,15 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
     })
         .then(res => {
             if (res.status === 404) {
+                setLoading(false);
+
                 if (setMessage !== undefined)
                     setMessage("User not found!");
                 throw Error("User not found!")
             }
             if (res.status === 429) {
+                setLoading(false);
+
                 presentAlert({
                     subHeader: 'Fail',
                     message: 'To many requests sent... Slow down!',
@@ -37,6 +42,8 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
                 throw Error("Too many requests sent!")
             }
             if (res.status === 406){
+                setLoading(false);
+
                 presentAlert({
                     subHeader: 'Error',
                     message: 'Enter your email and try again!',
@@ -80,11 +87,14 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
                 throw Error("Email not confirmed")
             }
             if (res.status === 405) {
+                setLoading(false);
                 throw Error("Wrond username or password")
             }
             if ((res.status === 401 || res.status === 422) && InstanceOfUserChange(user)) {
-                FetchRefreshToken(url, method, undefined, undefined, user, undefined, undefined, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
+                FetchRefreshToken(url, method, undefined, undefined, user, undefined, setLoading, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
             } else {
+                setLoading(false);
+
                 if (!res.ok) {
                     throw Error("Something went wrong!")
                 }

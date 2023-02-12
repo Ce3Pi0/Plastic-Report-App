@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router";
 
-import { IonButton, IonFab, IonFabButton, IonIcon, IonInput, IonTitle, useIonAlert } from "@ionic/react";
+import { IonButton, IonFab, IonFabButton, IonIcon, IonInput, IonLoading, IonTitle, useIonAlert } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
 import { GlobalContext } from '../../context/Context';
@@ -18,9 +18,12 @@ const AccountChangeComponent: React.FC = () => {
 
     const { user, updateTokens } = useContext(GlobalContext) as IContext;
 
+    const [loading, setLoading] = useState<boolean>(false);
+    
     const [password, setPassword] = useState<string>('');
     const [newPassword, setNewPassword] = useState<string>('');
     const [confirmNewPassword, setConfirmNewPassword] = useState<string>('');
+
     const [mistake, setMistake] = useState<boolean>(false);
     const [message, setMessage] = useState<string>('');
 
@@ -52,11 +55,12 @@ const AccountChangeComponent: React.FC = () => {
             new_password: newPassword
         };
 
-        userRequest(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert);
+        userRequest(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert, setLoading);
     }
 
     return (
         <div id="container">
+            <IonLoading isOpen={loading} message={"Updating password..."} />
             <form id="form" onSubmit={HandleSubmit}>
                 <IonFab horizontal="start" vertical="top">
                     <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>

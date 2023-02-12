@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router";
 
-import { IonButton, IonTitle, IonInput, IonFab, IonFabButton, IonIcon, IonRadioGroup, IonItem, IonLabel, IonRadio, useIonAlert } from "@ionic/react";
+import { IonButton, IonTitle, IonInput, IonFab, IonFabButton, IonIcon, IonRadioGroup, IonItem, IonLabel, IonRadio, useIonAlert, IonLoading } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
 import { GlobalContext } from "../../context/Context";
@@ -18,11 +18,14 @@ const AccountRegisterComponent: React.FC = () => {
 
     const { updateTokens } = useContext(GlobalContext) as IContext;
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     const [email, setEmail] = useState<string>('');
     const [name, setName] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [gender, setGender] = useState<string>('');
+
     const [userExists, setUserExists] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
 
@@ -51,11 +54,12 @@ const AccountRegisterComponent: React.FC = () => {
             gender
         };
 
-        userRequest(`https://${DOMAIN}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists, updateTokens, presentAlert);
+        userRequest(`https://${DOMAIN}/user/register`, "POST", newUser, setMessage, undefined, undefined, setUserExists, updateTokens, presentAlert, setLoading);
     }
 
     return (
         <div id="container">
+            <IonLoading isOpen={loading} message={"Creating account..."} />
             <form id="form" onSubmit={HandleSubmit}>
                 <IonFab horizontal="start" vertical="top">
                     <IonFabButton size={"small"} onClick={() => history.push('/account/login')}>

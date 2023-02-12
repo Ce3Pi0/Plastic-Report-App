@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { IonButton, IonInput, IonTitle, useIonAlert } from "@ionic/react";
+import { IonButton, IonInput, IonLoading, IonTitle, useIonAlert } from "@ionic/react";
 
 import { GlobalContext } from "../../context/Context";
 
@@ -16,6 +16,8 @@ const AccountLoginComponent: React.FC = () => {
 
     const { setLoggedIn, updateTokens } = useContext(GlobalContext) as IContext;
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -26,17 +28,19 @@ const AccountLoginComponent: React.FC = () => {
     const HandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const new_user: IUserLogin = {
+        const user: IUserLogin = {
             username,
             password
         }
 
-        userRequest(`https://${DOMAIN}/user/login`, "POST", new_user, setMessage, setMistake, setLoggedIn, undefined, updateTokens, presentAlert);
+        userRequest(`https://${DOMAIN}/user/login`, "POST", user, setMessage, setMistake, setLoggedIn, undefined, updateTokens, presentAlert, setLoading);
     }
 
 
     return (
         <div id="container">
+            <IonLoading isOpen={loading} message={"Logging in..."}/>
+            
             <form id="form" onSubmit={HandleSubmit}>
                 <IonTitle id="title">Login</IonTitle>
 
