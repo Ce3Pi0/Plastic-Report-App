@@ -55,6 +55,9 @@ import { GlobalContext, GlobalProvider } from './context/Context';
 import { IContext } from './interfaces/interfaces';
 import AppUrlListener from './AppUrlListener';
 
+import { assetLinks } from './json/json';
+
+
 setupIonicReact();
 
 
@@ -65,7 +68,7 @@ const Tabs = () => {
   const ionRouter = useIonRouter();
   document.addEventListener('ionBackButton', (ev: any) => {
     ev.detail.register(10, () => {
-      if (ionRouter.canGoBack()){
+      if (ionRouter.canGoBack()) {
         window.history.back();
       } else {
         ExitApp.exitApp();
@@ -113,6 +116,10 @@ const Tabs = () => {
         <Redirect exact from="/account/login" to="/account" />
         <Redirect exact from="/" to={"/home"} />
 
+
+        <Route exact path="/.well-known/assetlinks.json">
+          <>{JSON.stringify(assetLinks)}</>
+        </Route>
         <Route>
           <NotFoundPage />
         </Route>
@@ -168,6 +175,9 @@ const Tabs = () => {
       <Redirect exact from="/account/change" to="/account/login" />
       <Redirect exact from="/shop" to="/account/login" />
 
+      <Route exact path="/.well-known/assetlinks.json">
+        <>{JSON.stringify(assetLinks)}</>
+      </Route>
       <Route>
         <NotFoundPage />
       </Route>
@@ -179,7 +189,7 @@ const App: React.FC = () => (
   <GlobalProvider>
     <IonApp>
       <IonReactRouter>
-        <AppUrlListener/>
+        <AppUrlListener />
         <Tabs />
       </IonReactRouter>
     </IonApp>
