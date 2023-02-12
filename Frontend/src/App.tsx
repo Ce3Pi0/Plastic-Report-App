@@ -53,7 +53,6 @@ import AccountConfirmEmailPage from './pages/Account/AccountConfirmEmailPage';
 import { GlobalContext, GlobalProvider } from './context/Context';
 
 import { IContext } from './interfaces/interfaces';
-import AppUrlListener from './AppUrlListener';
 
 
 setupIonicReact();
@@ -181,7 +180,7 @@ const App: React.FC = () => (
   <GlobalProvider>
     <IonApp>
       <IonReactRouter>
-        <AppUrlListener />
+        {/* <AppUrlListener /> */}
         <Tabs />
       </IonReactRouter>
     </IonApp>
