@@ -33,7 +33,7 @@ class UserAuthRoute(BaseRoute):
             return customAbort("Password to weak", 405)
 
         salt = genSalt()
-        hashed_pw = hashPassword(request.json["password"], salt)
+        hashed_pw = hashPassword(request.json["password"], salt).decode("UTF-8")
 
         if request.json["gender"] not in self.__genders:
             return customAbort("Gender not allowed", 406)
@@ -64,7 +64,7 @@ class UserAuthRoute(BaseRoute):
         if user is None:
             return customAbort("User no found", 404)
 
-        hashed_pw = hashPassword(request.json["password"], user.salt) 
+        hashed_pw = hashPassword(request.json["password"], user.salt).decode("UTF-8") 
 
         if not hmac.compare_digest(hashed_pw, user.password):
             return customAbort("Password doesn't match", 405)

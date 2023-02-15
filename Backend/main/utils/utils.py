@@ -34,6 +34,7 @@ def genSalt() -> bytes:
 
 def hashPassword(password: str, salt: bytes) -> str:
     password = password.encode("UTF-8")
+    salt = salt.encode("UTF-8")
     return bcrypt.hashpw(password, salt)
     
 def get_random_alphanumerical(_len = 16):
