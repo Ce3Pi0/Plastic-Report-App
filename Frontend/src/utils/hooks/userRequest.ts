@@ -96,6 +96,7 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
                 setLoading(false);
 
                 if (!res.ok) {
+                    setLoading(false);
                     throw Error("Something went wrong!")
                 }
                 return res.json();
