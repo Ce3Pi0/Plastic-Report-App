@@ -17,16 +17,17 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
         body: JSON.stringify(user)
     })
         .then(res => {
-            if (res.status === 404) {
-                setLoading(false);
+            if ((res.status === 401 || res.status === 422) && InstanceOfUserChange(user)) {
+                FetchRefreshToken(url, method, undefined, undefined, user, undefined, setLoading, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
+            }
+            setLoading(false);
 
+            if (res.status === 404) {
                 if (setMessage !== undefined)
                     setMessage("User not found!");
                 throw Error("User not found!")
             }
             if (res.status === 429) {
-                setLoading(false);
-
                 presentAlert({
                     subHeader: 'Fail',
                     message: 'To many requests sent... Slow down!',
@@ -42,8 +43,6 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
                 throw Error("Too many requests sent!")
             }
             if (res.status === 406){
-                setLoading(false);
-
                 presentAlert({
                     subHeader: 'Error',
                     message: 'Enter your email and try again!',
@@ -87,20 +86,12 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
                 throw Error("Email not confirmed")
             }
             if (res.status === 405) {
-                setLoading(false);
                 throw Error("Wrond username or password")
             }
-            if ((res.status === 401 || res.status === 422) && InstanceOfUserChange(user)) {
-                FetchRefreshToken(url, method, undefined, undefined, user, undefined, setLoading, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
-            } else {
-                setLoading(false);
-
-                if (!res.ok) {
-                    setLoading(false);
-                    throw Error("Something went wrong!")
-                }
-                return res.json();
+            if (!res.ok) {
+                throw Error("Something went wrong!")
             }
+            return res.json();
         })
         .then(json => {
             if (InstanceOfUserChange(user) && json.msg === "success") {
@@ -161,6 +152,8 @@ export const userRequest = (url: string, method: methodType, user: IUserChange |
             }
         })
         .catch((err) => {
+            setLoading(false);
+
             if (!InstanceOfUserChange(user) && !InstanceOfUserRegister(user) && setMistake !== undefined) {
                 if (err.message === "User not found!") {
                     setMessage(err.message)
