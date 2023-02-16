@@ -27,7 +27,7 @@ class UserRoute(BaseRoute):
             return customAbort("User not found", 404)
 
         salt = user.salt
-        hashed_pass = hashPassword(request.json["current_password"], salt)
+        hashed_pass = hashPassword(request.json["current_password"], salt).decode("UTF-8")
         
         if not hmac.compare_digest(user.password, hashed_pass):
             return customAbort("Password doesn't match", 401)
