@@ -26,6 +26,18 @@ export const issueRequest = (url: string, method: methodType, body: BodyInit | u
 
                 throw Error("Too many requests sent!")
             }
+            if (res.status === 405){
+                presentAlert({
+                    subHeader: 'Fail',
+                    message: 'Account privilage too low!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                    },],
+                });
+
+                throw Error("Account privilage too low!")
+            }
             if (res.status === 401 || res.status === 422) {
                 if (method === "POST") FetchRefreshToken(url, method, undefined, body, undefined, undefined, undefined, undefined, undefined, undefined, "create_issue", updateTokens, presentAlert, undefined);
                 else if (method === "PUT") FetchRefreshToken(url, method, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "update_issue", updateTokens, undefined, undefined);

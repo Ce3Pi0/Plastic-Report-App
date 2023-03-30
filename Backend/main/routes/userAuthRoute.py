@@ -1,7 +1,7 @@
 from config.config import db, PASS_LEN, get_jwt_identity, create_access_token, create_refresh_token, Mail, Message, mail, s, MY_MAIL, FRONTEND_DOMAIN, SignatureExpired, BadTimeSignature, BadSignature
 from routes.baseRoute import BaseRoute
 from classes.classes import User, Request
-from utils.utils import customAbort, genSalt, hashPassword, checkMail
+from utils.utils import customAbort, genSalt, hashPassword, checkMail, REQUEST_TIMER_LIMIT
 
 from datetime import datetime, timedelta
 import hmac
@@ -92,7 +92,7 @@ class UserAuthRoute(BaseRoute):
 
         current_request = Request.query.filter_by(user_id = user.id, type="email_request").first()
         if current_request.time is not None:
-            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=1):
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=REQUEST_TIMER_LIMIT):
                 current_request.time = datetime.now()
             else:
                 return customAbort("Too many requests", 429)
@@ -148,7 +148,7 @@ class UserAuthRoute(BaseRoute):
 
         current_request = Request.query.filter_by(user_id = user.id, type="password_request").first()
         if current_request.time is not None:
-            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=1):
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=REQUEST_TIMER_LIMIT):
                 current_request.time = datetime.now()
             else:
                 return customAbort("Too many requests", 429)

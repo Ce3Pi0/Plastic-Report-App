@@ -26,7 +26,7 @@ const AccountInfoComponent: React.FC = () => {
     const [hidden, setHidden] = useState<boolean>(false);
     const [updatingUserImage, setUpdatingUserImage] = useState<boolean>(false);
 
-    const { data, err, loading } = useFetch(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, updateTokens);
+    const { data, err, loading } = useFetch(`https://${DOMAIN}/user`, updateTokens);
     const { data: reports, err: reports_error, loading: reports_loading } = useFetch(`https://${DOMAIN}/report`, updateTokens);
 
     const [presentAlert] = useIonAlert();
@@ -134,7 +134,7 @@ const AccountInfoComponent: React.FC = () => {
                         </div>
                     </div>
 
-                    {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: IReport) => report.user_id === user!.id && (report.status === status || status === "")).map((report: IReport) => (<ReportComponent key={report.id} report={report} />))}
+                    {reports && JSON.parse(JSON.stringify(reports)).reports.filter((report: IReport) => (report.status === status || status === "")).map((report: IReport) => (<ReportComponent key={report.id} report={report} />))}
                     {reports_error && <div>Error while fetching data</div>}
                 </>
             }

@@ -38,7 +38,7 @@ class UserRoute(BaseRoute):
             return customAbort("gender not allowed", 406)
 
         if self.__privilage[user.type] < self.__privilage[request.json["type"]]:
-            return customAbort("Cannot create a user with bigger privilage than your own", 405) 
+            return customAbort("Unauthorized", 405) 
 
         if not checkMail(request.json["email"]):
             return customAbort("Email not valid", 400)
@@ -74,12 +74,17 @@ class UserRoute(BaseRoute):
 
         return {"msg":"success"}
 
-    def read(self, request):
-        if "id" not in request.args:
-            all_users = User.query.all()
+    def read(self, request):        
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id = user_id).first()
 
-            if all_users is None:
-                return customAbort("Users not found", 404)
+        if user is None:
+            return customAbort("User not found", 404)
+
+        view_user = user
+
+        if "query" in request.args and user.type == "admin":
+            all_users = User.query.all()
 
             output = []
             for user in all_users:
@@ -97,39 +102,39 @@ class UserRoute(BaseRoute):
 
             return {"users": output}
 
-        user = User.query.filter_by(id=request.args['id']).first()
+        if "id" in request.args:
+            if request.args["id"] != view_user.id and user.type != "admin":
+                return customAbort("Unauthorized", 405)
+            if request.args["id"] != view_user.id:
+                view_user = User.query.filter_by(id=request.args['id']).first()
 
-        if user is None:
+        if view_user is None:
             return customAbort("User not found", 404)
 
         data = {
-            "id":user.id,
-            "name":user.name,
-            "username":user.username,
-            "img_url": user.url,
-            "confirmed":user.confirmed,
-            "email":user.email,
-            "type":user.type,
-            "gender": user.gender
+            "id":view_user.id,
+            "name":view_user.name,
+            "username":view_user.username,
+            "img_url": view_user.url,
+            "confirmed":view_user.confirmed,
+            "email":view_user.email,
+            "type":view_user.type,
+            "gender": view_user.gender
             }
         return {"user":data}
 
     def update(self, request):
-        if "id" not in request.args:
-            return customAbort("Key not in request", 400)
-
         user_id = get_jwt_identity()
         user = User.query.filter_by(id=user_id).first()
-
+ 
         if user is None:
             return customAbort("User not found", 404)
 
+        user_to_update = user
 
-        if str(user_id) != request.args["id"] and user.type != "admin":
-            return customAbort("You cannot update this user", 405)
-
-        if user_id != request.args["id"]:
-            user = User.query.filter_by(id=request.args["id"]).first()
+        if "id" in request.args:
+            if user_id != request.args["id"] and user.type == "admin":
+                user_to_update = User.query.filter_by(id=request.args["id"]).first()
 
         if "image" in request.files:
 
@@ -141,12 +146,11 @@ class UserRoute(BaseRoute):
             img.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
             img.save(app.config["UPLOAD_FOLDER"] + img_name)
             
-            if user.url is not None:
-                if os.path.exists(os.path.join(app.config["UPLOAD_FOLDER"], user.url)):
-                    os.remove(os.path.join(app.config["UPLOAD_FOLDER"], user.url))
+            if user_to_update.url is not None:
+                if os.path.exists(os.path.join(app.config["UPLOAD_FOLDER"], user_to_update.url)):
+                    os.remove(os.path.join(app.config["UPLOAD_FOLDER"], user_to_update.url))
 
-
-            user.url = img_name
+            user_to_update.url = img_name
             db.session.commit()
 
             return {"msg":"success"}
@@ -155,11 +159,12 @@ class UserRoute(BaseRoute):
             if key not in request.json:
                 return customAbort("Key not in reuqest", 400)
 
-        salt = user.salt
-        hashed_pass = hashPassword(request.json["password"], salt)
+        if user.type != "admin" or user.id == user_to_update.id:
+            salt = user_to_update.salt
+            hashed_pass = hashPassword(request.json["password"], salt)
         
-        if not hmac.compare_digest(user.password, hashed_pass):
-            return customAbort("Password doesn't match", 405)
+            if not hmac.compare_digest(user_to_update.password, hashed_pass):
+                return customAbort("Password doesn't match", 405)
 
         if request.json["password"] == request.json["new_password"]:
             return customAbort("New password cannot be the same as the old one", 409)
@@ -170,8 +175,8 @@ class UserRoute(BaseRoute):
         salt = genSalt()
         new_hashed_pw = hashPassword(request.json["new_password"], salt)
 
-        user.salt = salt
-        user.password = new_hashed_pw
+        user_to_update.salt = salt
+        user_to_update.password = new_hashed_pw
 
         db.session.commit()
 
@@ -179,14 +184,13 @@ class UserRoute(BaseRoute):
 
     def delete(self, request):
         user_id = get_jwt_identity()
-
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
             return customAbort("User not found", 404)
 
         if user.type != "admin":
-            return customAbort("Clients cannot delete account", 405)
+            return customAbort("Privilage too low!", 405)
                 
         if "id" not in request.args:
             return customAbort("Key not in request", 400)

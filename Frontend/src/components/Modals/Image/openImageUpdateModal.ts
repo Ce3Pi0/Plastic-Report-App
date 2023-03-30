@@ -12,7 +12,7 @@ const openImageUpdateModal = (present: any, updateTokens: Function, presentAlert
         const data = new FormData();
         data.append("image", ev.detail.data.file);
 
-        userImageRequest(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")!}`, "PUT", data, updateTokens, presentAlert, updatingUserImage, "form");
+        userImageRequest(`https://${DOMAIN}/user`, "PUT", data, updateTokens, presentAlert, updatingUserImage, "form");
       }
     }
   });

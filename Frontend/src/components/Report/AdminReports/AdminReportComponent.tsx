@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonLoading, IonModal, IonTitle, IonToolbar } from "@ionic/react";
+import { IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonLoading, IonModal, IonTitle, IonToolbar, useIonAlert } from "@ionic/react";
 import { checkmarkOutline, closeOutline } from "ionicons/icons";
 
 import { GlobalContext } from "../../../context/Context";
@@ -17,17 +17,19 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
     const { updateTokens } = useContext(GlobalContext) as IContext;
     const [loading, setLoading] = useState<boolean>(false);
 
+    const [ presentAlert ] = useIonAlert();
+
     //geoapify.com
     const { data, err, loading:location_loading } = useAddressFetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${report.lat}&lon=${report.lon}&apiKey=93ef976230904f26bf7ff03fd45f39aa`);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const HandleAccept = () => {
-        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=completed`, "PUT", undefined, updateTokens, undefined, undefined, setLoading)
+        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=completed`, "PUT", undefined, updateTokens, presentAlert, undefined, setLoading)
     }
 
     const HandleDecline = () => {
-        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=rejected`, "PUT", undefined, updateTokens, undefined, undefined, setLoading)
+        reportRequest(`https://${DOMAIN}/report?id=${report.id}&status=rejected`, "PUT", undefined, updateTokens, presentAlert, undefined, setLoading)
     }
 
     return (

@@ -7,7 +7,6 @@ import { arrowBackCircleOutline, bug, home, informationCircle, mail } from "ioni
 import ReportIssueModal from "../Modals/Issue/client/ReportIssueModal";
 import openReportIssueModal from "../Modals/Issue/client/openReportIssueModal";
 import ViewIssueModal from "../Modals/Issue/admin/ViewIssueModal";
-import openViewIssueModal from "../Modals/Issue/admin/openViewIssueModal";
 
 import { GlobalContext } from "../../context/Context";
 
@@ -57,7 +56,7 @@ const MenuComponent: React.FC = () => {
                             </h3>
                         </Link>
 
-                        <h3 onClick={() => user?.type === "client" ? openReportIssueModal(present, updateTokens, presentAlert) : openViewIssueModal(present)}>
+                        <h3 onClick={() => openReportIssueModal(present, updateTokens, presentAlert)}>
                             <IonIcon icon={bug} size={"small"} />       {user?.type === "client"? "Report an issue":"View issues"}
                         </h3>
                 </div>

@@ -27,6 +27,19 @@ export const reportRequest = (url: string, method: methodType, body: BodyInit | 
 
                 throw Error("Too many requests sent!")
             }
+            if (res.status === 405){
+                setLoading(false);
+                presentAlert({
+                    subHeader: 'Fail',
+                    message: 'Account privilage too low!',
+                    buttons: [{
+                        text: 'OK',
+                        role: 'confirm',
+                    },],
+                });
+
+                throw Error("Account privilage too low!")
+            }
             if (res.status === 401 || res.status === 422) {
                 if (contentType === "form") FetchRefreshToken(url, method, undefined, body, undefined, undefined, setLoading, undefined, undefined, undefined, "create_report", updateTokens, presentAlert, contentType);
                 else FetchRefreshToken(url, method, undefined, undefined, undefined, undefined, setLoading, undefined, undefined, undefined, "report", updateTokens, undefined, undefined);

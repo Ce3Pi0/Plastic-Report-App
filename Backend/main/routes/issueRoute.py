@@ -33,34 +33,46 @@ class IssueRoute(BaseRoute):
         return {"msg":"success"}
 
     def read(self, request):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id = user_id).first()
+
+        if user is None:
+            return customAbort("User not found", 404)        
+
         if "id" in request.args:
 
-            report = Issue.query.filter_by(id=request.args["id"]).first()
+            issue = None
+            if user.type == "admin":
+                issue = Issue.query.filter_by(id=request.args["id"]).first()
+            else:
+                issue = Issue.query.filter_by(id=request.args["id"], user_id = user_id).first()
 
-            if report is None:
+            if issue is None:
                 return customAbort("Issue report not found", 404)
             
             return {"issue":{
-                "id":report.id,
-                "name":report.name,
-                "description":report.description,
-                "fixed": report.fixed,
-                "user_id":report.user_id
+                "id":issue.id,
+                "name":issue.name,
+                "description":issue.description,
+                "fixed": issue.fixed,
+                "user_id":issue.user_id
             }}
 
-        all_reports = Issue.query.all()
 
-        if all_reports is None:
-            return customAbort("Issue reports not found", 404)
+        all_issues = None
+        if user.type == "admin":
+            all_issues = Issue.query.all()
+        else:
+            all_issues = Issue.query.filter_by(user_id = user_id)
 
         output = []
-        for report in all_reports:
+        for issue in all_issues:
             data = {
-                "id":report.id,
-                "name":report.name,
-                "description":report.description,
-                "fixed": report.fixed,
-                "user_id":report.user_id
+                "id":issue.id,
+                "name":issue.name,
+                "description":issue.description,
+                "fixed": issue.fixed,
+                "user_id":issue.user_id
             }
             output.append(data)
 
@@ -74,13 +86,13 @@ class IssueRoute(BaseRoute):
             return customAbort("User not found", 404)
 
         if self.__privilage[user.type] < self.__privilage["admin"]:
-            return customAbort("Clients cannot update issues", 405) 
+            return customAbort("Privilage too low", 405) 
 
         for key in self.update_req:
             if key not in request.args:
                 return customAbort("Key not in request", 400)
 
-        if request.args["fixed"] != "True" and request.args["fixed"] != "False":
+        if request.args["fixed"].upper() != "TRUE" and request.args["fixed"].upper() != "FALSE":
             return customAbort("Fixed arg must be True or False", 405)
 
         issue = Issue.query.filter_by(id=request.args["id"]).first()
@@ -88,7 +100,7 @@ class IssueRoute(BaseRoute):
         if issue is None:
             return customAbort("Issue report not found", 404)
 
-        issue.fixed = request.args["fixed"] == "True"
+        issue.fixed = request.args["fixed"].upper() == "TRUE"
 
         db.session.commit()
 

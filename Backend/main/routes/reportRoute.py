@@ -36,8 +36,8 @@ class ReportRoute(BaseRoute):
         img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
         
         img_name = get_random_alphanumerical() + "." + img_ext
+
         img.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
-        img.save(app.config["UPLOAD_FOLDER"] + img_name)
         
         report = Report(lat=self.lat, lon=self.lon, url=img_name, status="pending", user_id = user_id)
 
@@ -47,14 +47,21 @@ class ReportRoute(BaseRoute):
         return {"msg":"success"}
 
     def read(self, request):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id = user_id).first()
+
         if "id" in request.args:
             report = Report.query.filter_by(id=request.args["id"]).first()
 
             if report is None:
                 return customAbort("Report not found", 404)
 
-            user = User.query.filter_by(id=report.user_id).first()
-            username = user.username
+            if report.user_id != user_id and user.type != "admin":
+                return customAbort("Unauthorized", 405)
+            
+            if user.id != report.user_id:
+                user = User.query.filter_by(id=report.user_id).first()
+                username = user.username
 
             data = {
                 "id":report.id,
@@ -72,12 +79,20 @@ class ReportRoute(BaseRoute):
             if request.args["status"] not in self.__statuses:
                 customAbort("Invalid status", 406)
 
-            reports = Report.query.filter_by(status = request.args["status"])
+            reports = None
+            if user.type == "admin":
+                reports = Report.query.filter_by(status = request.args["status"])
+            else:
+                reports = Report.query.filter_by(status = request.args["status"], user_id = user.id)
 
             output = []
             for report in reports:
-                user = User.query.filter_by(id=report.user_id).first()
-                username = user.username
+                username = ""
+                if user.type == "admin":
+                    cur_user = User.query.filter_by(id=report.user_id).first()
+                    username = cur_user.username
+                else:
+                    username = user.username
 
                 data = {
                     "id":report.id,
@@ -92,12 +107,21 @@ class ReportRoute(BaseRoute):
             
             return {request.args["status"] : output}
         
-        all_reports = Report.query.all()
+        all_reports = None
+
+        if user.type == "admin":
+            all_reports = Report.query.all()
+        else:
+            all_reports = Report.query.filter_by(user_id = user.id)
 
         output = []
         for report in all_reports:
-            user = User.query.filter_by(id=report.user_id).first()
-            username = user.username
+            username = ""
+            if user.type == "admin":
+                cur_user = User.query.filter_by(id=report.user_id).first()
+                username = cur_user.username
+            else:
+                username = user.username
 
             data = {
                 "id":report.id,
@@ -115,9 +139,6 @@ class ReportRoute(BaseRoute):
     def update(self, request):
         if "id" in request.args and "status" in request.args:
 
-            if request.args["status"] not in self.__statuses:
-                return customAbort("Invalid status", 406)
-
             user_id = get_jwt_identity()
             user = User.query.filter_by(id=user_id).first()
 
@@ -125,7 +146,10 @@ class ReportRoute(BaseRoute):
                 return customAbort("User not found", 404)
 
             if user.type != "admin":
-                return customAbort("User privillage to low", 405)
+                return customAbort("Privilage too low!", 405)
+
+            if request.args["status"] not in self.__statuses:
+                return customAbort("Invalid status", 406)
 
             report = Report.query.filter_by(id=request.args["id"]).first()
 

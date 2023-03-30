@@ -5,6 +5,8 @@ import re
 
 from routes.baseRoute import BaseRoute
 
+REQUEST_TIMER_LIMIT = 1 # hours
+
 def customAbort(msg: str, code:int):
     return jsonify({
         "message":msg,

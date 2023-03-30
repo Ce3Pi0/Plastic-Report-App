@@ -55,7 +55,7 @@ const AccountChangeComponent: React.FC = () => {
             new_password: newPassword
         };
 
-        userRequest(`https://${DOMAIN}/user?id=${window.localStorage.getItem("id")}`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert, setLoading);
+        userRequest(`https://${DOMAIN}/user`, "PUT", newUser, setMessage, setMistake, undefined, undefined, updateTokens, presentAlert, setLoading);
     }
 
     return (

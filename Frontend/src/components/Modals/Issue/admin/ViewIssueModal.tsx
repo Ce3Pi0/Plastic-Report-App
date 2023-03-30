@@ -14,6 +14,7 @@ import {
   IonTitle,
   IonFab,
   IonFabButton,
+  useIonAlert,
 } from '@ionic/react';
 import { checkmark } from "ionicons/icons";
 
@@ -31,12 +32,14 @@ const ViewIssueModal = ({ onDismiss, }: { onDismiss: (data?: null, role?: string
 
   const { updateTokens } = useContext(GlobalContext) as IContext;
 
+  const [presentAlert] = useIonAlert();
+
   const { data, err, loading } = useFetch(`https://${DOMAIN}/issue`, updateTokens);
 
   const updateIssue = (e: React.MouseEvent<HTMLIonFabButtonElement, MouseEvent>, id: number) => {
     e.preventDefault();
 
-    issueRequest(`https://${DOMAIN}/issue?id=${id}&fixed=True`, "PUT", undefined, updateTokens, undefined);
+    issueRequest(`https://${DOMAIN}/issue?id=${id}&fixed=True`, "PUT", undefined, updateTokens, presentAlert);
 
     return;
   }
