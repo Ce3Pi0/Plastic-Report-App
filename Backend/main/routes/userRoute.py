@@ -103,9 +103,7 @@ class UserRoute(BaseRoute):
             return {"users": output}
 
         if "id" in request.args:
-            if request.args["id"] != view_user.id and user.type != "admin":
-                return customAbort("Unauthorized", 405)
-            if request.args["id"] != view_user.id:
+            if request.args["id"] != view_user.id and user.type == "admin": 
                 view_user = User.query.filter_by(id=request.args['id']).first()
 
         if view_user is None:
