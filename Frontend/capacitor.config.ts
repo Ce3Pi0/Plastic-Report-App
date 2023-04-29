@@ -1,9 +1,9 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.3DFactory.deeplinks',
-  appName: '3DFactory',
-  webDir: 'www',
+  appId: 'com.androidApp.android',
+  appName: 'androidApp',
+  webDir: 'build',
   bundledWebRuntime: false
 };
 

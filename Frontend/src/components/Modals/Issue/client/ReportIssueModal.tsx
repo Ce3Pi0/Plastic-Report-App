@@ -27,7 +27,7 @@ const ReportIssueModal = ({ onDismiss, }: { onDismiss: (data?: IIssue | null, ro
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton color="medium" onClick={() => onDismiss(null, 'cancel')}>
+            <IonButton color="dark" onClick={() => onDismiss(null, 'cancel')}>
               Cancel
             </IonButton>
           </IonButtons>
