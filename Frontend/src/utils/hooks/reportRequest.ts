@@ -58,7 +58,7 @@ export const reportRequest = (url: string, method: methodType, body: BodyInit | 
             if (presentAlert !== undefined) {
                 presentAlert({
                     subHeader: 'Success!',
-                    message: 'Report sent successfully!',
+                    message: 'Report updated successfully!',
                     buttons: [{
                         text: 'OK',
                         role: 'confirm',
