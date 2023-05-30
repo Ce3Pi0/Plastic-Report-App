@@ -114,7 +114,7 @@ class IssueRoute(BaseRoute):
             return customAbort("User not found", 404)
 
         if self.__privilage[user.type] < self.__privilage["admin"]:
-            return customAbort("Clients cannot delete issues", 405)
+            return customAbort("Unaotharized", 405)
 
         for key in self.delete_req:
             if key not in request.args:
