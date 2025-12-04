@@ -62,5 +62,7 @@ jwt = JWTManager(app)
 
 
 PASS_LEN: int = 6  
+FRONTEND_DOMAIN: str = "3dfactory.mk"
+
 
 
