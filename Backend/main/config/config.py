@@ -11,14 +11,23 @@ from itsdangerous import URLSafeSerializer, SignatureExpired, URLSafeTimedSerial
 
 app = Flask(__name__)
 
+MAIL_SERVER = os.getenv("MAIL_SERVER")
+MAIL_PORT = int(os.getenv("MAIL_PORT", 587)
+MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+
+if not MAIL_SERVER or not MAIL_PORT or not MAIL_USERNAME or not MAIL_PASSWORD:
+    raise RuntimeError("Some of the Mail Server environment variables are missing.")
+
+
 app.config.update(dict(
     DEBUG = True,
-    MAIL_SERVER = os.getenv("MAIL_SERVER"),
-    MAIL_PORT = int(os.getenv("MAIL_PORT", 587)),
+    MAIL_SERVER = MAIL_SERVER,
+    MAIL_PORT = MAIL_PORT,
     MAIL_USE_TLS = True,
     MAIL_USE_SSL = False,
-    MAIL_USERNAME = os.getenv("MAIL_USERNAME"),
-    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD"),
+    MAIL_USERNAME = MAIL_USERNAME,
+    MAIL_PASSWORD = MAIL_PASSWORD,
 ))
 
 mail = Mail(app)
@@ -42,3 +51,4 @@ jwt = JWTManager(app)
 
 
 PASS_LEN: int = 6  
+
