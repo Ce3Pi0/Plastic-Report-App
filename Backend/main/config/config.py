@@ -11,14 +11,25 @@ from itsdangerous import URLSafeSerializer, SignatureExpired, URLSafeTimedSerial
 
 app = Flask(__name__)
 
-MAIL_SERVER = os.getenv("MAIL_SERVER")
-MAIL_PORT = int(os.getenv("MAIL_PORT", 587)
-MAIL_USERNAME = os.getenv("MAIL_USERNAME")
-MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+# Mail Server Variables
+MAIL_SERVER: str = os.getenv("MAIL_SERVER")
+MAIL_PORT: int = int(os.getenv("MAIL_PORT", 587)
+MAIL_USERNAME: str = os.getenv("MAIL_USERNAME")
+MAIL_PASSWORD: str = os.getenv("MAIL_PASSWORD")
 
+# SQL Server Variables
+SQL_USERNAME: str = os.getenv("SQL_USERNAME")
+SQL_PASSWORD: str = os.getenv("SQL_PASSWORD")
+SQL_HOST: str = os.getenv("SQL_HOST", "localhost")
+SQL_NAME: str = os.getenv("SQL_NAME")
+
+# Mail Server Variables Validation
 if not MAIL_SERVER or not MAIL_PORT or not MAIL_USERNAME or not MAIL_PASSWORD:
     raise RuntimeError("Some of the Mail Server environment variables are missing.")
 
+# SQL Server Variables Validation
+if not SQL_USERNAME or not SQL_PASSWORD or not SQL_HOST:
+    raise RuntimeError("Some of the Database Server environment variables are missing.")
 
 app.config.update(dict(
     DEBUG = True,
@@ -37,7 +48,7 @@ s = URLSafeTimedSerializer(os.getenv("SECRET_KEY"))
 limiter = Limiter(app=app, key_func=get_remote_address)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
-uri = "mysql+pymysql://root:TFrcwRMuZMFqcKgU@localhost/PlasticReport?&autocommit=false"
+uri = f"mysql+pymysql://{SQL_USERNAME}:{SQL_PASSWORD}@{SQL_HOST}/{SQL_NAME}?&autocommit=false"
 db = SQLAlchemy(app)
 CORS(app)
 
@@ -51,4 +62,5 @@ jwt = JWTManager(app)
 
 
 PASS_LEN: int = 6  
+
 
