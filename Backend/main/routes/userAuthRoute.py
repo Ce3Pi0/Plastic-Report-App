@@ -1,4 +1,4 @@
-from config.config import db, PASS_LEN, get_jwt_identity, create_access_token, create_refresh_token, Mail, Message, mail, s, MY_MAIL, FRONTEND_DOMAIN, SignatureExpired, BadTimeSignature, BadSignature
+from config.config import db, PASS_LEN, get_jwt_identity, create_access_token, create_refresh_token, Mail, Message, mail, s, MAIL_USERNAME, FRONTEND_DOMAIN, SignatureExpired, BadTimeSignature, BadSignature
 from routes.baseRoute import BaseRoute
 from classes.classes import User, Request
 from utils.utils import customAbort, genSalt, hashPassword, checkMail, REQUEST_TIMER_LIMIT
@@ -102,7 +102,7 @@ class UserAuthRoute(BaseRoute):
 
         token = s.dumps(request.args["email"], salt='email-confirm')
 
-        msg = Message("Welcome new user! When you click this link, you will be able to confirm your email!", sender=MY_MAIL, recipients=[request.args["email"]])
+        msg = Message("Welcome new user! When you click this link, you will be able to confirm your email!", sender=MAIL_USERNAME, recipients=[request.args["email"]])
 
         link = f"https://{FRONTEND_DOMAIN}/account/confirm_email?token={token}"
 
@@ -215,5 +215,6 @@ class UserAuthRoute(BaseRoute):
         refresh_token = create_refresh_token(user_id, expires_delta = datetime.timedelta(days=30))
 
         return {'access_token': new_token, 'refresh_token': refresh_token}
+
 
 UserAuthRouteInstance = UserAuthRoute()
