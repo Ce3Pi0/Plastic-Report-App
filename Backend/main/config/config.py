@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -8,27 +9,21 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from itsdangerous import URLSafeSerializer, SignatureExpired, URLSafeTimedSerializer, BadTimeSignature, BadSignature
 
-SECRET_KEY: str = "Ce3Pi0"
-MAIL_SERVER: str = 'smtp-mail.outlook.com'
-MY_MAIL: str = "art3dfactoryapp@outlook.com"
-MAIL_PASSWORD: str = "PlasticKillers"
-FRONTEND_DOMAIN: str = "3dfactory.mk"
-
 app = Flask(__name__)
 
 app.config.update(dict(
     DEBUG = True,
-    MAIL_SERVER = MAIL_SERVER,
-    MAIL_PORT = 587,
+    MAIL_SERVER = os.getenv("MAIL_SERVER"),
+    MAIL_PORT = int(os.getenv("MAIL_PORT", 587)),
     MAIL_USE_TLS = True,
     MAIL_USE_SSL = False,
-    MAIL_USERNAME = MY_MAIL,
-    MAIL_PASSWORD = MAIL_PASSWORD,
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME"),
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD"),
 ))
 
-mail = Mail(app=app)
+mail = Mail(app)
 
-s = URLSafeTimedSerializer(SECRET_KEY)
+s = URLSafeTimedSerializer(os.getenv("SECRET_KEY"))
 
 limiter = Limiter(app=app, key_func=get_remote_address)
 
@@ -37,11 +32,13 @@ uri = "mysql+pymysql://root:TFrcwRMuZMFqcKgU@localhost/PlasticReport?&autocommit
 db = SQLAlchemy(app)
 CORS(app)
 
+# FOLDER DESTINATION FOR STATIC IMAGES
 # app.config["UPLOAD_FOLDER"] = "D:/Projects/Plastic-Report-App/Static/" # Desktop
 # app.config["UPLOAD_FOLDER"] = "C:/projects/Plastic-Report-App/Static/" # Laptop
-app.config["UPLOAD_FOLDER"] = "home/3dfactory.mk/static/" # Linux
+app.config["UPLOAD_FOLDER"] = "/home/3dfactory.mk/static/" # Linux Server
 
-app.config["JWT_SECRET_KEY"] = SECRET_KEY
+app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
 jwt = JWTManager(app)
+
 
 PASS_LEN: int = 6  
