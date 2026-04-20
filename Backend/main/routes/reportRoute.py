@@ -14,13 +14,10 @@ class ReportRoute(BaseRoute):
         self.delete_req = ["id"]
 
     def create(self, request):
-        for key in self.create_req:
-            # add this to the server
-            if key not in request.form:
-                return customAbort("Key not in request", 400)
-            setattr(self, key, request.form[key])
+        lat = request.form.get("lat")
+        lon = request.form.get("lon")
 
-        if not self.lat or not self.lon:
+        if not lat or not lon:
             return customAbort("Key not in request", 400)
 
         user_id = get_jwt_identity()
@@ -39,7 +36,7 @@ class ReportRoute(BaseRoute):
 
         img.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
         
-        report = Report(lat=self.lat, lon=self.lon, url=img_name, status="pending", user_id = user_id)
+        report = Report(lat, lon, url=img_name, status="pending", user_id = user_id)
 
         db.session.add(report)
         db.session.commit()
@@ -146,7 +143,7 @@ class ReportRoute(BaseRoute):
                 return customAbort("User not found", 404)
 
             if user.type != "admin":
-                return customAbort("Privilage too low!", 405)
+                return customAbort("Privilege too low!", 405)
 
             if request.args["status"] not in self.__statuses:
                 return customAbort("Invalid status", 406)
@@ -178,7 +175,7 @@ class ReportRoute(BaseRoute):
             return customAbort("User not found", 404)
 
         if user.type != "admin":
-            return customAbort("User privillage to low", 405)
+            return customAbort("User privilege to low", 405)
 
         report = Report.query.filter_by(id=request.args["id"]).first()
 

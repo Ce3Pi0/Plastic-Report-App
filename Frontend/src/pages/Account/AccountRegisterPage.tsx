@@ -1,14 +1,21 @@
-import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 
 /* Components */
-import AccountRegisterComponent from '../../components/Account/AccountRegisterComponent';
+import AccountRegisterComponent from "../../components/Account/AccountRegisterComponent";
 
-import { HandleRefresh } from '../../utils/utils';
+import { HandleRefresh } from "../../utils/utils";
 
-import './Account.css';
+import "./Account.css";
 
-
-const AccounRegisterPage: React.FC = () => {
+const AccountRegisterPage: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -26,4 +33,4 @@ const AccounRegisterPage: React.FC = () => {
   );
 };
 
-export default AccounRegisterPage;
+export default AccountRegisterPage;

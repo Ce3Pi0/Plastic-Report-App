@@ -13,7 +13,7 @@ def customAbort(msg: str, code:int):
         "code":code
     }), code
 
-def createReqeust(request, instance: BaseRoute):
+def createRequest(request, instance: BaseRoute):
     method = request.method
     CRUD = ["POST", "GET", "PUT", "DELETE"]
 
@@ -34,11 +34,11 @@ def createReqeust(request, instance: BaseRoute):
 def genSalt() -> bytes:
     return bcrypt.gensalt()
 
-def hashPassword(password: str, salt: bytes) -> str:
-    password = password.encode("UTF-8")
+def hashPassword(password: str, salt: bytes) -> bytes:
+    encoded_pass = password.encode("UTF-8")
     if type(salt) == str:
         salt = salt.encode("UTF-8")
-    return bcrypt.hashpw(password, salt)
+    return bcrypt.hashpw(encoded_pass, salt)
     
 def get_random_alphanumerical(_len = 16):
     asciiCodes = []
@@ -56,3 +56,11 @@ def checkMail(email) -> bool:
     if re.fullmatch(regex, email):
         return True
     return False
+
+def get_domain(env: str, prod_domain: str | None, dev_domain) -> str:
+    if env == "PRODUCTION":
+        if not prod_domain:
+            raise RuntimeError("Production domain not specified")
+        return prod_domain
+    else:
+        return dev_domain

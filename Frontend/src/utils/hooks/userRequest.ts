@@ -1,183 +1,230 @@
-import { IUserLogin, IUserChange, IUserRegister, IUser } from '../../interfaces/interfaces';
+import {
+  IUserLogin,
+  IUserChange,
+  IUserRegister,
+  IUser,
+} from "../../interfaces/interfaces";
 
-import { FetchRefreshToken, methodType, InstanceOfUserChange, InstanceOfUserRegister, DOMAIN, ValidateEmail } from '../utils';
+import {
+  FetchRefreshToken,
+  methodType,
+  InstanceOfUserChange,
+  InstanceOfUserRegister,
+  DOMAIN,
+  ValidateEmail,
+} from "../utils";
 
+export const userRequest = (
+  url: string,
+  method: methodType,
+  user: IUserChange | IUserLogin | IUserRegister,
+  setMessage: any,
+  setMistake: any,
+  setLoggedIn: any,
+  setUserExists: any,
+  updateTokens: any,
+  presentAlert: any,
+  setLoading: any,
+) => {
+  let myHeaders = new Headers();
 
-export const userRequest = (url: string, method: methodType, user: IUserChange | IUserLogin | IUserRegister, setMessage: any, setMistake: any, setLoggedIn: any, setUserExists: any, updateTokens: any, presentAlert: any, setLoading: any) => {
+  myHeaders.append(
+    "Authorization",
+    `Bearer ${window.localStorage.getItem("access_token")}`,
+  );
+  myHeaders.append("Content-Type", "application/json");
 
-    let myHeaders = new Headers();
+  setLoading(true);
+  fetch(url, {
+    method: method,
+    headers: myHeaders,
+    body: JSON.stringify(user),
+  })
+    .then((res) => {
+      if (
+        (res.status === 401 || res.status === 422) &&
+        InstanceOfUserChange(user)
+      ) {
+        FetchRefreshToken(
+          url,
+          method,
+          undefined,
+          undefined,
+          user,
+          undefined,
+          setLoading,
+          undefined,
+          setMessage,
+          setMistake,
+          "user",
+          updateTokens,
+          undefined,
+          undefined,
+        );
+      }
+      setLoading(false);
 
-    myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
-    myHeaders.append("Content-Type", "application/json");
+      if (res.status === 404) {
+        if (setMessage !== undefined) setMessage("User not found!");
+        throw Error("User not found!");
+      }
+      if (res.status === 429) {
+        presentAlert({
+          subHeader: "Fail",
+          message: "To many requests sent... Slow down!",
+          buttons: [
+            {
+              text: "OK",
+              role: "confirm",
+              handler: () => {
+                window.location.assign("/account/login");
+              },
+            },
+          ],
+        });
 
-    setLoading(true);
-    fetch(url, {
-        method: method,
-        headers: myHeaders,
-        body: JSON.stringify(user)
-    })
-        .then(res => {
-            if ((res.status === 401 || res.status === 422) && InstanceOfUserChange(user)) {
-                FetchRefreshToken(url, method, undefined, undefined, user, undefined, setLoading, undefined, setMessage, setMistake, "user", updateTokens, undefined, undefined);
-            }
-            setLoading(false);
-
-            if (res.status === 404) {
-                if (setMessage !== undefined)
-                    setMessage("User not found!");
-                throw Error("User not found!")
-            }
-            if (res.status === 429) {
-                presentAlert({
-                    subHeader: 'Fail',
-                    message: 'To many requests sent... Slow down!',
-                    buttons: [{
-                        text: 'OK',
-                        role: 'confirm',
-                        handler: () => {
-                            window.location.assign("/account/login");
-                        }
-                    },],
-                });
-
-                throw Error("Too many requests sent!")
-            }
-            if (res.status === 406){
-                presentAlert({
-                    subHeader: 'Error',
-                    message: 'Enter your email and try again!',
-                    buttons: [{
-                        text: 'OK',
-                        role: 'confirm',
-                        handler: (e: string) => {
-                            if (!ValidateEmail(e[0])) {
-                                return;
-                            }
-                            fetch(`https://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`, {
-                                method: "GET"
-                            })
-                                .then((res) => {
-                                    if (res.status === 429){
-                                        throw Error("To many requests!")
-                                    }
-                                    if (!res.ok) {
-                                        throw Error("Something went wrong!")
-                                    }
-                                    return res.json();
-                                })
-                                .then((json) => {
-                                    if (json.msg !== "success") {
-                                        new Error("Something went wrong")
-                                    }
-                                })
-                                .catch((err) => {
-                                    if (err.message === "To many requests!"){
-                                        setMessage("To many requests!")
-                                    }
-                                })
-                        }
-                    },],
-                    inputs: [{
-                        placeholder: 'Email',
+        throw Error("Too many requests sent!");
+      }
+      if (res.status === 406) {
+        presentAlert({
+          subHeader: "Error",
+          message: "Enter your email and try again!",
+          buttons: [
+            {
+              text: "OK",
+              role: "confirm",
+              handler: (e: string) => {
+                if (!ValidateEmail(e[0])) {
+                  return;
+                }
+                fetch(
+                  `http://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`,
+                  {
+                    method: "GET",
+                  },
+                )
+                  .then((res) => {
+                    if (res.status === 429) {
+                      throw Error("To many requests!");
                     }
-                    ]
+                    if (!res.ok) {
+                      throw Error("Something went wrong!");
+                    }
+                    return res.json();
+                  })
+                  .then((json) => {
+                    if (json.msg !== "success") {
+                      new Error("Something went wrong");
+                    }
+                  })
+                  .catch((err) => {
+                    if (err.message === "To many requests!") {
+                      setMessage("To many requests!");
+                    }
+                  });
+              },
+            },
+          ],
+          inputs: [
+            {
+              placeholder: "Email",
+            },
+          ],
+        });
+        throw Error("Email not confirmed");
+      }
+      if (res.status === 405) {
+        throw Error("Wrond username or password");
+      }
+      if (!res.ok) {
+        throw Error("Something went wrong!");
+      }
+      return res.json();
+    })
+    .then((json) => {
+      if (InstanceOfUserChange(user) && json.msg === "success") {
+        setMistake(false);
+        setMessage("");
+        window.location.assign("/");
+      } else if (InstanceOfUserRegister(user) && json.msg === "success") {
+        setMessage("");
+        setUserExists(false);
 
-                })
-                throw Error("Email not confirmed")
-            }
-            if (res.status === 405) {
-                throw Error("Wrond username or password")
-            }
+        fetch(
+          `http://${DOMAIN}/user/send_confirm_email_token?email=${user.email}`,
+          {
+            method: "GET",
+          },
+        )
+          .then((res) => {
             if (!res.ok) {
-                throw Error("Something went wrong!")
+              throw Error("Something went wrong!");
             }
             return res.json();
-        })
-        .then(json => {
-            if (InstanceOfUserChange(user) && json.msg === "success") {
-                setMistake(false);
-                setMessage('');
-                window.location.assign('/');
-            } else if (InstanceOfUserRegister(user) && json.msg === "success") {
-                setMessage("")
-                setUserExists(false);
-                
-                fetch(`https://${DOMAIN}/user/send_confirm_email_token?email=${user.email}`, {
-                    method: "GET"
-                })
-                    .then((res) => {
-                        if (!res.ok) {
-                            throw Error("Something went wrong!")
-                        }
-                        return res.json();
-                    })
-                    .then((json) => {
-                        if (json.msg === "success") {
-                            presentAlert({
-                                subHeader: 'Message',
-                                message: 'Open your email to confirm your account!',
-                                buttons: [{
-                                    text: 'OK',
-                                    role: 'confirm',
-                                },],
-
-                            }
-                            )
-                        }
-                    })
-                    .catch((err) => new Error("Something went wrong"))
-
-            } else if (!InstanceOfUserChange(user) && !InstanceOfUserRegister(user)) {
-                window.localStorage.setItem("id", json.id);
-                window.localStorage.setItem("username", json.username);
-                window.localStorage.setItem("gender", json.gender);
-                window.localStorage.setItem("type", json.type);
-                window.localStorage.setItem("access_token", json.access_token);
-                window.localStorage.setItem("refresh_token", json.refresh_token);
-                window.localStorage.setItem("logged_in", "true");
-
-                const current_user: IUser = {
-                    id: json.id,
-                    username: json.username,
-                    gender: json.gender,
-                    type: json.type,
-                    access_token: json.access_token,
-                    refresh_token: json.refresh_token
-                }
-                window.location.assign('/home');
-
-                setLoggedIn(true, current_user);
-                setMistake(false);
-                setMessage("");
+          })
+          .then((json) => {
+            if (json.msg === "success") {
+              presentAlert({
+                subHeader: "Message",
+                message: "Open your email to confirm your account!",
+                buttons: [
+                  {
+                    text: "OK",
+                    role: "confirm",
+                  },
+                ],
+              });
             }
-        })
-        .catch((err) => {
-            setLoading(false);
+          })
+          .catch((err) => new Error("Something went wrong"));
+      } else if (!InstanceOfUserChange(user) && !InstanceOfUserRegister(user)) {
+        window.localStorage.setItem("id", json.id);
+        window.localStorage.setItem("username", json.username);
+        window.localStorage.setItem("gender", json.gender);
+        window.localStorage.setItem("type", json.type);
+        window.localStorage.setItem("access_token", json.access_token);
+        window.localStorage.setItem("refresh_token", json.refresh_token);
+        window.localStorage.setItem("logged_in", "true");
 
-            if (!InstanceOfUserChange(user) && !InstanceOfUserRegister(user) && setMistake !== undefined) {
-                if (err.message === "User not found!") {
-                    setMessage(err.message)
-                    setMistake(false)
-                }
-                else if (err.message === "Wrond username or password") {
-                    setMessage('')
-                    setMistake(true);
-                }
-                else if (err.message === "Email not confirmed"){
-                    setMessage(err.message)
-                    setMistake(false)
-                }
-                else {
-                    setMessage("Something went wrong!");
-                    setMistake(false);
-                }
-            } else if (InstanceOfUserRegister(user)) {
-                if (err.name === "TypeError")
-                    setMessage("An error has occured");
-                else
-                    setUserExists(true);
-            }
-            else if (InstanceOfUserChange(user))
-                setMistake(true)
-        })
-}
+        const current_user: IUser = {
+          id: json.id,
+          username: json.username,
+          gender: json.gender,
+          type: json.type,
+          access_token: json.access_token,
+          refresh_token: json.refresh_token,
+        };
+        window.location.assign("/home");
+
+        setLoggedIn(true, current_user);
+        setMistake(false);
+        setMessage("");
+      }
+    })
+    .catch((err) => {
+      setLoading(false);
+
+      if (
+        !InstanceOfUserChange(user) &&
+        !InstanceOfUserRegister(user) &&
+        setMistake !== undefined
+      ) {
+        if (err.message === "User not found!") {
+          setMessage(err.message);
+          setMistake(false);
+        } else if (err.message === "Wrond username or password") {
+          setMessage("");
+          setMistake(true);
+        } else if (err.message === "Email not confirmed") {
+          setMessage(err.message);
+          setMistake(false);
+        } else {
+          setMessage("Something went wrong!");
+          setMistake(false);
+        }
+      } else if (InstanceOfUserRegister(user)) {
+        if (err.name === "TypeError") setMessage("An error has occured");
+        else setUserExists(true);
+      } else if (InstanceOfUserChange(user)) setMistake(true);
+    });
+};

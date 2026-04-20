@@ -1,4 +1,4 @@
-from config.config import db, PASS_LEN, get_jwt_identity, create_access_token, create_refresh_token, Mail, Message, mail, s, MAIL_USERNAME, FRONTEND_DOMAIN, SignatureExpired, BadTimeSignature, BadSignature
+from config.config import db, MY_MAIL, PASS_LEN, get_jwt_identity, create_access_token, create_refresh_token, Mail, Message, mail, s, MAIL_USERNAME, FRONTEND_DOMAIN, SignatureExpired, BadTimeSignature, BadSignature
 from routes.baseRoute import BaseRoute
 from classes.classes import User, Request
 from utils.utils import customAbort, genSalt, hashPassword, checkMail, REQUEST_TIMER_LIMIT
@@ -33,7 +33,7 @@ class UserAuthRoute(BaseRoute):
             return customAbort("Password to weak", 405)
 
         salt = genSalt()
-        hashed_pw = hashPassword(request.json["password"], salt).decode("UTF-8")
+        hashed_pw = hashPassword(request.json["password"], salt)
 
         if request.json["gender"] not in self.__genders:
             return customAbort("Gender not allowed", 406)
@@ -62,11 +62,11 @@ class UserAuthRoute(BaseRoute):
         user = User.query.filter_by(username = request.json["username"]).first()
 
         if user is None:
-            return customAbort("User no found", 404)
+            return customAbort("User not found", 404)
 
         hashed_pw = hashPassword(request.json["password"], user.salt).decode("UTF-8") 
 
-        if not hmac.compare_digest(hashed_pw, user.password):
+        if not hmac.compare_digest(hashed_pw, user.password.decode("UTF-8")):
             return customAbort("Password doesn't match", 405)
 
         if user.confirmed == False:
@@ -88,11 +88,11 @@ class UserAuthRoute(BaseRoute):
 
         if user.confirmed == True:
             return customAbort("User email already confirmed", 405)
-
-
+        
         current_request = Request.query.filter_by(user_id = user.id, type="email_request").first()
+
         if current_request.time is not None:
-            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(hours=REQUEST_TIMER_LIMIT):
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') < timedelta(hours=REQUEST_TIMER_LIMIT):
                 current_request.time = datetime.now()
             else:
                 return customAbort("Too many requests", 429)
@@ -121,9 +121,9 @@ class UserAuthRoute(BaseRoute):
         except SignatureExpired:
             return customAbort("Token has expired", 405)
         except BadTimeSignature:
-            return customAbort("The token you submited was incorrect", 406)
+            return customAbort("The token you submitted was incorrect", 406)
         except BadSignature:
-            return customAbort("The token you submited was incorrect", 406)
+            return customAbort("The token you submitted was incorrect", 406)
         
         
         user = User.query.filter_by(email=email).first()
@@ -178,10 +178,9 @@ class UserAuthRoute(BaseRoute):
         except SignatureExpired:
             return customAbort("Token has expired", 405)
         except BadTimeSignature:
-            return customAbort("The token you submited was incorrect", 406)
+            return customAbort("The token you submitted was incorrect", 406)
         except BadSignature:
-            return customAbort("The token you submited was incorrect", 406)
-        
+            return customAbort("The token you submitted was incorrect", 406)
         
         user = User.query.filter_by(email=email).first()
 
@@ -208,11 +207,10 @@ class UserAuthRoute(BaseRoute):
 
         return {"msg":"success"}
 
-
     def refresh(self):
         user_id = get_jwt_identity()
-        new_token = create_access_token(identity = user_id, fresh = True, expires_delta = datetime.timedelta(days=7))
-        refresh_token = create_refresh_token(user_id, expires_delta = datetime.timedelta(days=30))
+        new_token = create_access_token(identity = user_id, fresh = True, expires_delta = timedelta(days=7))
+        refresh_token = create_refresh_token(user_id, expires_delta = timedelta(days=30))
 
         return {'access_token': new_token, 'refresh_token': refresh_token}
 

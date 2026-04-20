@@ -6,7 +6,7 @@ from utils.utils import customAbort
 
 class IssueRoute(BaseRoute):
     
-    __privilage = {"client":1, "admin":2}
+    __privilege = {"client":1, "admin":2}
 
     def __init__(self) -> None:
         self.create_req = ["name"]
@@ -85,7 +85,7 @@ class IssueRoute(BaseRoute):
         if user is None:
             return customAbort("User not found", 404)
 
-        if self.__privilage[user.type] < self.__privilage["admin"]:
+        if self.__privilege[user.type] < self.__privilege["admin"]:
             return customAbort("Privilage too low", 405) 
 
         for key in self.update_req:
@@ -113,8 +113,8 @@ class IssueRoute(BaseRoute):
         if user is None:
             return customAbort("User not found", 404)
 
-        if self.__privilage[user.type] < self.__privilage["admin"]:
-            return customAbort("Unaotharized", 405)
+        if self.__privilege[user.type] < self.__privilege["admin"]:
+            return customAbort("Unauthorized", 405)
 
         for key in self.delete_req:
             if key not in request.args:

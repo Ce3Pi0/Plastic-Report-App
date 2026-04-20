@@ -1,1 +1,9 @@
-/API_ENV
+.env
+
+API_ENV/
+plastic-report-app/
+instance/
+
+**/__pycache__/
+*.py[cod]
+*$py.class

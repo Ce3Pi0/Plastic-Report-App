@@ -7,7 +7,7 @@ import os
 
 
 class UserRoute(BaseRoute):
-    __privilage = {"client":1, "admin":2}
+    __privilege = {"client":1, "admin":2}
     __genders = ["male", "female", "other"]
 
     def __init__(self) -> None:
@@ -32,12 +32,12 @@ class UserRoute(BaseRoute):
         if not hmac.compare_digest(user.password, hashed_pass):
             return customAbort("Password doesn't match", 401)
 
-        if request.json["type"] not in self.__privilage.keys():
+        if request.json["type"] not in self.__privilege.keys():
             return customAbort("Type not allowed", 406)
         if request.json["gender"] not in self.__genders:
             return customAbort("gender not allowed", 406)
 
-        if self.__privilage[user.type] < self.__privilage[request.json["type"]]:
+        if self.__privilege[user.type] < self.__privilege[request.json["type"]]:
             return customAbort("Unauthorized", 405) 
 
         if not checkMail(request.json["email"]):
@@ -155,7 +155,7 @@ class UserRoute(BaseRoute):
         
         for key in self.update_req:
             if key not in request.json:
-                return customAbort("Key not in reuqest", 400)
+                return customAbort("Key not in request", 400)
 
         if user.type != "admin" or user.id == user_to_update.id:
             salt = user_to_update.salt
@@ -188,7 +188,7 @@ class UserRoute(BaseRoute):
             return customAbort("User not found", 404)
 
         if user.type != "admin":
-            return customAbort("Privilage too low!", 405)
+            return customAbort("Privilege too low!", 405)
                 
         if "id" not in request.args:
             return customAbort("Key not in request", 400)

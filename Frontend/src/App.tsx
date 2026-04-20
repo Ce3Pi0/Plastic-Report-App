@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { useContext } from "react";
+import { Redirect, Route } from "react-router-dom";
 
 import {
   IonApp,
@@ -11,60 +11,57 @@ import {
   IonTabButton,
   IonTabs,
   setupIonicReact,
-  useIonRouter
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { home, person, locate, listOutline } from 'ionicons/icons';
-import { App as ExitApp } from '@capacitor/app';
+  useIonRouter,
+} from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+import { home, person, locate, listOutline } from "ionicons/icons";
+import { App as ExitApp } from "@capacitor/app";
 
 /* Core CSS required for Ionic components to work properly */
-import '@ionic/react/css/core.css';
+import "@ionic/react/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
-import '@ionic/react/css/normalize.css';
-import '@ionic/react/css/structure.css';
-import '@ionic/react/css/typography.css';
+import "@ionic/react/css/normalize.css";
+import "@ionic/react/css/structure.css";
+import "@ionic/react/css/typography.css";
 
 /* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
-import '@ionic/react/css/text-alignment.css';
-import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
+import "@ionic/react/css/padding.css";
+import "@ionic/react/css/float-elements.css";
+import "@ionic/react/css/text-alignment.css";
+import "@ionic/react/css/text-transformation.css";
+import "@ionic/react/css/flex-utils.css";
+import "@ionic/react/css/display.css";
 
 /* Theme variables */
-import './theme/variables.css';
+import "./theme/variables.css";
 
 /* Pages */
-import HomePage from './pages/Home/HomePage';
-import AboutPage from './pages/About/AboutPage';
-import ContactPage from './pages/Contact/ContactPage';
-import ReportPage from './pages/Report/Report';
-import AccountLoginPage from './pages/Account/AccountLoginPage';
-import AccountRegisterPage from './pages/Account/AccounRegisterPage';
-import AccountChangePage from './pages/Account/AccountChangePage';
-import AccountPage from './pages/Account/AccountInfoPage';
-import NotFoundPage from './pages/NotFound/NotFoundPage';
-import AccountForgotPage from './pages/Account/AccountForgotPage';
-import AccountForgotChangePage from './pages/Account/AccountForgotChangePage';
-import AccountConfirmEmailPage from './pages/Account/AccountConfirmEmailPage';
+import HomePage from "./pages/Home/HomePage";
+import AboutPage from "./pages/About/AboutPage";
+import ContactPage from "./pages/Contact/ContactPage";
+import ReportPage from "./pages/Report/Report";
+import AccountLoginPage from "./pages/Account/AccountLoginPage";
+import AccountRegisterPage from "./pages/Account/AccountRegisterPage";
+import AccountChangePage from "./pages/Account/AccountChangePage";
+import AccountPage from "./pages/Account/AccountInfoPage";
+import NotFoundPage from "./pages/NotFound/NotFoundPage";
+import AccountForgotPage from "./pages/Account/AccountForgotPage";
+import AccountForgotChangePage from "./pages/Account/AccountForgotChangePage";
+import AccountConfirmEmailPage from "./pages/Account/AccountConfirmEmailPage";
 
-import { GlobalContext, GlobalProvider } from './context/Context';
+import { GlobalContext, GlobalProvider } from "./context/Context";
 
-import { IContext } from './interfaces/interfaces';
-import AppUrlListener from './AppUrlListener';
-
+import { IContext } from "./interfaces/interfaces";
+import AppUrlListener from "./AppUrlListener";
 
 setupIonicReact();
 
-
 const Tabs = () => {
-
   const { loggedIn, user, isLoaded } = useContext(GlobalContext) as IContext;
 
   const ionRouter = useIonRouter();
-  document.addEventListener('ionBackButton', (ev: any) => {
+  document.addEventListener("ionBackButton", (ev: any) => {
     ev.detail.register(10, () => {
       if (ionRouter.canGoBack()) {
         window.history.back();
@@ -74,10 +71,11 @@ const Tabs = () => {
     });
   });
 
-  return !isLoaded ? <IonLoading isOpen={true} message="Loading data... Please wait." /> : loggedIn ? (
+  return !isLoaded ? (
+    <IonLoading isOpen={true} message="Loading data... Please wait." />
+  ) : loggedIn ? (
     <IonTabs>
       <IonRouterOutlet>
-
         <Route exact path="/home">
           <HomePage />
         </Route>
@@ -114,22 +112,38 @@ const Tabs = () => {
         <Redirect exact from="/account/login" to="/account" />
         <Redirect exact from="/" to={"/home"} />
 
-
         <Route>
           <NotFoundPage />
         </Route>
-
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom">
-        <IonTabButton tab="home" href="/home" selected={window.location.pathname.includes("home")}>
+        <IonTabButton
+          tab="home"
+          href="/home"
+          selected={window.location.pathname.includes("home")}
+        >
           <IonIcon icon={home} />
           <IonLabel>Home</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="report" href="/report" selected={window.location.pathname.includes("report")}>
-          <IonIcon icon={user?.type === "client" || user?.type === undefined ? locate : listOutline} />
-          <IonLabel>{user?.type === "client" || user?.type === undefined ? "Report" : "Reports"}</IonLabel>
+        <IonTabButton
+          tab="report"
+          href="/report"
+          selected={window.location.pathname.includes("report")}
+        >
+          <IonIcon
+            icon={
+              user?.type === "client" || user?.type === undefined
+                ? locate
+                : listOutline
+            }
+          />
+          <IonLabel>
+            {user?.type === "client" || user?.type === undefined
+              ? "Report"
+              : "Reports"}
+          </IonLabel>
         </IonTabButton>
 
         {/* <IonTabButton tab="shop" href="/shop">
@@ -137,7 +151,11 @@ const Tabs = () => {
           <IonLabel>E-Shop</IonLabel>
         </IonTabButton> */}
 
-        <IonTabButton tab={"/account"} href={"/account"} selected={window.location.pathname.includes("account")}>
+        <IonTabButton
+          tab={"/account"}
+          href={"/account"}
+          selected={window.location.pathname.includes("account")}
+        >
           <IonIcon icon={person} />
           <IonLabel>Account</IonLabel>
         </IonTabButton>
@@ -174,8 +192,8 @@ const Tabs = () => {
         <NotFoundPage />
       </Route>
     </IonRouterOutlet>
-  )
-}
+  );
+};
 
 const App: React.FC = () => (
   <GlobalProvider>
