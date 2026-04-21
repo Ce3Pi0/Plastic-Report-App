@@ -3,10 +3,12 @@ import codecs
 import random
 import bcrypt
 import re
+from flask import Request
 from utils.httpAbort import methodNotAllowed
-from routes.baseRoute import BaseRoute
+from controllers.base_controller import BaseController
+from typing import Type
 
-def createRequest(request, instance: BaseRoute):
+def createRequest(request: Request, controller: Type[BaseController]):
     method = request.method
     CRUD = ["POST", "GET", "PUT", "DELETE"]
 
@@ -14,15 +16,15 @@ def createRequest(request, instance: BaseRoute):
         return methodNotAllowed()
 
     if method == "GET":
-        return instance.read(request)
+        return controller.read(request)
     elif method == "POST":
-        return instance.create(request)
+        return controller.create(request)
     elif method == "PUT":
-        return instance.update(request)
+        return controller.update(request)
     elif method == "DELETE":
-        return instance.delete(request)
-
-
+        return controller.delete(request)
+    
+    return methodNotAllowed()
 
 def genSalt() -> bytes:
     return bcrypt.gensalt()
@@ -67,3 +69,23 @@ def decode_postgres_bytea(value) -> bytes | None:
 # TODO: Use in ID creation for all models
 def generate_uuid() -> str:
     return str(uuid.uuid4())
+
+def validate_privilege(user_type) -> bool:
+    __privilege = {"client":1, "admin":2}
+    if __privilege[user_type] < __privilege["admin"]:
+        return False
+    return True
+
+def validate_boolean_str(bool_val: str) -> bool:
+    bool_val = bool_val.upper()
+    if bool_val != "TRUE" and bool_val != "FALSE":
+        return False
+    return True
+
+def validate_report_status(status: str) -> bool:
+    __statuses = ["pending", "completed", "rejected"]
+    return status in __statuses
+
+def validate_request_type(req_type: str) -> bool:
+    __types = ["password_request", "email_request"]
+    return req_type in __types

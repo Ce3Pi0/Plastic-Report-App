@@ -7,41 +7,8 @@ from utils.httpAbort import badRequest, notFound, methodNotAllowed
 from datetime import datetime, timedelta
 
 class RequestRoute(BaseRoute):
-    __types = ["password_request", "email_request"]
-
     def __init__(self) -> None:
         self.update_req = ["user_id", "req_type"]
-
-    def create(self, request):
-        if "type" not in request.args:
-            return badRequest("Key not in request")
-
-        if request.args["type"] not in self.__types:
-            return methodNotAllowed("Type not allowed")
-
-        user_id = get_jwt_identity()
-        user = User.query.filter_by(id=user_id).first()
-
-        if user is None:
-            return notFound("User not found")
-
-        if user.type != "admin":
-            return methodNotAllowed("Unauthorized")
-
-        if "user_id" not in request.json:
-            return badRequest("Key not in request")
-
-        test_request = Request.query.filter_by(user_id=request.json["user_id"], type=request.args['type']).first()
-
-        if test_request is not None:
-            return methodNotAllowed("Cannot create another table of this type for this user")
-
-        user_request = Request(type=request.args["type"], time=None, user_id=request.json["user_id"])
-
-        db.session.add(user_request)
-        db.session.commit()
-        
-        return {"msg":"success"}
 
     def read(self, request):
         user_id = get_jwt_identity()

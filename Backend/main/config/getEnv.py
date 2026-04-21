@@ -20,6 +20,7 @@ getEnv = {
     "MAIL_USERNAME": os.getenv("MAIL_USERNAME"),
     "MAIL_PASSWORD": os.getenv("MAIL_PASSWORD"),
     "REQUEST_TIMER_LIMIT": os.getenv("REQUEST_TIMER_LIMIT", "5"),
+    "HOST": os.getenv("HOST", "0.0.0.0"),
 }
 
 
