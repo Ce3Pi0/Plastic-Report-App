@@ -1,7 +1,8 @@
+from utils.httpAbort import badRequest, methodNotAllowed, notAcceptable, notFound, unauthorized
 from config.config import db, app
 from routes.baseRoute import BaseRoute
 from classes.classes import User, Report
-from utils.utils import customAbort, get_random_alphanumerical
+from utils.utils import get_random_alphanumerical
 from flask_jwt_extended import get_jwt_identity
 import os
 
@@ -18,16 +19,16 @@ class ReportRoute(BaseRoute):
         lon = request.form.get("lon")
 
         if not lat or not lon:
-            return customAbort("Key not in request", 400)
+            return badRequest("Key not in request")
 
         user_id = get_jwt_identity()
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         if "image" not in request.files:
-            return customAbort("Missing image", 400)
+            return badRequest("Missing image")
 
         img = request.files["image"]
         img_ext = img.filename.split(".")[len(img.filename.split(".")) - 1]
@@ -51,11 +52,11 @@ class ReportRoute(BaseRoute):
             report = Report.query.filter_by(id=request.args["id"]).first()
 
             if report is None:
-                return customAbort("Report not found", 404)
+                return notFound("Report not found")
 
             if report.user_id != user_id and user.type != "admin":
-                return customAbort("Unauthorized", 405)
-            
+                return unauthorized("Unauthorized")
+
             if user.id != report.user_id:
                 user = User.query.filter_by(id=report.user_id).first()
                 username = user.username
@@ -74,7 +75,7 @@ class ReportRoute(BaseRoute):
         
         if "status" in request.args:
             if request.args["status"] not in self.__statuses:
-                customAbort("Invalid status", 406)
+                return notAcceptable("Invalid status")
 
             reports = None
             if user.type == "admin":
@@ -140,42 +141,42 @@ class ReportRoute(BaseRoute):
             user = User.query.filter_by(id=user_id).first()
 
             if user is None:
-                return customAbort("User not found", 404)
+                return notFound("User not found")
 
             if user.type != "admin":
-                return customAbort("Privilege too low!", 405)
+                return methodNotAllowed("Privilege too low!")
 
             if request.args["status"] not in self.__statuses:
-                return customAbort("Invalid status", 406)
+                return notAcceptable("Invalid status")
 
             report = Report.query.filter_by(id=request.args["id"]).first()
 
             if report is None:
-                return customAbort("Report not found", 404)
+                return notFound("Report not found")
 
             if report.status == request.args["status"]:
-                return customAbort("Can't change to the same status", 406)
+                return notAcceptable("Can't change to the same status")
 
             report.status = request.args["status"]
             db.session.commit()
 
             return {"msg":"success"}   
 
-        return customAbort("Key not in request", 400)
+        return badRequest("Key not in request")
     
     def delete(self, request):
         for key in self.delete_req:
             if key not in request.args:
-                return customAbort("Key not in request", 400)
+                return badRequest("Key not in request")
 
         user_id = get_jwt_identity()
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         if user.type != "admin":
-            return customAbort("User privilege to low", 405)
+            return methodNotAllowed("User privilege to low")
 
         report = Report.query.filter_by(id=request.args["id"]).first()
 

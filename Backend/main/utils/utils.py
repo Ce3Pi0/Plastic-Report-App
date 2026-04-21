@@ -1,24 +1,17 @@
-from flask import jsonify
+import uuid
+import codecs
 import random
 import bcrypt
 import re
-
+from utils.httpAbort import methodNotAllowed
 from routes.baseRoute import BaseRoute
-
-REQUEST_TIMER_LIMIT = 1 # hours
-
-def customAbort(msg: str, code:int):
-    return jsonify({
-        "message":msg,
-        "code":code
-    }), code
 
 def createRequest(request, instance: BaseRoute):
     method = request.method
     CRUD = ["POST", "GET", "PUT", "DELETE"]
 
     if method not in CRUD:
-        return customAbort("Method not allowed", 405)        
+        return methodNotAllowed()
 
     if method == "GET":
         return instance.read(request)
@@ -35,9 +28,10 @@ def genSalt() -> bytes:
     return bcrypt.gensalt()
 
 def hashPassword(password: str, salt: bytes) -> bytes:
-    encoded_pass = password.encode("UTF-8")
-    if type(salt) == str:
-        salt = salt.encode("UTF-8")
+    encoded_pass = password.encode("utf-8")
+    if isinstance(salt, str):
+        salt = salt.encode("utf-8")
+    
     return bcrypt.hashpw(encoded_pass, salt)
     
 def get_random_alphanumerical(_len = 16):
@@ -64,3 +58,12 @@ def get_domain(env: str, prod_domain: str | None, dev_domain) -> str:
         return prod_domain
     else:
         return dev_domain
+    
+def decode_postgres_bytea(value) -> bytes | None:
+    if isinstance(value, str) and value.startswith("\\x"):
+        return codecs.decode(value[2:], "hex")
+    return None
+
+# TODO: Use in ID creation for all models
+def generate_uuid() -> str:
+    return str(uuid.uuid4())

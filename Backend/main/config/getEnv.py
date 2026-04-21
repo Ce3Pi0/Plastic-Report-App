@@ -1,0 +1,26 @@
+import os
+from utils.utils import get_domain
+from dotenv import load_dotenv
+
+# Load .env Environment Variables
+load_dotenv()
+
+getEnv = {
+    "ENV": os.getenv("ENV", "DEVELOPMENT"),
+    "PASS_LEN": os.getenv("PASS_LEN", "6"),
+    "SECRET_KEY": os.getenv("SECRET_KEY"),
+    "JWT_SECRET": os.getenv("JWT_SECRET"),
+    "FRONTEND_PORT": os.getenv("FRONTEND_PORT", "8100"),
+    "DEV_FRONTEND_DOMAIN": os.getenv("DEV_FRONTEND_DOMAIN", "localhost:"),
+    "PROD_FRONTEND_DOMAIN": os.getenv("PROD_FRONTEND_DOMAIN"),
+    "DATABASE_URL": os.getenv("DATABASE_URL"),
+    "MY_MAIL": os.getenv("MY_MAIL"),
+    "MAIL_SERVER": os.getenv("MAIL_SERVER"),
+    "MAIL_PORT": os.getenv("MAIL_PORT", "587"),
+    "MAIL_USERNAME": os.getenv("MAIL_USERNAME"),
+    "MAIL_PASSWORD": os.getenv("MAIL_PASSWORD"),
+    "REQUEST_TIMER_LIMIT": os.getenv("REQUEST_TIMER_LIMIT", "5"),
+}
+
+
+getEnv["FRONTEND_DOMAIN"] = f"${get_domain(getEnv["ENV"], getEnv["PROD_FRONTEND_DOMAIN"], getEnv["DEV_FRONTEND_DOMAIN"])}{getEnv["FRONTEND_PORT"]}"

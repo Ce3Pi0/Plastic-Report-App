@@ -1,8 +1,8 @@
-from config.config import get_jwt_identity, db
+from flask_jwt_extended import get_jwt_identity
+from config.config import db
 from routes.baseRoute import BaseRoute
 from classes.classes import Issue, User
-from utils.utils import customAbort
-
+from utils.httpAbort import badRequest, notFound, methodNotAllowed, notAcceptable
 
 class IssueRoute(BaseRoute):
     
@@ -18,12 +18,11 @@ class IssueRoute(BaseRoute):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         for key in self.create_req:
             if key not in request.json:
-                return customAbort("Key not in request", 400)
-
+                return badRequest("Key not in request")
         issue = Issue(name=request.json["name"], description=request.json["description"] if "description" in
         request.json else None, fixed=False, user_id=user_id)
 
@@ -37,7 +36,7 @@ class IssueRoute(BaseRoute):
         user = User.query.filter_by(id = user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)        
+            return notFound("User not found")
 
         if "id" in request.args:
 
@@ -48,7 +47,7 @@ class IssueRoute(BaseRoute):
                 issue = Issue.query.filter_by(id=request.args["id"], user_id = user_id).first()
 
             if issue is None:
-                return customAbort("Issue report not found", 404)
+                return notFound("Issue report not found")
             
             return {"issue":{
                 "id":issue.id,
@@ -83,22 +82,22 @@ class IssueRoute(BaseRoute):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         if self.__privilege[user.type] < self.__privilege["admin"]:
-            return customAbort("Privilage too low", 405) 
+            return methodNotAllowed("Privilege too low")
 
         for key in self.update_req:
             if key not in request.args:
-                return customAbort("Key not in request", 400)
+                return badRequest("Key not in request")
 
         if request.args["fixed"].upper() != "TRUE" and request.args["fixed"].upper() != "FALSE":
-            return customAbort("Fixed arg must be True or False", 405)
+            return notAcceptable("Fixed arg must be True or False")
 
         issue = Issue.query.filter_by(id=request.args["id"]).first()
 
         if issue is None:
-            return customAbort("Issue report not found", 404)
+            return notFound("Issue report not found")
 
         issue.fixed = request.args["fixed"].upper() == "TRUE"
 
@@ -111,19 +110,19 @@ class IssueRoute(BaseRoute):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         if self.__privilege[user.type] < self.__privilege["admin"]:
-            return customAbort("Unauthorized", 405)
+            return methodNotAllowed("Unauthorized")
 
         for key in self.delete_req:
             if key not in request.args:
-                return customAbort("Key not in request", 400)
+                return badRequest("Key not in request")
 
         issue = Issue.query.filter_by(id=request.args["id"]).first()
 
         if issue is None:
-            return customAbort("Report issue not found", 404)
+            return notFound("Report issue not found")
         
         db.session.delete(issue)
         db.session.commit()

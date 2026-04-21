@@ -1,7 +1,10 @@
-from config.config import db, PASS_LEN, app, get_jwt_identity
+from flask_jwt_extended import get_jwt_identity
+from config.config import db, app
 from routes.baseRoute import BaseRoute
 from classes.classes import User, Request
-from utils.utils import customAbort, genSalt, hashPassword, checkMail, get_random_alphanumerical
+from utils.utils import decode_postgres_bytea, genSalt, hashPassword, checkMail, get_random_alphanumerical
+from utils.httpAbort import badRequest, unauthorized, notFound, methodNotAllowed, notAcceptable, conflict, internalServerError
+from config.getEnv import getEnv
 import hmac
 import os
 
@@ -19,38 +22,38 @@ class UserRoute(BaseRoute):
     def create(self, request):
         for key in self.create_req:
             if key not in request.json:
-                return customAbort("Key not in request", 400)
+                return badRequest("Key not in request")
 
         user = User.query.filter_by(username=request.json["current_username"]).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         salt = user.salt
         hashed_pass = hashPassword(request.json["current_password"], salt).decode("UTF-8")
         
         if not hmac.compare_digest(user.password, hashed_pass):
-            return customAbort("Password doesn't match", 401)
+            return unauthorized("Password doesn't match")
 
         if request.json["type"] not in self.__privilege.keys():
-            return customAbort("Type not allowed", 406)
+            return notAcceptable("Type not allowed")
         if request.json["gender"] not in self.__genders:
-            return customAbort("gender not allowed", 406)
+            return notAcceptable("gender not allowed")
 
         if self.__privilege[user.type] < self.__privilege[request.json["type"]]:
-            return customAbort("Unauthorized", 405) 
+            return methodNotAllowed("Unauthorized")
 
         if not checkMail(request.json["email"]):
-            return customAbort("Email not valid", 400)
+            return badRequest("Email not valid")
 
         check_username = User.query.filter_by(username = request.json["username"]).first()
         check_email = User.query.filter_by(email = request.json["email"]).first()
 
         if check_username is not None or check_email is not None:
-            return customAbort("User already exists", 409)       
+            return conflict("User already exists")
         
-        if len(request.json["password"]) < PASS_LEN:
-            return customAbort("Password to weak", 405)
+        if len(request.json["password"]) < getEnv["PASS_LEN"]:
+            return notAcceptable("Password to weak")
 
         salt = genSalt()
         hashed_pw = hashPassword(request.json["password"], salt)
@@ -79,7 +82,7 @@ class UserRoute(BaseRoute):
         user = User.query.filter_by(id = user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         view_user = user
 
@@ -107,7 +110,7 @@ class UserRoute(BaseRoute):
                 view_user = User.query.filter_by(id=request.args['id']).first()
 
         if view_user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         data = {
             "id":view_user.id,
@@ -126,7 +129,7 @@ class UserRoute(BaseRoute):
         user = User.query.filter_by(id=user_id).first()
  
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         user_to_update = user
 
@@ -155,20 +158,25 @@ class UserRoute(BaseRoute):
         
         for key in self.update_req:
             if key not in request.json:
-                return customAbort("Key not in request", 400)
+                return badRequest("Key not in request")
 
         if user.type != "admin" or user.id == user_to_update.id:
-            salt = user_to_update.salt
-            hashed_pass = hashPassword(request.json["password"], salt)
+            user_password = decode_postgres_bytea(user.password)
+            user_salt = decode_postgres_bytea(user.salt)
+
+            if user_password is None or user_salt is None:
+                return internalServerError("User data corrupted")
+
+            hashed_pass = hashPassword(request.json["password"], user_salt).decode("UTF-8")
         
-            if not hmac.compare_digest(user_to_update.password, hashed_pass):
-                return customAbort("Password doesn't match", 405)
+            if not hmac.compare_digest(user_password.decode("UTF-8"), hashed_pass):
+                return unauthorized("Password doesn't match")
 
         if request.json["password"] == request.json["new_password"]:
-            return customAbort("New password cannot be the same as the old one", 409)
+            return conflict("New password cannot be the same as the old one")
 
-        if len(request.json["new_password"]) < PASS_LEN:
-            return customAbort("Password to short", 409)
+        if len(request.json["new_password"]) < getEnv["PASS_LEN"]:
+            return notAcceptable("Password too short")
 
         salt = genSalt()
         new_hashed_pw = hashPassword(request.json["new_password"], salt)
@@ -185,21 +193,21 @@ class UserRoute(BaseRoute):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         if user.type != "admin":
-            return customAbort("Privilege too low!", 405)
-                
+            return methodNotAllowed("Privilege too low!")
+
         if "id" not in request.args:
-            return customAbort("Key not in request", 400)
+            return badRequest("Key not in request")
 
         user_to_delete = User.query.filter_by(id=request.args["id"]).first()
 
         if user_to_delete is None:
-            return customAbort("User not found", 404)
+            return notFound("User not found")
 
         if user_to_delete.type == "admin":
-            return customAbort("Cannot delete and admin user", 405)
+            return methodNotAllowed("Cannot delete an admin user")
 
         db.session.delete(user_to_delete)
         db.session.commit()  

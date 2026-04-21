@@ -2,7 +2,8 @@ from flask import request
 from flask_jwt_extended import jwt_required
 
 from config.config import *
-from utils.utils import createRequest, customAbort
+from utils.utils import createRequest
+from utils.httpAbort import notFound
 from routes.userRoute import UserRouteInstance
 from routes.reportRoute import ReportRouteInstance
 from routes.issueRoute import IssueRouteInstance 
@@ -85,7 +86,7 @@ def confirm_reset_token():
 # Not found route #
 @app.errorhandler(404)
 def not_found(err):
-    return customAbort("Page not found!", 404)
+    return notFound("Page not found!")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
