@@ -1,7 +1,8 @@
 from config.config import db
 from services.base_service import BaseService
-from utils.httpAbort import notFound, methodNotAllowed, notAcceptable
 from utils.utils import validate_privilege, validate_boolean_str
+from config.errorCodes import HttpError
+from utils.httpAbort import abort
 from classes.classes import Issue, User
 from validators.issue_validators import *
 
@@ -11,7 +12,7 @@ class IssueService(BaseService):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
 
         issue = Issue(name=body.name, description=body.description, fixed=False, user_id=user_id)
 
@@ -23,7 +24,7 @@ class IssueService(BaseService):
         user = User.query.filter_by(id = user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
         
         if issue_id:
             issue = None
@@ -33,7 +34,7 @@ class IssueService(BaseService):
                 issue = Issue.query.filter_by(id=issue_id, user_id = user_id).first()
 
             if issue is None:
-                return notFound("Issue report not found")
+                abort(HttpError.NOT_FOUND, "Issue report not found")
             
             return {
                 "id":issue.id,
@@ -67,18 +68,18 @@ class IssueService(BaseService):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
         
         if not validate_privilege(user.type):
-            return methodNotAllowed("Unauthorized")
+            abort(HttpError.UNAUTHORIZED,"Unauthorized")
         
         if not validate_boolean_str(issue_fixed):
-            return notAcceptable("Fixed arg must be True or False")
+            abort(HttpError.NOT_ACCEPTABLE, "Fixed arg must be True or False")
 
         issue = Issue.query.filter_by(id=issue_id).first()
 
         if issue is None:
-            return notFound("Issue report not found")
+            abort(HttpError.NOT_FOUND, "Issue report not found")
         
         issue.fixed = issue_fixed.upper() == "TRUE"
 
@@ -89,15 +90,15 @@ class IssueService(BaseService):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
 
         if not validate_privilege(user.type):
-            return methodNotAllowed("Unauthorized")
+            abort(HttpError.UNAUTHORIZED, "Unauthorized")
 
         issue = Issue.query.filter_by(id=issue_id).first()
 
         if issue is None:
-            return notFound("Report issue not found")
+            abort(HttpError.NOT_FOUND, "Report issue not found")
         
         db.session.delete(issue)
         db.session.commit()

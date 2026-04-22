@@ -4,27 +4,24 @@ import random
 import bcrypt
 import re
 from flask import Request
-from utils.httpAbort import methodNotAllowed
+from utils.httpAbort import abort
+from config.errorCodes import HttpError
 from controllers.base_controller import BaseController
 from typing import Type
 
 def createRequest(request: Request, controller: Type[BaseController]):
     method = request.method
-    CRUD = ["POST", "GET", "PUT", "DELETE"]
+    CRUD = {
+        "POST": controller.create(request),
+        "GET": controller.read(request),
+        "PUT": controller.update(request),
+        "DELETE": controller.delete(request)
+    }
 
-    if method not in CRUD:
-        return methodNotAllowed()
-
-    if method == "GET":
-        return controller.read(request)
-    elif method == "POST":
-        return controller.create(request)
-    elif method == "PUT":
-        return controller.update(request)
-    elif method == "DELETE":
-        return controller.delete(request)
+    if method not in CRUD.keys():
+        abort(HttpError.METHOD_NOT_ALLOWED)
     
-    return methodNotAllowed()
+    return CRUD[method]
 
 def genSalt() -> bytes:
     return bcrypt.gensalt()

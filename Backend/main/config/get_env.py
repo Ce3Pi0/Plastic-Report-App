@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # Load .env Environment Variables
 load_dotenv()
 
-getEnv = {
+get_env = {
     "ENV": os.getenv("ENV", "DEVELOPMENT"),
     "PASS_LEN": os.getenv("PASS_LEN", "6"),
     "SECRET_KEY": os.getenv("SECRET_KEY"),
@@ -24,4 +24,4 @@ getEnv = {
 }
 
 
-getEnv["FRONTEND_DOMAIN"] = f"${get_domain(getEnv["ENV"], getEnv["PROD_FRONTEND_DOMAIN"], getEnv["DEV_FRONTEND_DOMAIN"])}{getEnv["FRONTEND_PORT"]}"
+get_env["FRONTEND_DOMAIN"] = f"${get_domain(get_env["ENV"], get_env["PROD_FRONTEND_DOMAIN"], get_env["DEV_FRONTEND_DOMAIN"])}{get_env["FRONTEND_PORT"]}"

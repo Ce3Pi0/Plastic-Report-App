@@ -2,7 +2,8 @@ from werkzeug.datastructures import FileStorage
 from config.config import db
 from services.base_service import BaseService
 from validators.report_validators import ReportCreateSchema
-from utils.httpAbort import notFound, unauthorized, methodNotAllowed, notAcceptable
+from config.errorCodes import HttpError
+from utils.httpAbort import abort
 from classes.classes import Report, User
 from utils.utils import validate_privilege, validate_report_status
 
@@ -13,7 +14,7 @@ class ReportService(BaseService):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
         
         # TODO: Upload to cloudinary
         img_url = ""
@@ -28,16 +29,16 @@ class ReportService(BaseService):
         user = User.query.filter_by(id = user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
         
         if report_id is not None:
             report = Report.query.filter_by(id=report_id).first()
 
             if report is None:
-                return notFound("Report not found")
+                abort(HttpError.NOT_FOUND, "Report not found")
 
             if report.user_id != user_id and user.type != "admin":
-                return unauthorized("Unauthorized")
+                abort(HttpError.UNAUTHORIZED, "Unauthorized")
 
             if user.id != report.user_id:
                 user = User.query.filter_by(id=report.user_id).first()
@@ -55,7 +56,7 @@ class ReportService(BaseService):
 
         if report_status is not None:
             if not validate_report_status(report_status):
-                return notAcceptable("Invalid status")
+                abort(HttpError.NOT_ACCEPTABLE, "Invalid status")
 
             reports = None
             if validate_privilege(user.type):
@@ -111,21 +112,21 @@ class ReportService(BaseService):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
 
         if not validate_privilege(user.type):
-            return methodNotAllowed("User privilege to low")
+            abort(HttpError.METHOD_NOT_ALLOWED, "User privilege to low")
 
         if not validate_report_status(report_status):
-            return notAcceptable("Invalid status")
+            abort(HttpError.NOT_ACCEPTABLE, "Invalid status")
 
         report = Report.query.filter_by(id=report_id).first()
 
         if report is None:
-            return notFound("Report not found")
+            abort(HttpError.NOT_FOUND, "Report not found")
         
         if report.status == report_status:
-            return notAcceptable("Can't change to the same status")
+            abort(HttpError.CONFLICT, "Can't change to the same status")
         
         report.status = report_status
         db.session.commit()
@@ -135,14 +136,13 @@ class ReportService(BaseService):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
-            return notFound("User not found")
+            abort(HttpError.NOT_FOUND, "User not found")
         
         if not validate_privilege(user.type):
-            return methodNotAllowed("User privilege to low")
+            abort(HttpError.METHOD_NOT_ALLOWED, "User privilege to low")
         
         report = Report.query.filter_by(report_id).first()
         
         # TODO: Delete img from cloudinary
-
         db.session.delete(report)
         db.session.commit()

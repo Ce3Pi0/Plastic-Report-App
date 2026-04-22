@@ -1,4 +1,4 @@
-from config.getEnv import getEnv
+from config.get_env import get_env
 
 class SupabaseConfig:
     _instance = None
@@ -9,8 +9,8 @@ class SupabaseConfig:
         return cls._instance
     
     def init_app(self, app):
-        if not getEnv["DATABASE_URL"]:
+        if not get_env["DATABASE_URL"]:
             raise RuntimeError("Database configuration error - DATABASE_URL not found.")
-        app.config["SQLALCHEMY_DATABASE_URI"] = getEnv["DATABASE_URL"]
+        app.config["SQLALCHEMY_DATABASE_URI"] = get_env["DATABASE_URL"]
 
 SupabaseConfigInstance = SupabaseConfig()

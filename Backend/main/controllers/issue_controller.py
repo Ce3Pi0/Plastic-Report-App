@@ -1,10 +1,11 @@
 from flask import Request
 from typing import Dict, Any
 from flask_jwt_extended import get_jwt_identity
+from config.errorCodes import HttpError
+from utils.httpAbort import abort
 from controllers.base_controller import BaseController
 from services.issue_service import IssueService
 from validators.issue_validators import IssueCreateSchema
-from utils.httpAbort import badRequest, unauthorized
 
 class IssueController(BaseController):
     @staticmethod
@@ -12,13 +13,13 @@ class IssueController(BaseController):
         user_id = get_jwt_identity()
 
         if user_id is None:
-            return unauthorized("Invalid credentials")
+            abort(HttpError.UNAUTHORIZED, "Invalid credentials")
 
         data: Dict[str, Any] = request.get_json() or {}
         try:
             body = IssueCreateSchema(**data)
         except Exception as e:
-            return badRequest(str(e))
+            abort(HttpError.BAD_REQUEST, str(e))
         
         IssueService.create(user_id, body)
 
@@ -30,7 +31,7 @@ class IssueController(BaseController):
         issue_id = request.args.get("id")
 
         if user_id is None:
-            return unauthorized("Invalid credentials")
+            abort(HttpError.UNAUTHORIZED, "Invalid credentials")
         
         data = IssueService.read(user_id, issue_id)
 
@@ -49,10 +50,10 @@ class IssueController(BaseController):
         issue_fixed = request.args.get("fixed")
 
         if user_id is None:
-            return unauthorized("Invalid credentials")
+            abort(HttpError.UNAUTHORIZED, "Invalid credentials")
         
         if issue_id is None or issue_fixed is None:
-            return badRequest("Invalid Issue parameters")
+            abort(HttpError.BAD_REQUEST, "Invalid Issue parameters")
 
         IssueService.update(user_id, issue_id, issue_fixed)
 
@@ -64,7 +65,7 @@ class IssueController(BaseController):
         issue_id = request.args.get("id")
 
         if issue_id is None:
-            return badRequest("Invalid Issue parameters")
+            abort(HttpError.BAD_REQUEST, "Invalid Issue parameters")
         
         IssueService.delete(user_id, issue_id)
 
