@@ -1,5 +1,6 @@
 from flask import Request
 from typing import Dict, Any
+from pydantic import ValidationError
 from flask_jwt_extended import get_jwt_identity
 from config.errorCodes import HttpError
 from utils.httpAbort import abort
@@ -18,8 +19,8 @@ class ReportController(BaseController):
         data: Dict[str, Any] = request.form.to_dict() or {}
         try:
             body = ReportCreateSchema(**data)
-        except Exception as e:
-            abort(HttpError.BAD_REQUEST, str(e))
+        except ValidationError as e:
+            abort(HttpError.BAD_REQUEST, e.json())
         
         image = request.files.get("image")
         if image is None:

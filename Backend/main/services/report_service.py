@@ -115,7 +115,7 @@ class ReportService(BaseService):
             abort(HttpError.NOT_FOUND, "User not found")
 
         if not validate_privilege(user.type):
-            abort(HttpError.METHOD_NOT_ALLOWED, "User privilege to low")
+            abort(HttpError.UNAUTHORIZED, "User privilege to low")
 
         if not validate_report_status(report_status):
             abort(HttpError.NOT_ACCEPTABLE, "Invalid status")
@@ -139,7 +139,7 @@ class ReportService(BaseService):
             abort(HttpError.NOT_FOUND, "User not found")
         
         if not validate_privilege(user.type):
-            abort(HttpError.METHOD_NOT_ALLOWED, "User privilege to low")
+            abort(HttpError.UNAUTHORIZED, "User privilege to low")
         
         report = Report.query.filter_by(report_id).first()
         

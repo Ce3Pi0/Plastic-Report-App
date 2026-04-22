@@ -1,10 +1,11 @@
 # TODO: Add /api/v1 to all frontend requests
-from config.config import *
+from config.config import app
 from config.get_env import get_env
 from routes import register_routes
 from config.errorHandler import register_error_handlers
 
+register_routes(app)
+register_error_handlers(app)
+
 if __name__ == "__main__":
-    register_routes(app)
-    register_error_handlers(app)
     app.run(debug=True, host=get_env["HOST"], port=get_env["PORT"])

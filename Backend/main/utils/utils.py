@@ -3,7 +3,11 @@ import codecs
 import random
 import bcrypt
 import re
+from datetime import datetime, timedelta
 from flask import Request
+from itsdangerous import SignatureExpired, BadSignature, BadTimeSignature
+from config.config import s
+from config.get_env import get_env
 from utils.httpAbort import abort
 from config.errorCodes import HttpError
 from controllers.base_controller import BaseController
@@ -50,13 +54,7 @@ def checkMail(email) -> bool:
         return True
     return False
 
-def get_domain(env: str, prod_domain: str | None, dev_domain) -> str:
-    if env == "PRODUCTION":
-        if not prod_domain:
-            raise RuntimeError("Production domain not specified")
-        return prod_domain
-    else:
-        return dev_domain
+
     
 def decode_postgres_bytea(value) -> bytes | None:
     if isinstance(value, str) and value.startswith("\\x"):
@@ -79,6 +77,11 @@ def validate_boolean_str(bool_val: str) -> bool:
         return False
     return True
 
+def boolean_str_to_boolean(bool_val: str) -> bool:
+    if validate_boolean_str(bool_val):
+        return bool_val == "TRUE"
+    raise ValueError("Invalid value provided")
+
 def validate_report_status(status: str) -> bool:
     __statuses = ["pending", "completed", "rejected"]
     return status in __statuses
@@ -86,3 +89,21 @@ def validate_report_status(status: str) -> bool:
 def validate_request_type(req_type: str) -> bool:
     __types = ["password_request", "email_request"]
     return req_type in __types
+
+def check_last_request_time(current_request):
+    if current_request.time is not None:
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=get_env["REQUEST_TIMER_LIMIT"]):
+                current_request.time = datetime.now()
+            else:
+                abort(HttpError.TOO_MANY_REQUESTS, "Too many requests")
+    else:
+        current_request.time = datetime.now()
+
+def get_user_email(token: str):
+    try:
+        email = s.loads(token, salt="email-confirm", max_age=3600)
+        return email
+    except SignatureExpired:
+        abort(HttpError.PRECONDITION_FAILED, "Token has expired")
+    except (BadTimeSignature, BadSignature):
+        abort(HttpError.NOT_ACCEPTABLE, "The token you submitted was incorrect")
