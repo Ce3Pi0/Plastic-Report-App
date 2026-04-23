@@ -33,7 +33,7 @@ class UserController(BaseController):
 
         should_query = boolean_str_to_boolean(query) if query is not None else False
         
-        data = UserService.read(user_id, query, user_to_read_id, should_query)
+        data = UserService.read(user_id, user_to_read_id, should_query)
 
         if should_query:
             return {"users": data}

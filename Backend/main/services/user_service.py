@@ -7,6 +7,7 @@ from utils.httpAbort import abort
 from config.httpException import HttpError
 from utils.utils import validate_privilege, genSalt, hashPassword, decode_postgres_bytea
 from validators.user_validators import UserCreateSchema, UserUpdateSchema
+from cloudinary.uploader import upload, destroy
 
 class UserService(BaseService):
     @staticmethod
@@ -52,7 +53,7 @@ class UserService(BaseService):
         db.session.commit()
 
     @staticmethod
-    def read(user_id: str, query: str | None, user_to_read_id: str | None, should_query: bool):
+    def read(user_id: str, user_to_read_id: str | None, should_query: bool):
         user = User.query.filter_by(id=user_id).first()
 
         if user is None:
@@ -113,10 +114,13 @@ class UserService(BaseService):
         if user_to_update_id is not None and user_id != user_to_update_id and validate_privilege(user.type):
             user_to_update = User.query.filter_by(id=user_to_update).first()
         if image is not None:
-            # TODO: Upload to cloudinary
-            img_url = ""
+            result = upload(image, folder="users", unique_filename=True)
+            
+            img_url = result["secure_url"]
+            public_url = result["public_id"]
             
             user_to_update.url = img_url
+            user_to_update.public_url = public_url
             db.session.commit()
 
             return
@@ -165,6 +169,8 @@ class UserService(BaseService):
         if validate_privilege(user_to_delete.type):
             abort(HttpError.METHOD_NOT_ALLOWED, "Cannot delete an admin user")
         
+        if user_to_delete.public_url is not None:
+            destroy(user_to_delete.public_url)
+
         db.session.delete(user_to_delete)
-    
         db.session.commit()

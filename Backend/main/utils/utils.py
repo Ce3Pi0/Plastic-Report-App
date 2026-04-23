@@ -15,17 +15,18 @@ from typing import Type
 
 def createRequest(request: Request, controller: Type[BaseController]):
     method = request.method
+
     CRUD = {
-        "POST": controller.create(request),
-        "GET": controller.read(request),
-        "PUT": controller.update(request),
-        "DELETE": controller.delete(request)
+        "POST": lambda: controller.create(request),
+        "GET": lambda: controller.read(request),
+        "PUT": lambda: controller.update(request),
+        "DELETE": lambda: controller.delete(request),
     }
 
-    if method not in CRUD.keys():
+    if method not in CRUD:
         abort(HttpError.METHOD_NOT_ALLOWED)
-    
-    return CRUD[method]
+
+    return CRUD[method]()
 
 def genSalt() -> bytes:
     return bcrypt.gensalt()
@@ -61,10 +62,6 @@ def decode_postgres_bytea(value) -> bytes | None:
         return codecs.decode(value[2:], "hex")
     return None
 
-# TODO: Use in ID creation for all models
-def generate_uuid() -> str:
-    return str(uuid.uuid4())
-
 def validate_privilege(user_type) -> bool:
     __privilege = {"client":1, "admin":2}
     if __privilege[user_type] < __privilege["admin"]:
@@ -92,7 +89,7 @@ def validate_request_type(req_type: str) -> bool:
 
 def check_last_request_time(current_request):
     if current_request.time is not None:
-            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=get_env["REQUEST_TIMER_LIMIT"]):
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=int(get_env.get("REQUEST_TIMER_LIMIT") or 5)):
                 current_request.time = datetime.now()
             else:
                 abort(HttpError.TOO_MANY_REQUESTS, "Too many requests")

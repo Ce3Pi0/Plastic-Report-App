@@ -1,5 +1,4 @@
 # TODO: Fix frontend to work with 412 error
-
 from pydantic import BaseModel, Field, EmailStr, field_validator
 from utils.utils import checkMail
 from config.get_env import get_env
@@ -25,7 +24,7 @@ class AuthRegisterSchema(BaseModel):
     
     @field_validator("password")
     def check_password(cls, v):
-        if len(v) < get_env["PASS_LEN"]:
+        if len(v) < (get_env.get("PASS_LEN") or 6):
             raise ValueError("Password too weak")
         return v
     
@@ -35,6 +34,6 @@ class AuthLoginSchema(BaseModel):
 
     @field_validator("password")
     def check_password(cls, v):
-        if len(v) < get_env["PASS_LEN"]:
+        if len(v) < (get_env.get("PASS_LEN") or 6):
             raise ValueError("Password too weak")
         return v

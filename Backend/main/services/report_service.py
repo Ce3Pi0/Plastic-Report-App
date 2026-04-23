@@ -6,20 +6,22 @@ from config.errorCodes import HttpError
 from utils.httpAbort import abort
 from classes.classes import Report, User
 from utils.utils import validate_privilege, validate_report_status
-
+from cloudinary.uploader import upload, destroy
 
 class ReportService(BaseService):
     @staticmethod
     def create(user_id, body: ReportCreateSchema, image: FileStorage):
-        user = User.query.filter_by(id=user_id).first()
+        user = User.query.filter_by(id = user_id).first()
 
         if user is None:
             abort(HttpError.NOT_FOUND, "User not found")
         
-        # TODO: Upload to cloudinary
-        img_url = ""
+        result = upload(image, folder="reports", unique_filename=True)
 
-        report = Report(lat=body.lat, lon=body.lon, url=img_url, status="pending", user_id = user_id)
+        img_url = result["secure_url"]
+        public_url = result["public_id"]
+
+        report = Report(lat=body.lat, lon=body.lon, url=img_url, public_url=public_url, status="pending", user_id = user_id)
 
         db.session.add(report)
         db.session.commit()
@@ -141,8 +143,13 @@ class ReportService(BaseService):
         if not validate_privilege(user.type):
             abort(HttpError.UNAUTHORIZED, "User privilege to low")
         
-        report = Report.query.filter_by(report_id).first()
+        report = Report.query.filter_by(id=report_id).first()
         
-        # TODO: Delete img from cloudinary
+        if report is None:
+            abort(HttpError.NOT_FOUND, "Report not found")
+
+        if report.public_id:
+            destroy(report.public_id)
+
         db.session.delete(report)
         db.session.commit()

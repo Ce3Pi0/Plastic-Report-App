@@ -1,4 +1,4 @@
-# TODO: Add /api/v1 to all frontend requests
+# TODO: Add /api/v1 to all frontend requests and add auth for auth routes instead of user
 from config.config import app
 from config.get_env import get_env
 from routes import register_routes
@@ -8,4 +8,4 @@ register_routes(app)
 register_error_handlers(app)
 
 if __name__ == "__main__":
-    app.run(debug=True, host=get_env["HOST"], port=get_env["PORT"])
+    app.run(debug=True, host=get_env.get("HOST"), port=get_env["PORT"])

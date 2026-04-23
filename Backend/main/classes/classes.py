@@ -7,6 +7,7 @@ class User(db.Model):
     type = db.Column(db.String(128), nullable = False)
     name = db.Column(db.String(256), nullable = False)
     url = db.Column(db.String(128))
+    public_url = db.Column(db.String(128))
     username = db.Column(db.String(256), unique = True, nullable = False)
     email = db.Column(db.String(2048), unique = True, nullable = False)
     confirmed = db.Column(db.Boolean, nullable = False, default = False)
@@ -24,6 +25,7 @@ class Report(db.Model):
     lat = db.Column(db.String(256), nullable = False)
     lon = db.Column(db.String(256), nullable = False)
     url = db.Column(db.String(128))
+    public_url = db.Column(db.String(128))
     status = db.Column(db.String(128), nullable = False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable = False)
 

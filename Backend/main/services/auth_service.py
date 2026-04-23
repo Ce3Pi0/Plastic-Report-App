@@ -71,7 +71,7 @@ class AuthService:
 
     @staticmethod
     def send_confirm_email(email: str):
-        user = User.query.filter_by(email).first()
+        user = User.query.filter_by(email=email).first()
 
         if user is None: 
             abort(HttpError.NOT_FOUND, "User not found")
@@ -97,6 +97,9 @@ class AuthService:
 
         if user is None:
             abort(HttpError.NOT_FOUND, "User not found")
+
+        if user.confirmed:
+            abort(HttpError.CONFLICT, "User email already confirmed")
 
         user.confirmed = True
 
@@ -128,8 +131,7 @@ class AuthService:
         if user is None:
             abort(HttpError.NOT_FOUND, "User not found")
 
-
-        if len(password) < get_env["PASS_LEN"]:
+        if len(password) < (get_env.get("PASS_LEN") or 6):
             abort(HttpError.NOT_ACCEPTABLE, "Password to weak")
 
         salt = genSalt()
