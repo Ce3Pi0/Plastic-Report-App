@@ -40,7 +40,7 @@ export const sendConfirmEmail = (url: string, presentAlert: any) => {
                   return;
                 }
                 fetch(
-                  `http://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`,
+                  `http://${DOMAIN}/auth/send_confirm_email_token?email=${e[0]}`,
                   {
                     method: "POST",
                   },

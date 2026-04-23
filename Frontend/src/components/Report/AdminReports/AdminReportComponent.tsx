@@ -26,7 +26,7 @@ import { GlobalContext } from "../../../context/Context";
 import { IContext, IReport } from "../../../interfaces/interfaces";
 
 import { reportRequest } from "../../../utils/hooks/reportRequest";
-import { DOMAIN, STATIC_URL } from "../../../utils/utils";
+import { DOMAIN } from "../../../utils/utils";
 import useAddressFetch from "../../../utils/hooks/requestAddress";
 
 const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
@@ -132,11 +132,7 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
 
         <IonContent className="ion-padding">
           <div className="container">
-            <img
-              className="trash-image"
-              src={`http://${STATIC_URL}${report.url}`}
-              alt="Not found"
-            />
+            <img className="trash-image" src={report.url} alt="Not found" />
           </div>
         </IonContent>
       </IonModal>

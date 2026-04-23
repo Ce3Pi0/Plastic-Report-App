@@ -8,8 +8,7 @@ import {
 
 //constants
 // export const DOMAIN: string = 'api.3dfactory.mk';
-export const DOMAIN: string = "localhost:5000";
-export const STATIC_URL = "static.3dfactory.mk/";
+export const DOMAIN: string = "localhost:5000/api/v1";
 export const UNSAFE_PASSWORD: number = 6;
 export const MACEDONIA_CENTER = {
   lat: 41.56,
@@ -305,7 +304,7 @@ export const FetchRefreshToken = (
   );
   refreshHeaders.append("Content-Type", "application/json");
 
-  fetch(`http://${DOMAIN}/user/refresh_token`, {
+  fetch(`http://${DOMAIN}/auth/refresh_token`, {
     method: "GET",
     headers: refreshHeaders,
   })

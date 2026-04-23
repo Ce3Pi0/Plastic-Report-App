@@ -10,8 +10,6 @@ import {
 
 import { IReport } from "../../../interfaces/interfaces";
 
-import { STATIC_URL } from "../../../utils/utils";
-
 const ReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
   const checkStatus = (status: string): string => {
     if (status === "completed") return "success";
@@ -36,11 +34,7 @@ const ReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
         <br />
         Status: {report.status}
         <br />
-        <img
-          className="trash-image-info"
-          src={`http://${STATIC_URL}${report.url}`}
-          alt="Not found"
-        />
+        <img className="trash-image-info" src={report.url} alt="Not found" />
       </IonCardContent>
     </IonCard>
   );

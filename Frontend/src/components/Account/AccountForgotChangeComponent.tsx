@@ -43,7 +43,7 @@ const AccountForgotChangeComponent: React.FC = () => {
     }
 
     sendConfirmPasswordReset(
-      `http://${DOMAIN}/user/forgot_password?token=${token}&password=${password}`,
+      `http://${DOMAIN}/auth/forgot_password?token=${token}&password=${password}`,
       presentAlert,
     );
   };

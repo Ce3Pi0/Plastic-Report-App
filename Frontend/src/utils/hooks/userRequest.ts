@@ -98,7 +98,7 @@ export const userRequest = (
                   return;
                 }
                 fetch(
-                  `http://${DOMAIN}/user/send_confirm_email_token?email=${e[0]}`,
+                  `http://${DOMAIN}/auth/send_confirm_email_token?email=${e[0]}`,
                   {
                     method: "GET",
                   },
@@ -151,7 +151,7 @@ export const userRequest = (
         setUserExists(false);
 
         fetch(
-          `http://${DOMAIN}/user/send_confirm_email_token?email=${user.email}`,
+          `http://${DOMAIN}/auth/send_confirm_email_token?email=${user.email}`,
           {
             method: "GET",
           },

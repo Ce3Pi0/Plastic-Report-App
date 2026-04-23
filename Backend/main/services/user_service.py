@@ -119,6 +119,9 @@ class UserService(BaseService):
             img_url = result["secure_url"]
             public_url = result["public_id"]
             
+            if user_to_update.public_url is not None:
+                destroy(user_to_update.public_url)
+
             user_to_update.url = img_url
             user_to_update.public_url = public_url
             db.session.commit()

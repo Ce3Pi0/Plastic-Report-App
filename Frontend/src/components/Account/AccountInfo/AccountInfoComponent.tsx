@@ -33,7 +33,7 @@ import { GlobalContext } from "../../../context/Context";
 import { IReport, IContext } from "../../../interfaces/interfaces";
 
 import useFetch from "../../../utils/hooks/useFetch";
-import { DOMAIN, STATIC_URL } from "../../../utils/utils";
+import { DOMAIN } from "../../../utils/utils";
 import UpdateUserImageModal from "../../Modals/Image/imageUpdateModal";
 import openImageUpdateModal from "../../Modals/Image/openImageUpdateModal";
 
@@ -171,7 +171,7 @@ const AccountInfoComponent: React.FC = () => {
                     JSON.parse(JSON.stringify(data)).user.img_url === null ||
                     undefined
                       ? "https://ionicframework.com/docs/img/demos/avatar.svg"
-                      : `http://${STATIC_URL}${JSON.parse(JSON.stringify(data)).user.img_url}`
+                      : JSON.parse(JSON.stringify(data)).user.img_url
                   }
                   alt="Silhouette of a person's head"
                 ></Avatar>
