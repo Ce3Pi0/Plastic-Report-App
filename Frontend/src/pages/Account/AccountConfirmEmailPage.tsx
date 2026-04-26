@@ -14,8 +14,6 @@ import AccountConfirmEmailComponent from "../../components/Account/AccountConfir
 
 import { HandleRefresh } from "../../utils/utils";
 
-import "./Account.css";
-
 const AccountConfirmEmailPage: React.FC = () => {
   return (
     <IonPage>

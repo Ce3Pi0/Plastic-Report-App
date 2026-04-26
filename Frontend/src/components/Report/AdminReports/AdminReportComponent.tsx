@@ -79,7 +79,7 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
       <IonCardContent>
         <IonLoading isOpen={loading} message={"Applying changes..."} />
         <IonBadge
-          className="test"
+          className="min-[800px]:w-[10%] max-[800px]:w-[50%]"
           color={
             report.status === "pending"
               ? "warning"
@@ -131,8 +131,9 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
         </IonHeader>
 
         <IonContent className="ion-padding">
-          <div className="container">
-            <img className="trash-image" src={report.url} alt="Not found" />
+          {/* relative pt-[2%] m-auto flex justify-center items-center */}
+          <div className="relative">
+            <img className="max-h-[350px]" src={report.url} alt="Not found" />
           </div>
         </IonContent>
       </IonModal>

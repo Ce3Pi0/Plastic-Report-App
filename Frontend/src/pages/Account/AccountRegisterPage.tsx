@@ -13,8 +13,6 @@ import AccountRegisterComponent from "../../components/Account/AccountRegisterCo
 
 import { HandleRefresh } from "../../utils/utils";
 
-import "./Account.css";
-
 const AccountRegisterPage: React.FC = () => {
   return (
     <IonPage>

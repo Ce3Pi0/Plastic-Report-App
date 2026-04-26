@@ -55,17 +55,20 @@ const ShowReportsComponent: React.FC = () => {
         <IonRefresherContent />
       </IonRefresher>
       <IonFab slot="fixed" horizontal="end" vertical="top">
-        <div className="first_tooltip">
+        <div className="group relative inline-block">
           <IonFabButton size="small" onClick={(e) => HideTooltip()}>
             <IonIcon icon={arrowBackOutline} />
           </IonFabButton>
-          <span id="first_tooltip_text" className="tooltiptext-left">
+          <span
+            id="first_tooltip_text"
+            className="invisible group-hover:visible w-[100%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[9.5px] z-1 top-[100%] left-[0%]"
+          >
             Filter
           </span>
         </div>
 
         <IonFabList className="tooltips" side="start">
-          <div className="tooltip">
+          <div className="group relative inline-block">
             <IonFabButton
               size="small"
               color="success"
@@ -76,10 +79,12 @@ const ShowReportsComponent: React.FC = () => {
             >
               <IonIcon icon={checkmark} />
             </IonFabButton>
-            <span className="tooltiptext-left">Completed</span>
+            <span className="invisible group-hover:visible w-[100%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[9.5px] z-1 top-[100%] left-[0%]">
+              Completed
+            </span>
           </div>
 
-          <div className="tooltip">
+          <div className="group relative inline-block">
             <IonFabButton
               size="small"
               color="warning"
@@ -90,10 +95,12 @@ const ShowReportsComponent: React.FC = () => {
             >
               <IonIcon icon={codeWorkingOutline} />
             </IonFabButton>
-            <span className="tooltiptext-left">Pending</span>
+            <span className="invisible group-hover:visible w-[100%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[9.5px] z-1 top-[100%] left-[0%]">
+              Pending
+            </span>
           </div>
 
-          <div className="tooltip">
+          <div className="group relative inline-block">
             <IonFabButton
               size="small"
               color="danger"
@@ -104,10 +111,12 @@ const ShowReportsComponent: React.FC = () => {
             >
               <IonIcon icon={alertOutline} />
             </IonFabButton>
-            <span className="tooltiptext-left">Rejected</span>
+            <span className="invisible group-hover:visible w-[100%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[9.5px] z-1 top-[100%] left-[0%]">
+              Rejected
+            </span>
           </div>
 
-          <div className="tooltip">
+          <div className="group relative inline-block">
             <IonFabButton
               size="small"
               onClick={() => {
@@ -117,7 +126,9 @@ const ShowReportsComponent: React.FC = () => {
             >
               <IonIcon icon={appsOutline} />
             </IonFabButton>
-            <span className="tooltiptext-left">All</span>
+            <span className="invisible group-hover:visible w-[100%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[9.5px] z-1 top-[100%] left-[0%]">
+              All
+            </span>
           </div>
         </IonFabList>
       </IonFab>

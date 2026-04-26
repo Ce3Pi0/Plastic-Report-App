@@ -34,8 +34,15 @@ const AccountForgotComponent: React.FC = () => {
   };
 
   return (
-    <div id="container">
-      <form id="form" onSubmit={sendResetToken}>
+    <div
+      id="container"
+      className="pt-[2%] min-[800px]:pt-[5%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
+    >
+      <form
+        id="form"
+        className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
+        onSubmit={sendResetToken}
+      >
         <IonFab horizontal="start" vertical="top">
           <IonFabButton
             size={"small"}
@@ -44,7 +51,9 @@ const AccountForgotComponent: React.FC = () => {
             <IonIcon icon={arrowBack} />
           </IonFabButton>
         </IonFab>
-        <IonTitle id="title">Forgot password</IonTitle>
+        <IonTitle id="title" className="p-[10px] text-center">
+          Forgot password
+        </IonTitle>
 
         <br />
 
@@ -57,15 +66,21 @@ const AccountForgotComponent: React.FC = () => {
           clearInput={true}
           value={email}
           id="username"
+          className="text-center min-[800px]:ml-[10px] max-[800px]:ml-[15px]"
           placeholder="Enter your email"
           required={true}
         />
 
-        <p id="warning">
+        <p id="warning" className="text-[#e04055] text-center">
           {!message && <br></br>} {message}
         </p>
 
-        <IonButton type="submit" expand="block" id="button">
+        <IonButton
+          type="submit"
+          expand="block"
+          id="button"
+          className="flex justify-center ml-[35%] max-w-[30%]"
+        >
           Reset
         </IonButton>
       </form>

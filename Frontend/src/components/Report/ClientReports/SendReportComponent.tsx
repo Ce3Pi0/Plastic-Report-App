@@ -54,7 +54,7 @@ const SendReportComponent: React.FC = () => {
     if (location.lat === undefined || location.lng === undefined) {
       presentAlert({
         subHeader: "Location not specified!",
-        message: "Please specifiy a location",
+        message: "Please specify a location",
         buttons: ["OK"],
       });
 
@@ -100,7 +100,7 @@ const SendReportComponent: React.FC = () => {
         <IonRefresherContent />
       </IonRefresher>
 
-      <div className="map">
+      <div className="h-[100%] w-[100%]">
         <IonLoading isOpen={loading} message={"Sending report..."} />
         <IonFab>
           <IonButton
@@ -111,12 +111,15 @@ const SendReportComponent: React.FC = () => {
             Reset
           </IonButton>
         </IonFab>
-        <form className="reportMapForm" onSubmit={HandleSubmit}>
+        <form
+          className="h-[100%] w-[100%] absolute flex"
+          onSubmit={HandleSubmit}
+        >
           <IonFab horizontal="start" vertical="bottom">
-            <label className="label">
+            <label className="inline-block py-[7px] px-[15px] m-[5px] cursor-pointer rounded-[5px] bg-[var(--ion-color-light)] text-[var(--ion-text-color)] active:bg-[var(--ion-color-step-300)]">
               <RiGalleryFill />
               <input
-                className="upload"
+                className="hidden"
                 type="file"
                 onChange={(e) => HandleSetFile(e)}
                 accept="image/*"
@@ -125,10 +128,10 @@ const SendReportComponent: React.FC = () => {
 
             <br />
 
-            <label className="label">
+            <label className="inline-block py-[7px] px-[15px] m-[5px] cursor-pointer rounded-[5px] bg-[var(--ion-color-light)] text-[var(--ion-text-color)] active:bg-[var(--ion-color-step-300)]">
               <IonIcon icon={camera} />
               <input
-                className="upload camera"
+                className="hidden camera"
                 type="file"
                 onChange={(e) => HandleSetFile(e)}
                 accept="image/*"
@@ -144,7 +147,7 @@ const SendReportComponent: React.FC = () => {
           </IonFab>
         </form>
         <GoogleMapReact
-          onClick={(e) => {
+          onClick={(e: any) => {
             setLocation({ lat: `${e.lat}`, lng: `${e.lng}` });
           }}
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}

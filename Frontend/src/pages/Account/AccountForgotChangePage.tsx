@@ -1,14 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 
 /* Components */
-import AccountForgotChangeComponent from '../../components/Account/AccountForgotChangeComponent';
+import AccountForgotChangeComponent from "../../components/Account/AccountForgotChangeComponent";
 
-import { HandleRefresh } from '../../utils/utils';
-
-import './Account.css';
-
+import { HandleRefresh } from "../../utils/utils";
 
 const AccountForgotChangePage: React.FC = () => {
   return (

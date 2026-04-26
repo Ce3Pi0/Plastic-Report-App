@@ -3,25 +3,32 @@ import React from "react";
 import { IonFabButton, IonIcon, IonText, IonTitle } from "@ionic/react";
 import { arrowDownOutline } from "ionicons/icons";
 
-import logo from "../../images/logo.png";
+import img from "../../images/programmer.png";
 
 const AboutComponent: React.FC = () => (
-  <div className="about-first-page">
+  <div className="text-center mb-[200px]">
     <IonTitle>
-      <h1>About us</h1>
+      <h1 className="text-[62px]">About Me</h1>
     </IonTitle>
 
+    <div className="w-[100%] flex justify-center items-center">
+      <img src={img} className="w-[40%]" />
+    </div>
+
     <IonText>
-      <h4>On this page you will get to know our team</h4>
+      <h4 className="text-[24px]">
+        On this page you will get to know more about me
+      </h4>
     </IonText>
 
-    <img className="about-logo" src={logo} alt="3D factory" />
-
-    <div id="container">
+    <div
+      id="container"
+      className="pt-[2%] min-[800px]:pt-[5%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
+    >
       <IonFabButton
         onClick={() =>
           document
-            .querySelector(".team-component")!
+            .querySelector(".me-component")!
             .scrollIntoView({ behavior: "smooth" })
         }
       >

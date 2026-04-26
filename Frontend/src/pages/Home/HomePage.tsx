@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import {
   IonButtons,
@@ -9,20 +9,16 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonTitle,
-  IonToolbar
-} from '@ionic/react';
+  IonToolbar,
+} from "@ionic/react";
 
 /* Components */
-import MenuComponent from '../../components/Menu/MenuComponent';
-import HomeComponent from '../../components/Home/HomeComponent';
+import MenuComponent from "../../components/Menu/MenuComponent";
+import HomeComponent from "../../components/Home/HomeComponent";
 
-import { HandleRefresh } from '../../utils/utils';
-
-import './Home.css';
-
+import { HandleRefresh } from "../../utils/utils";
 
 const HomePage: React.FC = () => {
-
   return (
     <>
       {window.location.pathname.includes("home") && <MenuComponent />}
@@ -37,8 +33,7 @@ const HomePage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <IonContent
-          fullscreen={true}>
+        <IonContent fullscreen={true}>
           <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
             <IonRefresherContent />
           </IonRefresher>

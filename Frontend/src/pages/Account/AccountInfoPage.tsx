@@ -1,12 +1,17 @@
-import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 
 /* Components */
-import AccountInfoComponent from '../../components/Account/AccountInfo/AccountInfoComponent';
+import AccountInfoComponent from "../../components/Account/AccountInfo/AccountInfoComponent";
 
-import { HandleRefresh } from '../../utils/utils';
-
-import './Account.css';
-
+import { HandleRefresh } from "../../utils/utils";
 
 const AccountInfoPage: React.FC = () => {
   return (

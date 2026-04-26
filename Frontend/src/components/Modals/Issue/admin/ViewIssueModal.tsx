@@ -76,7 +76,7 @@ const ViewIssueModal = ({
             <IonItem key={issue.id}>
               <IonLabel>
                 <IonBadge
-                  className="test"
+                  className="min-[800px]:w-[10%] max-[800px]:w-[50%]"
                   color={issue.fixed === true ? "success" : "danger"}
                   slot="start"
                 >

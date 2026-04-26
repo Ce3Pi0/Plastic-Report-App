@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef, useState } from "react";
 
 import {
   IonButtons,
@@ -14,21 +14,17 @@ import {
   IonTitle,
   IonToolbar,
   ScrollDetail,
-} from '@ionic/react';
-import { chevronUpOutline } from 'ionicons/icons';
+} from "@ionic/react";
+import { chevronUpOutline } from "ionicons/icons";
 
 /* Components */
-import MenuComponent from '../../components/Menu/MenuComponent';
-import ContactComponent from '../../components/Contact/ContactComponent';
-import FooterComponent from '../../components/Contact/FooterComponent';
+import MenuComponent from "../../components/Menu/MenuComponent";
+import ContactComponent from "../../components/Contact/ContactComponent";
+import FooterComponent from "../../components/Contact/FooterComponent";
 
-import { HandleRefresh } from '../../utils/utils';
-
-import './Contact.css';
-
+import { HandleRefresh } from "../../utils/utils";
 
 const ContactPage: React.FC = () => {
-
   const contentRef = createRef<HTMLIonContentElement>();
   const [backToTop, setBackToTop] = useState<boolean>(false);
 
@@ -37,7 +33,7 @@ const ContactPage: React.FC = () => {
   const HandleScroll = (ev: CustomEvent<ScrollDetail>) => {
     if (ev.detail.scrollTop > 20) setBackToTop(true);
     else setBackToTop(false);
-  }
+  };
 
   return (
     <>
@@ -56,7 +52,8 @@ const ContactPage: React.FC = () => {
         <IonContent
           scrollEvents={true}
           onIonScroll={HandleScroll}
-          ref={contentRef}>
+          ref={contentRef}
+        >
           <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
@@ -67,11 +64,18 @@ const ContactPage: React.FC = () => {
           <FooterComponent />
         </IonContent>
 
-        {backToTop && <IonFab slot="fixed" vertical="bottom" horizontal="end" className='back-to-top'>
-          <IonFabButton onClick={() => ScrollToTop()}>
-            <IonIcon icon={chevronUpOutline}></IonIcon>
-          </IonFabButton>
-        </IonFab>}
+        {backToTop && (
+          <IonFab
+            slot="fixed"
+            vertical="bottom"
+            horizontal="end"
+            className="mr-4"
+          >
+            <IonFabButton onClick={() => ScrollToTop()}>
+              <IonIcon icon={chevronUpOutline}></IonIcon>
+            </IonFabButton>
+          </IonFab>
+        )}
       </IonPage>
     </>
   );

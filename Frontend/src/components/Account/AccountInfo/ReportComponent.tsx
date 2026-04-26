@@ -25,7 +25,7 @@ const ReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
 
       <IonCardContent>
         <IonBadge
-          className="test"
+          className="min-[800px]:w-[10%] max-[800px]:w-[50%]"
           color={checkStatus(report.status)}
           slot="start"
         >
@@ -34,7 +34,7 @@ const ReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
         <br />
         Status: {report.status}
         <br />
-        <img className="trash-image-info" src={report.url} alt="Not found" />
+        <img className="max-h-[150px]" src={report.url} alt="Not found" />
       </IonCardContent>
     </IonCard>
   );

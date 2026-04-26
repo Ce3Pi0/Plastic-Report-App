@@ -49,9 +49,16 @@ const AccountForgotChangeComponent: React.FC = () => {
   };
 
   return (
-    <div id="container">
+    <div
+      id="container"
+      className="pt-[2%] min-[800px]:pt-[5%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
+    >
       {token && (
-        <form id="form" onSubmit={SendResetToken}>
+        <form
+          id="form"
+          className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
+          onSubmit={SendResetToken}
+        >
           <IonFab horizontal="start" vertical="top">
             <IonFabButton
               size={"small"}
@@ -60,7 +67,9 @@ const AccountForgotChangeComponent: React.FC = () => {
               <IonIcon icon={arrowBack} />
             </IonFabButton>
           </IonFab>
-          <IonTitle id="title">Reset your password</IonTitle>
+          <IonTitle id="title" className="p-[10px] text-center">
+            Reset your password
+          </IonTitle>
 
           <br />
 
@@ -73,6 +82,7 @@ const AccountForgotChangeComponent: React.FC = () => {
             clearInput={true}
             value={password}
             id="username"
+            className="text-center min-[800px]:ml-[10px] max-[800px]:ml-[15px]"
             placeholder="Enter new password"
             required={true}
           />
@@ -88,22 +98,30 @@ const AccountForgotChangeComponent: React.FC = () => {
             clearInput={true}
             value={passwordConfirm}
             id="username"
+            className="text-center min-[800px]:ml-[10px] max-[800px]:ml-[15px]"
             placeholder="Confirm new password"
             required={true}
           />
 
-          <p id="warning">
+          <p id="warning" className="text-[#e04055] text-center">
             {!message && <br></br>} {message}
           </p>
 
-          <IonButton type="submit" expand="block" id="button">
+          <IonButton
+            type="submit"
+            expand="block"
+            id="button"
+            className="flex justify-center ml-[35%] max-w-[30%]"
+          >
             Reset
           </IonButton>
         </form>
       )}
       {!token && (
         <>
-          <h2 className="middle-confirm-text">Token not specified!</h2>
+          <h2 className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2">
+            Token not specified!
+          </h2>
           <IonFab
             horizontal="center"
             vertical="center"

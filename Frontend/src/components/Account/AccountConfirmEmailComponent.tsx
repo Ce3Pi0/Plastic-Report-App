@@ -14,7 +14,9 @@ const AccountConfirmEmailComponent: React.FC = () => {
 
   return token === null ? (
     <>
-      <h2 className="middle-confirm-text">{"Token not specified"}</h2>
+      <h2 className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2">
+        {"Token not specified"}
+      </h2>
 
       <IonFab
         horizontal="center"
@@ -31,7 +33,9 @@ const AccountConfirmEmailComponent: React.FC = () => {
     </>
   ) : (
     <>
-      <h2 className="middle-confirm-text">{"Confirm your email"}</h2>
+      <h2 className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2">
+        {"Confirm your email"}
+      </h2>
       <IonFab
         horizontal="center"
         vertical="center"

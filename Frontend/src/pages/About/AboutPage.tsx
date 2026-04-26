@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef, useState } from "react";
 
 import {
   IonButtons,
@@ -13,22 +13,18 @@ import {
   IonRefresherContent,
   IonTitle,
   IonToolbar,
-  ScrollDetail
-} from '@ionic/react';
-import { chevronUpOutline } from 'ionicons/icons';
+  ScrollDetail,
+} from "@ionic/react";
+import { chevronUpOutline } from "ionicons/icons";
 
 /* Components */
-import AboutComponent from '../../components/About/AboutComponent';
-import TeamComponent from '../../components/About/TeamComponent';
-import MenuComponent from '../../components/Menu/MenuComponent';
+import AboutComponent from "../../components/About/AboutComponent";
+import TeamComponent from "../../components/About/TeamComponent";
+import MenuComponent from "../../components/Menu/MenuComponent";
 
-import { HandleRefresh } from '../../utils/utils';
-
-import './About.css';
-
+import { HandleRefresh } from "../../utils/utils";
 
 const AboutPage: React.FC = () => {
-
   const contentRef = createRef<HTMLIonContentElement>();
   const [backToTop, setBackToTop] = useState<boolean>(false);
 
@@ -37,7 +33,7 @@ const AboutPage: React.FC = () => {
   const HandleScroll = (ev: CustomEvent<ScrollDetail>) => {
     if (ev.detail.scrollTop > 20) setBackToTop(true);
     else setBackToTop(false);
-  }
+  };
 
   return (
     <>
@@ -47,7 +43,7 @@ const AboutPage: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonMenuButton></IonMenuButton>
+              <IonMenuButton />
             </IonButtons>
             <IonTitle>About</IonTitle>
           </IonToolbar>
@@ -56,7 +52,8 @@ const AboutPage: React.FC = () => {
         <IonContent
           scrollEvents={true}
           onIonScroll={HandleScroll}
-          ref={contentRef}>
+          ref={contentRef}
+        >
           <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
@@ -64,11 +61,18 @@ const AboutPage: React.FC = () => {
           <TeamComponent />
         </IonContent>
 
-        {backToTop && <IonFab slot="fixed" vertical="bottom" horizontal="end" className='back-to-top'>
-          <IonFabButton onClick={() => ScrollToTop()}>
-            <IonIcon icon={chevronUpOutline}></IonIcon>
-          </IonFabButton>
-        </IonFab>}
+        {backToTop && (
+          <IonFab
+            slot="fixed"
+            vertical="bottom"
+            horizontal="end"
+            className="mr-4"
+          >
+            <IonFabButton onClick={() => ScrollToTop()}>
+              <IonIcon icon={chevronUpOutline}></IonIcon>
+            </IonFabButton>
+          </IonFab>
+        )}
       </IonPage>
     </>
   );

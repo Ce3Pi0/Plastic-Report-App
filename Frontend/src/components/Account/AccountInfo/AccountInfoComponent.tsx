@@ -81,17 +81,20 @@ const AccountInfoComponent: React.FC = () => {
       {data && (
         <>
           <IonFab slot="fixed" horizontal="end" vertical="top">
-            <div className="first_tooltip">
+            <div className="group relative inline-block">
               <IonFabButton size="small" onClick={(e) => hideTooltip()}>
                 <IonIcon icon={arrowDownOutline} />
               </IonFabButton>
-              <span id="first_tooltip_text" className="tooltiptext">
+              <span
+                id="first_tooltip_text"
+                className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]"
+              >
                 Filter
               </span>
             </div>
 
             <IonFabList className="tooltips" side="bottom">
-              <div className="tooltip">
+              <div className="group relative inline-block">
                 <IonFabButton
                   size="small"
                   color="success"
@@ -102,10 +105,12 @@ const AccountInfoComponent: React.FC = () => {
                 >
                   <IonIcon icon={checkmark} />
                 </IonFabButton>
-                <span className="tooltiptext">Completed</span>
+                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
+                  Completed
+                </span>
               </div>
 
-              <div className="tooltip">
+              <div className="group relative inline-block">
                 <IonFabButton
                   size="small"
                   color="warning"
@@ -116,10 +121,12 @@ const AccountInfoComponent: React.FC = () => {
                 >
                   <IonIcon icon={codeWorkingOutline} />
                 </IonFabButton>
-                <span className="tooltiptext">Pending</span>
+                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
+                  Pending
+                </span>
               </div>
 
-              <div className="tooltip">
+              <div className="group relative inline-block">
                 <IonFabButton
                   size="small"
                   color="danger"
@@ -130,10 +137,12 @@ const AccountInfoComponent: React.FC = () => {
                 >
                   <IonIcon icon={alertOutline} />
                 </IonFabButton>
-                <span className="tooltiptext">Rejected</span>
+                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
+                  Rejected
+                </span>
               </div>
 
-              <div className="tooltip">
+              <div className="group relative inline-block">
                 <IonFabButton
                   size="small"
                   onClick={() => {
@@ -143,19 +152,22 @@ const AccountInfoComponent: React.FC = () => {
                 >
                   <IonIcon icon={appsOutline} />
                 </IonFabButton>
-                <span className="tooltiptext">All</span>
+                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
+                  All
+                </span>
               </div>
             </IonFabList>
           </IonFab>
 
-          <IonCard className="account-info">
+          <IonCard className="bg-[var(--ion-color-step-150)] rounded-[15px] pb-[15px] border-[3px] border-solid border-[var(--ion-color-success)]">
             <IonLoading
               isOpen={updatingUserImage}
               message="Updating image ... Please wait."
             />
             <IonCardHeader>
               <div
-                id="avatar"
+                id="group avatar"
+                className="relative w-[56px]"
                 onClick={() =>
                   openImageUpdateModal(
                     present,
@@ -173,9 +185,12 @@ const AccountInfoComponent: React.FC = () => {
                       ? "https://ionicframework.com/docs/img/demos/avatar.svg"
                       : JSON.parse(JSON.stringify(data)).user.img_url
                   }
+                  className="group-hover:opacity-60 rounded-[100%] opacity-100"
                   alt="Silhouette of a person's head"
                 ></Avatar>
-                <div className="middle">Change image</div>
+                <div className="group-hover:opacity-100 text-[var(--ion-color-light-contrast)] absolute top-[50%] left-[50%] text-center cursor-pointer transition-all duration-500 ease-in-out opacity-0 -translate-x-1/2 -translate-y-1/2">
+                  Change image
+                </div>
               </div>
               <IonCardTitle>
                 <h1>{JSON.parse(JSON.stringify(data)).user.username}</h1>
@@ -205,8 +220,8 @@ const AccountInfoComponent: React.FC = () => {
             </IonButton>
           </IonCard>
 
-          <div className="container">
-            <div className="center-text">
+          <div className="relative">
+            <div className="text-center p-[5px] w-[98%] bg-[var(--ion-color-background)] border-t-2 border-l-2 border-r-2 border-solid border-[--ion-color-primary] rounded-t-[10px]">
               <h2>Your reports:</h2>
             </div>
           </div>

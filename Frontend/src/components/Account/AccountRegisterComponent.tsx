@@ -80,9 +80,16 @@ const AccountRegisterComponent: React.FC = () => {
   };
 
   return (
-    <div id="container">
+    <div
+      id="container"
+      className="pt-[2%] min-[800px]:pt-[5%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
+    >
       <IonLoading isOpen={loading} message={"Creating account..."} />
-      <form id="form" onSubmit={HandleSubmit}>
+      <form
+        id="form"
+        className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
+        onSubmit={HandleSubmit}
+      >
         <IonFab horizontal="start" vertical="top">
           <IonFabButton
             size={"small"}
@@ -92,7 +99,9 @@ const AccountRegisterComponent: React.FC = () => {
           </IonFabButton>
         </IonFab>
 
-        <IonTitle id="title">Create account</IonTitle>
+        <IonTitle id="title" className="p-[10px] text-center">
+          Create account
+        </IonTitle>
 
         <br />
 
@@ -105,6 +114,7 @@ const AccountRegisterComponent: React.FC = () => {
           clearInput={true}
           value={email}
           id="username"
+          className="text-center min-[800px]:ml-[10px] max-[800px]:ml-[15px]"
           placeholder="Enter your email"
           required={true}
         />
@@ -119,6 +129,7 @@ const AccountRegisterComponent: React.FC = () => {
           clearInput={true}
           value={name}
           id="username"
+          className="text-center min-[800px]:ml-[10px] max-[800px]:ml-[15px]"
           placeholder="Enter your name"
           required={true}
         />
@@ -133,6 +144,7 @@ const AccountRegisterComponent: React.FC = () => {
           clearInput={true}
           value={username}
           id="username"
+          className="text-center min-[800px]:ml-[10px] max-[800px]:ml-[15px]"
           placeholder="Enter username"
           required={true}
         />
@@ -148,6 +160,7 @@ const AccountRegisterComponent: React.FC = () => {
           clearInput={true}
           value={password}
           id="password"
+          className="min-[800px]:ml-[10px]  text-center max-[800px]:ml-[15px]"
           placeholder="Enter password"
           required={true}
         />
@@ -172,11 +185,24 @@ const AccountRegisterComponent: React.FC = () => {
           </IonItem>
         </IonRadioGroup>
 
-        {userExists && !message && <p id="warning">User already exists!</p>}
-        {!userExists && message && <p id="warning">{message}</p>}
+        {userExists && !message && (
+          <p id="warning" className="text-[#e04055] text-center">
+            User already exists!
+          </p>
+        )}
+        {!userExists && message && (
+          <p id="warning" className="text-[#e04055] text-center">
+            {message}
+          </p>
+        )}
         {!userExists && !message && <br />}
 
-        <IonButton type="submit" expand="block" id="button">
+        <IonButton
+          type="submit"
+          expand="block"
+          id="button"
+          className="flex justify-center ml-[35%] max-w-[30%]"
+        >
           Create
         </IonButton>
       </form>
