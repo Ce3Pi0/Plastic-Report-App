@@ -15,272 +15,271 @@ export const MACEDONIA_CENTER = {
   lng: 21.8,
 };
 export const DEFAULT_ZOOM = 9.5;
-const fileTypes = [
-  "image/apng",
-  "image/bmp",
-  "image/gif",
-  "image/jpeg",
-  "image/pjpeg",
-  "image/png",
-  "image/svg+xml",
-  "image/tiff",
-  "image/webp",
-  "image/x-icon",
-];
 
 //types
 export type methodType = "POST" | "PUT" | "GET" | "DELETE";
+type FetchDataType = {
+  url: string;
+  accessHeaders: Headers;
+  method: methodType | undefined;
+  AbtCnt: AbortController | undefined;
+  body: undefined | BodyInit;
+  user: IUserChange | IUserRegister | IUserLogin | undefined;
+  setData: any;
+  setLoading: any;
+  setErr: any;
+  setMessage: any;
+  setMistake: any;
+  presentAlert: any;
+};
+
+// Error codes
+enum ErrorCodes {
+  TOO_MANY_REQUESTS = 429,
+}
+
+const tooManyRequestsAlert = {
+  subHeader: "Fail",
+  message: "To many requests sent... Slow down!",
+  buttons: [
+    {
+      text: "OK",
+      role: "confirm",
+    },
+  ],
+};
+
+const reFetch = (fetchType: string, fetchData: FetchDataType) => {
+  const fetches: Map<string, () => void> = new Map([
+    [
+      "data",
+      async () => {
+        await FetchData(fetchData);
+      },
+    ],
+    [
+      "report",
+      async () => {
+        await FetchReportChange(fetchData);
+      },
+    ],
+    [
+      "user",
+      async () => {
+        await FetchUserChange(fetchData);
+      },
+    ],
+    [
+      "issue",
+      async () => {
+        await FetchIssueChange(fetchData);
+      },
+    ],
+    [
+      "update_image",
+      async () => {
+        await FetchUserImageChange(fetchData);
+      },
+    ],
+  ]);
+  fetches.get(fetchType);
+};
+
+const successAlert = (message: string) => {
+  return {
+    subHeader: "Success!",
+    message,
+    buttons: [
+      {
+        text: "OK",
+        role: "confirm",
+      },
+    ],
+  };
+};
+
+const handleTooManyRequestsError = (presentAlert: any) => {
+  presentAlert(tooManyRequestsAlert);
+  throw Error("Too many requests sent!");
+};
+
+export const getAuthToken = (contentType: string | undefined = undefined) => {
+  const accessHeaders = new Headers();
+
+  accessHeaders.append(
+    "Authorization",
+    `Bearer ${window.localStorage.getItem("access_token")}`,
+  );
+  if (contentType !== "form")
+    accessHeaders.append("Content-Type", "application/json");
+
+  return accessHeaders;
+};
+
+const getRefreshToken = () => {
+  let refreshHeaders = new Headers();
+
+  refreshHeaders.append(
+    "Authorization",
+    `Bearer ${window.localStorage.getItem("refresh_token")}`,
+  );
+  refreshHeaders.append("Content-Type", "application/json");
+
+  return refreshHeaders;
+};
+
+const setTokens = (json: any) => {
+  localStorage.setItem("access_token", json.access_token);
+  localStorage.setItem("refresh_token", json.refresh_token);
+};
+
+const handleExpiredSession = () => {
+  if (window.localStorage.getItem("logged_in") === "true") {
+    window.alert("Session expired!");
+    window.location.assign("/account/login");
+    window.localStorage.clear();
+  }
+  window.localStorage.setItem("logged_in", "false");
+};
 
 //fetches
-const FetchData = (
-  url: string,
-  myHeaders: Headers,
-  AbtCnt: AbortController,
-  setData: any,
-  setLoading: any,
-  setErr: any,
-) => {
-  fetch(url, {
-    method: "GET",
-    headers: myHeaders,
-    body: null,
-    signal: AbtCnt.signal,
-  })
-    .then((data) => {
-      setLoading(false);
-      if (!data.ok) {
-        throw Error("Something went wrong!");
-      }
-      return data.json();
-    })
-    .then((json) => {
-      setLoading(false);
-      setData(json);
-      setErr(null);
-    })
-    .catch((err) => {
-      setLoading(false);
-      setErr(err.message);
+const FetchData = async ({
+  url,
+  accessHeaders,
+  AbtCnt,
+  setData,
+  setLoading,
+  setErr,
+}: FetchDataType) => {
+  try {
+    const data = await fetch(url, {
+      method: "GET",
+      headers: accessHeaders,
+      body: null,
+      signal: AbtCnt?.signal,
     });
+
+    if (!data.ok) {
+      throw new Error("Something went wrong!");
+    }
+
+    setLoading(false);
+    setData(data.json());
+    setErr(null);
+  } catch (err: any) {
+    setLoading(false);
+    setErr(err.message);
+  }
 };
 
-const FetchUserChange = (
-  url: string,
-  method: methodType,
-  myHeaders: Headers,
-  user: IUserChange | IUserRegister | IUserLogin,
-  setMessage: any,
-  setMistake: any,
-  presentAlert: any,
-) => {
-  fetch(url, {
-    method: method,
-    headers: myHeaders,
-    body: JSON.stringify(user),
-  })
-    .then((res) => {
-      if (res.status === 429) {
-        presentAlert({
-          subHeader: "Fail",
-          message: "To many requests sent... Slow down!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
-
-        throw Error("Too many requests sent!");
-      }
-      if (!res.ok) {
-        throw Error("Something went wrong!");
-      }
-      return res.json();
-    })
-    .then((json) => {
-      if (json.msg === "success") {
-        setMistake(false);
-        setMessage("");
-      }
-    })
-    .catch((err) => {
-      setMistake(true);
-      setMessage("");
+const FetchUserChange = async ({
+  url,
+  method,
+  accessHeaders,
+  user,
+  setMessage,
+  setMistake,
+  presentAlert,
+}: FetchDataType) => {
+  try {
+    const data = await fetch(url, {
+      method: method,
+      headers: accessHeaders,
+      body: JSON.stringify(user),
     });
+
+    if (data.status === ErrorCodes.TOO_MANY_REQUESTS)
+      handleTooManyRequestsError(presentAlert);
+
+    if (!data.ok) throw new Error("Something went wrong!");
+
+    setMistake(false);
+    setMessage("");
+  } catch (err: any) {
+    setMistake(true);
+    setMessage("");
+  }
 };
 
-const FetchReportChange = (
-  url: string,
-  method: methodType,
-  myHeaders: Headers,
-  body: BodyInit | undefined | null,
-  presentAlert: any,
-  setLoading: any,
-) => {
-  fetch(url, {
+const FetchReportChange = async ({
+  url,
+  method,
+  accessHeaders,
+  body,
+  presentAlert,
+  setLoading,
+}: FetchDataType) => {
+  const data = await fetch(url, {
     method: method,
-    headers: myHeaders,
+    headers: accessHeaders,
     body: body,
-  })
-    .then((res) => {
-      if (res.status === 429) {
-        setLoading(false);
-        presentAlert({
-          subHeader: "Fail",
-          message: "To many requests sent... Slow down!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
+  });
 
-        throw Error("Too many requests sent!");
-      }
-      if (!res.ok) {
-        setLoading(false);
-        throw Error("Something went wrong!");
-      }
-      return res.json();
-    })
-    .then((json) => {
-      setLoading(false);
-      if (json.msg !== "success") throw Error("Something went wrong!");
-      if (presentAlert !== undefined) {
-        presentAlert({
-          subHeader: "Success!",
-          message: "Report sent successfully!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-              handler: () => {
-                window.location.reload();
-              },
-            },
-          ],
-        });
-      } else window.location.reload();
-    })
-    .catch((err) => Error(err));
+  if (data.status === ErrorCodes.TOO_MANY_REQUESTS) {
+    setLoading(false);
+    handleTooManyRequestsError(presentAlert);
+  }
+
+  if (!data.ok) {
+    setLoading(false);
+    throw Error("Something went wrong!");
+  }
+
+  setLoading(false);
+
+  presentAlert !== undefined
+    ? presentAlert(presentAlert(successAlert("Report sent successfully!")))
+    : window.location.reload();
 };
 
-const FetchIssueChange = (
-  url: string,
-  method: methodType,
-  myHeaders: Headers,
-  body: BodyInit | undefined | null,
-  presentAlert: any,
-) => {
-  fetch(url, {
+const FetchIssueChange = async ({
+  url,
+  method,
+  accessHeaders,
+  body,
+  presentAlert,
+}: FetchDataType) => {
+  const data = await fetch(url, {
     method: method,
-    headers: myHeaders,
+    headers: accessHeaders,
     body: body,
-  })
-    .then((res) => {
-      if (res.status === 429) {
-        presentAlert({
-          subHeader: "Fail",
-          message: "To many requests sent... Slow down!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
+  });
 
-        throw Error("Too many requests sent!");
-      }
-      if (!res.ok) {
-        throw Error("Something went wrong!");
-      }
-      return res.json();
-    })
-    .then((json) => {
-      if (json.msg !== "success") throw Error("Something went wrong!");
-      if (presentAlert !== undefined && method !== "PUT") {
-        presentAlert({
-          subHeader: "Success!",
-          message: "Issue report sent successfully!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-              handler: () => {
-                window.location.reload();
-              },
-            },
-          ],
-        });
-      } else window.location.reload();
-    })
-    .catch((err) => Error(err));
+  if (data.status === ErrorCodes.TOO_MANY_REQUESTS)
+    handleTooManyRequestsError(presentAlert);
+
+  if (!data.ok) throw new Error("Something went wrong");
+
+  presentAlert !== undefined
+    ? presentAlert(successAlert("Issue report sent successfully!"))
+    : window.location.reload();
 };
 
-const FetchUserImageChange = (
-  url: string,
-  method: methodType,
-  myHeaders: Headers,
-  body: BodyInit | undefined | null,
-  presentAlert: any,
-  updatingUserImage: any,
-) => {
-  fetch(url, {
+const FetchUserImageChange = async ({
+  url,
+  method,
+  accessHeaders,
+  body,
+  presentAlert,
+}: FetchDataType) => {
+  const data = await fetch(url, {
     method: method,
-    headers: myHeaders,
+    headers: accessHeaders,
     body: body,
-  })
-    .then((res) => {
-      if (res.status === 429) {
-        if (updatingUserImage !== undefined) updatingUserImage(false);
-        presentAlert({
-          subHeader: "Fail",
-          message: "To many requests sent... Slow down!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
+  });
 
-        throw Error("Too many requests sent!");
-      }
-      if (!res.ok) {
-        throw Error("Something went wrong!");
-      }
-      return res.json();
-    })
-    .then((json) => {
-      if (json.msg !== "success") throw Error("Something went wrong!");
+  if (data.status === ErrorCodes.TOO_MANY_REQUESTS) {
+    handleTooManyRequestsError(presentAlert);
+  }
 
-      if (presentAlert !== undefined) {
-        if (updatingUserImage !== undefined) updatingUserImage(false);
-        presentAlert({
-          subHeader: "Success!",
-          message: "User image updated successfully!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-              handler: () => {
-                window.location.reload();
-              },
-            },
-          ],
-        });
-      } else window.location.reload();
-    })
-    .catch((err) => {
-      if (updatingUserImage !== undefined) updatingUserImage(false);
-      throw Error(err);
-    });
+  if (!data.ok) throw new Error("Something went wrong");
+
+  presentAlert !== undefined
+    ? presentAlert(successAlert("User image updated successfully!"))
+    : window.location.reload();
 };
 
-export const FetchRefreshToken = (
+export const FetchRefreshToken = async (
   url: string,
   method: methodType | undefined,
   AbtCnt: AbortController | undefined,
@@ -291,100 +290,46 @@ export const FetchRefreshToken = (
   setErr: any,
   setMessage: any,
   setMistake: any,
-  fetchData: string,
+  fetchType: string,
   updateTokens: any,
   presentAlert: any,
   contentType: string | undefined,
 ) => {
-  let refreshHeaders = new Headers();
+  const refreshHeaders = getRefreshToken();
 
-  refreshHeaders.append(
-    "Authorization",
-    `Bearer ${window.localStorage.getItem("refresh_token")}`,
-  );
-  refreshHeaders.append("Content-Type", "application/json");
-
-  fetch(`http://${DOMAIN}/auth/refresh_token`, {
-    method: "GET",
-    headers: refreshHeaders,
-  })
-    .then((data) => {
-      if (!data.ok) throw Error("There was a mistake!");
-      return data.json();
-    })
-    .then((json) => {
-      localStorage.setItem("access_token", json.access_token);
-      localStorage.setItem("refresh_token", json.refresh_token);
-
-      updateTokens();
-
-      let myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${json.access_token}`);
-
-      if (contentType !== "form")
-        myHeaders.append("Content-Type", "application/json");
-
-      switch (fetchData) {
-        case "data":
-          FetchData(url, myHeaders, AbtCnt!, setData, setLoading, setErr);
-          break;
-        case "report":
-          FetchReportChange(
-            url,
-            method!,
-            myHeaders,
-            null,
-            undefined,
-            setLoading,
-          );
-          break;
-        case "user":
-          FetchUserChange(
-            url,
-            method!,
-            myHeaders,
-            user!,
-            setMessage,
-            setMistake,
-            presentAlert,
-          );
-          break;
-        case "create_report":
-          FetchReportChange(
-            url,
-            method!,
-            myHeaders,
-            body,
-            presentAlert,
-            setLoading,
-          );
-          break;
-        case "create_issue":
-          FetchIssueChange(url, method!, myHeaders, body, presentAlert);
-          break;
-        case "update_issue":
-          FetchIssueChange(url, method!, myHeaders, null, undefined);
-          break;
-        case "update_image":
-          FetchUserImageChange(
-            url,
-            method!,
-            myHeaders,
-            body,
-            presentAlert,
-            setLoading,
-          );
-          break;
-      }
-    })
-    .catch((e) => {
-      if (window.localStorage.getItem("logged_in") === "true") {
-        window.alert("Session expired!");
-        window.location.assign("/account/login");
-        window.localStorage.clear();
-      }
-      window.localStorage.setItem("logged_in", "false");
+  try {
+    const data = await fetch(`http://${DOMAIN}/auth/refresh_token`, {
+      method: "GET",
+      headers: refreshHeaders,
     });
+
+    if (!data.ok) throw Error("There was a mistake!");
+
+    const json = await data.json();
+
+    setTokens(json);
+    updateTokens();
+
+    const accessHeaders = getAuthToken(contentType);
+    accessHeaders.append("Authorization", `Bearer ${json.access_token}`);
+
+    reFetch(fetchType, {
+      url,
+      method,
+      accessHeaders,
+      AbtCnt,
+      body,
+      user,
+      setData,
+      setLoading,
+      setErr,
+      setMessage,
+      setMistake,
+      presentAlert,
+    });
+  } catch (err: any) {
+    handleExpiredSession();
+  }
 };
 
 //functions
@@ -393,61 +338,6 @@ export const HandleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     event.detail.complete();
   }, 2000);
   window.location.reload();
-};
-
-const ValidFileType = (file: File) => {
-  return fileTypes.includes(file.type);
-};
-
-export const UpdateImageDisplay = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const preview: Element | null = document.querySelector(".preview");
-  const input: HTMLInputElement | null = document.querySelector(".upload");
-  const cameraInput: HTMLInputElement | null =
-    document.querySelector(".camera");
-
-  if (preview === null || input === null || cameraInput === null) return;
-
-  while (preview.firstChild) {
-    preview.removeChild(preview.firstChild);
-  }
-
-  const curFiles =
-    input.value === e.target.value
-      ? input.files
-      : cameraInput.value === e.target.value
-        ? cameraInput.files
-        : null;
-
-  if (input.value === e.target.value) {
-    cameraInput.value = "";
-  } else if (cameraInput.value === e.target.value) {
-    input.value = "";
-  }
-
-  if (curFiles === null) return;
-
-  if (curFiles.length === 0) {
-    const para = document.createElement("p");
-    para.textContent = "No files currently selected for upload";
-    preview.appendChild(para);
-  } else {
-    const list = document.createElement("ol");
-    preview.appendChild(list);
-
-    for (const file in curFiles) {
-      const listItem = document.createElement("li");
-
-      if (ValidFileType(curFiles[file])) {
-        const image = document.createElement("img");
-        image.src = URL.createObjectURL(curFiles[file]);
-        image.style.maxHeight = "150px";
-
-        listItem.appendChild(image);
-      }
-
-      list.appendChild(listItem);
-    }
-  }
 };
 
 export const GetLocation = (

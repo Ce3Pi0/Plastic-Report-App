@@ -120,7 +120,7 @@ const AccountLoginComponent: React.FC = () => {
         </a>
         <a
           id="forgot"
-          className="text-center no-underline"
+          className="float-right text-center no-underline"
           href="/account/forgot"
         >
           <p>forgot password</p>

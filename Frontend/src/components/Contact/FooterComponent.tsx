@@ -28,10 +28,10 @@ const FooterComponent: React.FC = () => {
           Be part of the solution, not pollution © 2023
         </p>
 
-        <Link to="/home" className="flex flex-col items-center align-middle">
+        <Link to="/home" className="flex flex-col items-start justify-center">
           <img
             id="company-logo"
-            className="w-[30%] mb-[-10%]"
+            className="w-[30%]"
             src={logo}
             alt="3D factory logo"
           />

@@ -12,6 +12,7 @@ import {
   InstanceOfUserRegister,
   DOMAIN,
   ValidateEmail,
+  getAuthToken,
 } from "../utils";
 
 export const userRequest = (
@@ -26,13 +27,7 @@ export const userRequest = (
   presentAlert: any,
   setLoading: any,
 ) => {
-  let myHeaders = new Headers();
-
-  myHeaders.append(
-    "Authorization",
-    `Bearer ${window.localStorage.getItem("access_token")}`,
-  );
-  myHeaders.append("Content-Type", "application/json");
+  let myHeaders = getAuthToken();
 
   setLoading(true);
   fetch(url, {
@@ -134,7 +129,7 @@ export const userRequest = (
         throw Error("Email not confirmed");
       }
       if (res.status === 405) {
-        throw Error("Wrond username or password");
+        throw Error("Wrong username or password");
       }
       if (!res.ok) {
         throw Error("Something went wrong!");
@@ -185,6 +180,7 @@ export const userRequest = (
         window.localStorage.setItem("access_token", json.access_token);
         window.localStorage.setItem("refresh_token", json.refresh_token);
         window.localStorage.setItem("logged_in", "true");
+        window.localStorage.setItem("url", json.img_url);
 
         const current_user: IUser = {
           id: json.id,
@@ -193,6 +189,7 @@ export const userRequest = (
           type: json.type,
           access_token: json.access_token,
           refresh_token: json.refresh_token,
+          url: json.img_url,
         };
         window.location.assign("/home");
 

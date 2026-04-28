@@ -42,6 +42,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
         access_token: localStorage.getItem("access_token")!,
         refresh_token: localStorage.getItem("refresh_token")!,
         type: localStorage.getItem("type")!,
+        url: localStorage.getItem("url")!,
       },
     });
   };
@@ -58,6 +59,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
           access_token: localStorage.getItem("access_token")!,
           refresh_token: localStorage.getItem("refresh_token")!,
           type: localStorage.getItem("type")!,
+          url: localStorage.getItem("url")!,
         },
         isLoaded: true,
       }));

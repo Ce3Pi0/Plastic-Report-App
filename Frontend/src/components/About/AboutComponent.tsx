@@ -12,7 +12,7 @@ const AboutComponent: React.FC = () => (
     </IonTitle>
 
     <div className="w-[100%] flex justify-center items-center">
-      <img src={img} className="w-[40%]" />
+      <img src={img} className="min-[800px]:w-[20%] max-[800px]:w-[40%]" />
     </div>
 
     <IonText>
@@ -23,7 +23,7 @@ const AboutComponent: React.FC = () => (
 
     <div
       id="container"
-      className="pt-[2%] min-[800px]:pt-[5%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
+      className="pt-[2%] min-[800px]:pt-[4%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
     >
       <IonFabButton
         onClick={() =>

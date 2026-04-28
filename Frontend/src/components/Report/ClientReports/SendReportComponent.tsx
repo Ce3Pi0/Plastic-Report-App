@@ -1,3 +1,5 @@
+// TODO: Add an image preview
+
 import React, { useContext, useState } from "react";
 import { RiGalleryFill } from "react-icons/ri";
 import GoogleMapReact from "google-map-react";
@@ -7,6 +9,7 @@ import {
   IonContent,
   IonFab,
   IonIcon,
+  IonImg,
   IonLoading,
   IonRefresher,
   IonRefresherContent,
@@ -24,12 +27,13 @@ import { IContext, ILocation } from "../../../interfaces/interfaces";
 
 import { reportRequest } from "../../../utils/hooks/reportRequest";
 import {
-  UpdateImageDisplay,
   DOMAIN,
   MACEDONIA_CENTER,
   DEFAULT_ZOOM,
   HandleRefresh,
 } from "../../../utils/utils";
+import { FaXing } from "react-icons/fa";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 const SendReportComponent: React.FC = () => {
   const { updateTokens } = useContext(GlobalContext) as IContext;
@@ -40,11 +44,11 @@ const SendReportComponent: React.FC = () => {
     lat: undefined,
     lng: undefined,
   });
+  const [fileName, setFileName] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const HandleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    UpdateImageDisplay(e);
     setFile(e.target.files === null ? null : e.target.files[0]);
   };
 
@@ -106,9 +110,10 @@ const SendReportComponent: React.FC = () => {
           <IonButton
             color="danger"
             shape="round"
+            disabled={location.lat === undefined || location.lng === undefined}
             onClick={() => setLocation({ lat: undefined, lng: undefined })}
           >
-            Reset
+            Reset Location
           </IonButton>
         </IonFab>
         <form
@@ -116,28 +121,48 @@ const SendReportComponent: React.FC = () => {
           onSubmit={HandleSubmit}
         >
           <IonFab horizontal="start" vertical="bottom">
-            <label className="inline-block py-[7px] px-[15px] m-[5px] cursor-pointer rounded-[5px] bg-[var(--ion-color-light)] text-[var(--ion-text-color)] active:bg-[var(--ion-color-step-300)]">
-              <RiGalleryFill />
-              <input
-                className="hidden"
-                type="file"
-                onChange={(e) => HandleSetFile(e)}
-                accept="image/*"
-              />
-            </label>
+            <div className="flex items-end justify-center">
+              <div>
+                <label className="inline-block py-[7px] px-[15px] m-[5px] cursor-pointer rounded-[5px] bg-[var(--ion-color-light)] text-[var(--ion-text-color)] active:bg-[var(--ion-color-step-300)]">
+                  <RiGalleryFill />
+                  <input
+                    className="upload hidden"
+                    type="file"
+                    onChange={(e) => HandleSetFile(e)}
+                    accept="image/*"
+                    value={""}
+                  />
+                </label>
 
-            <br />
+                <br />
 
-            <label className="inline-block py-[7px] px-[15px] m-[5px] cursor-pointer rounded-[5px] bg-[var(--ion-color-light)] text-[var(--ion-text-color)] active:bg-[var(--ion-color-step-300)]">
-              <IonIcon icon={camera} />
-              <input
-                className="hidden camera"
-                type="file"
-                onChange={(e) => HandleSetFile(e)}
-                accept="image/*"
-                capture="environment"
-              />
-            </label>
+                <label className="inline-block py-[7px] px-[15px] m-[5px] cursor-pointer rounded-[5px] bg-[var(--ion-color-light)] text-[var(--ion-text-color)] active:bg-[var(--ion-color-step-300)]">
+                  <IonIcon icon={camera} />
+                  <input
+                    className="camera hidden"
+                    type="file"
+                    onChange={(e) => HandleSetFile(e)}
+                    accept="image/*"
+                    capture="environment"
+                    value={""}
+                  />
+                </label>
+              </div>
+              {file && (
+                <div className="p-3 max-w-[120px] max-h-[120px] bg-[var(--ion-color-light)] flex flex-col justify-center items-center rounded-md">
+                  <div className="absolute top-1 right-1">
+                    <IoCloseCircleOutline
+                      className="text-[var(--ion-color-danger)] hover:cursor-pointer hover:!text-[var(--ion-color-danger-tint)]"
+                      size={24}
+                      onClick={() => setFile(null)}
+                    />
+                  </div>
+                  <IonImg
+                    src={file === null ? "" : URL.createObjectURL(file)}
+                  />
+                </div>
+              )}
+            </div>
           </IonFab>
 
           <IonFab horizontal="end" vertical="bottom">

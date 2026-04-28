@@ -60,7 +60,7 @@ class AuthService:
         new_token = create_access_token(identity = user.id, fresh = True, expires_delta = timedelta(days=7))
         refresh_token = create_refresh_token(identity = user.id, expires_delta = timedelta(days=30))
 
-        return {'id':user.id, 'username':user.username, 'gender':user.gender, 'type':user.type, 'access_token': new_token, 'refresh_token': refresh_token}
+        return {'id':user.id, 'username':user.username, 'gender':user.gender, 'type':user.type, 'access_token': new_token, 'refresh_token': refresh_token, 'img_url': user.url}
 
     @staticmethod
     def refresh(user_id: str):

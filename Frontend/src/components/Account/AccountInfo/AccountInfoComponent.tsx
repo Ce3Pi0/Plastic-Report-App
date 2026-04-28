@@ -1,3 +1,5 @@
+// TODO: Preview image
+
 import React, { useContext, useState } from "react";
 
 import {
@@ -50,6 +52,7 @@ const AccountInfoComponent: React.FC = () => {
     `http://${DOMAIN}/user`,
     updateTokens,
   );
+
   const {
     data: reports,
     err: reports_error,
