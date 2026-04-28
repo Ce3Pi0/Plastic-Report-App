@@ -18,7 +18,6 @@ const FooterComponent: React.FC = () => {
   };
 
   return (
-    //
     <footer className="bg-[#4a4a4a] shadow-[0_1px_1px_0_rgba(0,0,0,0.12)] box-border w-[100%] text-left py-[55px] px-[50px] font-sans text-[16px] max-[880px]:text-[14px]">
       <div className="inline-block align-top w-[40%] max-[880px]:block max-[880px]:w-[100%] max-[880px]:mb-[40px] max-[880px]:text-center">
         <h3 className="text-3xl m-0">
@@ -71,7 +70,7 @@ const FooterComponent: React.FC = () => {
       </div>
 
       <div className="inline-block align-top w-[20%] mr-[-10%] max-[880px]:block max-[880px]:w-[100%] max-[880px]:mb-[40px] max-[880px]:text-center">
-        <div className="mt-[25px]">
+        <div className="mt-[25px] flex flex-row items-center justify-end">
           <a
             className="inline-block w-[35px] h-[35px] cursor-pointer rounded-[2px] text-xl text-white text-center mr-[7px] mb-[5px]"
             href="https://www.facebook.com/profile.php?id=100085664212659"

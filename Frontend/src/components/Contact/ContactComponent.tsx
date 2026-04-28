@@ -55,7 +55,10 @@ const ContactComponent: React.FC = () => {
   };
 
   return (
-    <div id="container" className="m-auto flex justify-center items-center">
+    <div
+      id="container"
+      className="m-auto flex justify-center items-center mt-4"
+    >
       <form
         id="form"
         className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
@@ -103,7 +106,7 @@ const ContactComponent: React.FC = () => {
           className="flex justify-center ml-[35%] max-w-[30%]"
         >
           {" "}
-          Submit
+          Send
         </IonButton>
       </form>
     </div>

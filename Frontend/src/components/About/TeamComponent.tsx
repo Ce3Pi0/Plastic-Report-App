@@ -1,5 +1,5 @@
 import React from "react";
-import { RiDeviceFill } from "react-icons/ri";
+import { RiCodeBlock } from "react-icons/ri";
 
 import { IonIcon } from "@ionic/react";
 import { peopleOutline } from "ionicons/icons";
@@ -30,12 +30,12 @@ const TeamComponent: React.FC = () => {
 
       <div className="w-[100%] flex justify-center items-center flex-wrap pb-[4rem]">
         <MemberComponent
-          MemberIcon={RiDeviceFill}
+          MemberIcon={RiCodeBlock}
           msg={
             "I am the main developer of this application which was built as a part of a bigger project during my High School education. The project's goals was to create a business focusing on circular economy. My main roles included designing and developing the Frontend and Backend systems of this application."
           }
           img={HristijanImg}
-          name="Hristijan Nikolovski"
+          name="Hristijan Nikolovski-Postler"
           email="hristijannikolovski16@gmail.com"
         />
       </div>

@@ -1,5 +1,3 @@
-// TODO: Preview image
-
 import React, { useContext, useState } from "react";
 
 import {
@@ -17,13 +15,7 @@ import {
   useIonAlert,
   useIonModal,
 } from "@ionic/react";
-import {
-  alertOutline,
-  appsOutline,
-  arrowDownOutline,
-  codeWorkingOutline,
-  checkmark,
-} from "ionicons/icons";
+import { appsOutline, arrowDownOutline, checkmark } from "ionicons/icons";
 
 import { Avatar } from "@mui/material";
 
@@ -38,6 +30,8 @@ import useFetch from "../../../utils/hooks/useFetch";
 import { DOMAIN } from "../../../utils/utils";
 import UpdateUserImageModal from "../../Modals/Image/imageUpdateModal";
 import openImageUpdateModal from "../../Modals/Image/openImageUpdateModal";
+import { RiProgress1Line } from "react-icons/ri";
+import { IoCheckmark, IoWarning } from "react-icons/io5";
 
 const AccountInfoComponent: React.FC = () => {
   const { user, setLoggedIn, updateTokens } = useContext(
@@ -106,7 +100,7 @@ const AccountInfoComponent: React.FC = () => {
                     hideTooltip();
                   }}
                 >
-                  <IonIcon icon={checkmark} />
+                  <IoCheckmark size={24} className="text-black" />
                 </IonFabButton>
                 <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
                   Completed
@@ -122,7 +116,7 @@ const AccountInfoComponent: React.FC = () => {
                     hideTooltip();
                   }}
                 >
-                  <IonIcon icon={codeWorkingOutline} />
+                  <RiProgress1Line size={24} />
                 </IonFabButton>
                 <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
                   Pending
@@ -138,7 +132,7 @@ const AccountInfoComponent: React.FC = () => {
                     hideTooltip();
                   }}
                 >
-                  <IonIcon icon={alertOutline} />
+                  <IoWarning size={24} className="text-black" />
                 </IonFabButton>
                 <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
                   Rejected
@@ -205,9 +199,6 @@ const AccountInfoComponent: React.FC = () => {
 
             <IonCardContent>
               Welcome to your account{" "}
-              {JSON.parse(JSON.stringify(data)).user.gender === "male" && "mr."}
-              {JSON.parse(JSON.stringify(data)).user.gender === "female" &&
-                "mrs."}
               {JSON.parse(JSON.stringify(data)).user.name}!
             </IonCardContent>
 
@@ -223,8 +214,8 @@ const AccountInfoComponent: React.FC = () => {
             </IonButton>
           </IonCard>
 
-          <div className="relative">
-            <div className="text-center p-[5px] w-[98%] bg-[var(--ion-color-background)] border-t-2 border-l-2 border-r-2 border-solid border-[--ion-color-primary] rounded-t-[10px]">
+          <div className="flex flex-col justify-center items-center">
+            <div className="text-center p-[5px] bg-[var(--ion-color-background)] border-b-2 border-solid border-[var(--ion-color-step-150)] w-[98%] mb-4">
               <h2>Your reports:</h2>
             </div>
           </div>

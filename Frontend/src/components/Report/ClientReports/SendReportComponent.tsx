@@ -16,7 +16,7 @@ import {
   IonTitle,
   useIonAlert,
 } from "@ionic/react";
-import { arrowUpOutline, camera } from "ionicons/icons";
+import { arrowUpOutline, camera, locationSharp } from "ionicons/icons";
 
 /* Components */
 import Marker from "./MarkerComponent";
@@ -32,11 +32,13 @@ import {
   DEFAULT_ZOOM,
   HandleRefresh,
 } from "../../../utils/utils";
-import { FaXing } from "react-icons/fa";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
 const SendReportComponent: React.FC = () => {
   const { updateTokens } = useContext(GlobalContext) as IContext;
+
+  const [mapInstance, setMapInstance] = useState<any>(null);
+  const [mapApi, setMapApi] = useState<any>(null);
 
   const [presentAlert] = useIonAlert();
 
@@ -44,7 +46,6 @@ const SendReportComponent: React.FC = () => {
     lat: undefined,
     lng: undefined,
   });
-  const [fileName, setFileName] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -98,6 +99,26 @@ const SendReportComponent: React.FC = () => {
     );
   };
 
+  const useCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const newLat = position.coords.latitude;
+        const newLng = position.coords.longitude;
+
+        setLocation({
+          lat: newLat.toString(),
+          lng: newLng.toString(),
+        });
+
+        if (mapInstance && mapApi) {
+          const newPos = new mapApi.LatLng(newLat, newLng);
+          mapInstance.panTo(newPos);
+          mapInstance.setZoom(15);
+        }
+      });
+    }
+  };
+
   return (
     <IonContent>
       <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
@@ -106,14 +127,24 @@ const SendReportComponent: React.FC = () => {
 
       <div className="h-[100%] w-[100%]">
         <IonLoading isOpen={loading} message={"Sending report..."} />
-        <IonFab>
+        <IonFab className="flex flex-col">
           <IonButton
+            className="w-[100%]"
             color="danger"
             shape="round"
             disabled={location.lat === undefined || location.lng === undefined}
             onClick={() => setLocation({ lat: undefined, lng: undefined })}
           >
             Reset Location
+          </IonButton>
+          <IonButton
+            className="w-[100%]"
+            color="success"
+            shape="round"
+            onClick={() => useCurrentLocation()}
+          >
+            My Location{" "}
+            <IonIcon className="text-black" size="small" icon={locationSharp} />
           </IonButton>
         </IonFab>
         <form
@@ -165,20 +196,28 @@ const SendReportComponent: React.FC = () => {
             </div>
           </IonFab>
 
-          <IonFab horizontal="end" vertical="bottom">
+          <IonFab horizontal="end" vertical="top">
             <IonButton type="submit" shape="round">
               <IonIcon icon={arrowUpOutline} />
+              <p>Send</p>
             </IonButton>
           </IonFab>
         </form>
+
         <GoogleMapReact
-          onClick={(e: any) => {
-            setLocation({ lat: `${e.lat}`, lng: `${e.lng}` });
-          }}
+          // TODO: Move key to ENV_VAR
           bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
           defaultCenter={MACEDONIA_CENTER}
           defaultZoom={DEFAULT_ZOOM}
-          options={{ fullscreenControl: false, zoomControl: false }}
+          yesIWantToUseGoogleMapApiInternals
+          onGoogleApiLoaded={({ map, maps }: any) => {
+            setMapInstance(map);
+            setMapApi(maps);
+          }}
+          onClick={(e: any) => {
+            setLocation({ lat: e.lat, lng: e.lng });
+          }}
+          options={{ fullscreenControl: false, zoomControl: true }}
         >
           {location.lat !== undefined && location.lng !== undefined && (
             <Marker lat={location.lat} lng={location.lng} />
