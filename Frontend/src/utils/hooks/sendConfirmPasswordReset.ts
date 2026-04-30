@@ -1,3 +1,4 @@
+import { UseIonRouterResult } from "@ionic/react";
 import { ErrorCodes } from "../../config";
 import {
   handleConflictError,
@@ -10,6 +11,7 @@ import {
 export const sendConfirmPasswordReset = async (
   url: string,
   presentAlert: any,
+  router: UseIonRouterResult,
 ) => {
   try {
     const data = await fetch(url, {
@@ -18,7 +20,7 @@ export const sendConfirmPasswordReset = async (
 
     if (!data.ok) throw { status: data.status };
 
-    window.location.assign("/account/login");
+    router.push("/account/login", "back");
   } catch (err: any) {
     switch (err.status) {
       case ErrorCodes.NOT_FOUND:

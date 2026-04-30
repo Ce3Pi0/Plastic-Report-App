@@ -6,6 +6,7 @@ import {
   IonLoading,
   IonTitle,
   useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
 
 import { GlobalContext } from "../../context/Context";
@@ -16,6 +17,8 @@ import { userLoginRequest } from "../../utils/hooks/userLoginRequest";
 import { DOMAIN } from "../../config";
 
 const AccountLoginComponent: React.FC = () => {
+  const router = useIonRouter();
+
   const [presentAlert] = useIonAlert();
 
   const { setLoggedIn } = useContext(GlobalContext) as IContext;
@@ -28,7 +31,7 @@ const AccountLoginComponent: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [mistake, setMistake] = useState<boolean>(false);
 
-  const HandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const user: IUserLogin = {
@@ -37,7 +40,7 @@ const AccountLoginComponent: React.FC = () => {
     };
 
     userLoginRequest(
-      `http://${DOMAIN}/auth/login`,
+      `{DOMAIN}/auth/login`,
       "POST",
       user,
       setMessage,
@@ -45,6 +48,7 @@ const AccountLoginComponent: React.FC = () => {
       setLoggedIn,
       presentAlert,
       setLoading,
+      router,
     );
   };
 
@@ -58,7 +62,7 @@ const AccountLoginComponent: React.FC = () => {
       <form
         id="form"
         className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
-        onSubmit={HandleSubmit}
+        onSubmit={handleSubmit}
       >
         <IonTitle id="title" className="p-[10px] text-center">
           Login

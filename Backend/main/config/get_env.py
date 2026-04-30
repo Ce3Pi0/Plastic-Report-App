@@ -1,8 +1,11 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-# Load .env Environment Variables
-load_dotenv()
+base_dir = Path(__file__).resolve().parent 
+env_path = base_dir / '.env'
+
+load_dotenv(dotenv_path=env_path)
 
 def get_domain(env: str, prod_domain: str | None, dev_domain) -> str:
     if env == "PRODUCTION":
@@ -14,6 +17,8 @@ def get_domain(env: str, prod_domain: str | None, dev_domain) -> str:
 
 get_env = {
     "ENV": os.getenv("ENV", "DEVELOPMENT"),
+    "FRONTEND_DIST": os.getenv("FRONTEND_DIST", "../../Frontend/dist"),
+    "PORT": os.getenv("PORT", "5000"),
     "PASS_LEN": int(os.getenv("PASS_LEN", "6")),
     "SECRET_KEY": os.getenv("SECRET_KEY"),
     "JWT_SECRET": os.getenv("JWT_SECRET"),

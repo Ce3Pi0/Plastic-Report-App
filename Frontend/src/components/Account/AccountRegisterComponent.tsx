@@ -1,6 +1,4 @@
-// FIXME: Radio buttons on click fix
-
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 
 import {
@@ -11,11 +9,10 @@ import {
   IonFabButton,
   IonIcon,
   IonRadioGroup,
-  IonItem,
-  IonLabel,
-  IonRadio,
   useIonAlert,
   IonLoading,
+  useIonRouter,
+  IonLabel,
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
@@ -23,6 +20,8 @@ import { IUserRegister } from "../../interfaces/interfaces";
 
 import { userRegisterRequest } from "../../utils/hooks/userRegisterRequest";
 import { DOMAIN, UNSAFE_PASSWORD } from "../../config";
+import GenderComponent from "./AccountInfo/GenderComponent";
+import { gendersType } from "../../types";
 
 const AccountRegisterComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();
@@ -33,25 +32,25 @@ const AccountRegisterComponent: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [gender, setGender] = useState<string>("");
+  const [gender, setGender] = useState<gendersType | "">("");
 
   const [userExists, setUserExists] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
-  const history = useHistory();
+  const router = useIonRouter();
 
-  const HandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const genders: gendersType[] = ["male", "female", "other"];
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage("");
 
     if (gender === "") {
       setMessage("Please select a gender!");
-
       return;
     }
     if (password.length < UNSAFE_PASSWORD) {
       setMessage("Password too weak!");
-
       return;
     }
 
@@ -64,7 +63,7 @@ const AccountRegisterComponent: React.FC = () => {
     };
 
     userRegisterRequest(
-      `http://${DOMAIN}/auth/register`,
+      `{DOMAIN}/auth/register`,
       "POST",
       newUser,
       setMessage,
@@ -77,20 +76,20 @@ const AccountRegisterComponent: React.FC = () => {
   return (
     <div
       id="container"
-      className="pt-[2%] min-[800px]:pt-[5%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
+      className="min-[800px]:pt-[5%] max-[800px]:pt-[20%] m-auto flex justify-center items-center"
     >
       <IonLoading isOpen={loading} message={"Creating account..."} />
       <form
         id="form"
         className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
-        onSubmit={HandleSubmit}
+        onSubmit={handleSubmit}
       >
         <IonFab horizontal="start" vertical="top">
           <IonFabButton
             size={"small"}
-            onClick={() => history.push("/account/login")}
+            onClick={() => router.push("/account/login")}
           >
-            <IonIcon icon={arrowBack}></IonIcon>
+            <IonIcon icon={arrowBack} />
           </IonFabButton>
         </IonFab>
 
@@ -159,27 +158,22 @@ const AccountRegisterComponent: React.FC = () => {
           placeholder="Enter password"
           required={true}
         />
-
+        <div className="w-full flex items-center justify-center pb-2 my-4 border-b-2 border-[var(--ion-color-medium)]">
+          <IonLabel>Pick a Gender:</IonLabel>
+        </div>
         <IonRadioGroup
           value={gender}
           onIonChange={(e) => setGender(e.detail.value)}
+          className="!flex !flex-row !items-center pt-1"
         >
-          <IonItem className="gender" color={"light"}>
-            <IonLabel>Male</IonLabel>
-            <IonRadio slot="end" value="male"></IonRadio>
-          </IonItem>
-
-          <IonItem className="gender" color={"light"}>
-            <IonLabel>Female</IonLabel>
-            <IonRadio slot="end" value="female"></IonRadio>
-          </IonItem>
-
-          <IonItem className="gender" color={"light"}>
-            <IonLabel>Other</IonLabel>
-            <IonRadio slot="end" value="other"></IonRadio>
-          </IonItem>
+          {genders.map((gender, index) => (
+            <GenderComponent
+              key={index}
+              gender={gender}
+              setGender={setGender}
+            />
+          ))}
         </IonRadioGroup>
-
         {userExists && !message && (
           <p id="warning" className="text-[#e04055] text-center">
             User already exists!
@@ -198,7 +192,7 @@ const AccountRegisterComponent: React.FC = () => {
           id="button"
           className="flex justify-center ml-[35%] max-w-[30%]"
         >
-          Create
+          Register
         </IonButton>
       </form>
     </div>

@@ -4,11 +4,13 @@ import { IIssue } from "../../../../interfaces/interfaces";
 import { issueRequest } from "../../../../utils/hooks/issueRequest";
 
 import { DOMAIN } from "../../../../config";
+import { UseIonRouterResult } from "@ionic/react";
 
 const openReportIssueModal = (
   present: any,
   updateTokens: Function,
   presentAlert: any,
+  router: UseIonRouterResult,
 ) => {
   present({
     onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
@@ -26,11 +28,12 @@ const openReportIssueModal = (
         myHeaders.append("Content-Type", "application/json");
 
         issueRequest(
-          `http://${DOMAIN}/issue`,
+          `{DOMAIN}/issue`,
           "POST",
           JSON.stringify(newIssueReport),
           updateTokens,
           presentAlert,
+          router,
         );
       }
     },

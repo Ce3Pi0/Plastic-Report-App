@@ -28,9 +28,9 @@ const ContactPage: React.FC = () => {
   const contentRef = createRef<HTMLIonContentElement>();
   const [backToTop, setBackToTop] = useState<boolean>(false);
 
-  const ScrollToTop = () => contentRef.current?.scrollToTop(500);
+  const scrollToTop = () => contentRef.current?.scrollToTop(500);
 
-  const HandleScroll = (ev: CustomEvent<ScrollDetail>) => {
+  const handleScroll = (ev: CustomEvent<ScrollDetail>) => {
     if (ev.detail.scrollTop > 20) setBackToTop(true);
     else setBackToTop(false);
   };
@@ -50,7 +50,7 @@ const ContactPage: React.FC = () => {
 
         <IonContent
           scrollEvents={true}
-          onIonScroll={HandleScroll}
+          onIonScroll={handleScroll}
           ref={contentRef}
         >
           <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
@@ -67,7 +67,7 @@ const ContactPage: React.FC = () => {
             horizontal="end"
             className="mr-4"
           >
-            <IonFabButton onClick={() => ScrollToTop()}>
+            <IonFabButton onClick={() => scrollToTop()}>
               <IonIcon icon={chevronUpOutline}></IonIcon>
             </IonFabButton>
           </IonFab>

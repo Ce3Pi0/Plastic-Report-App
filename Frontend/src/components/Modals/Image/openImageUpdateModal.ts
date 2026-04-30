@@ -2,12 +2,14 @@ import { OverlayEventDetail } from "@ionic/core";
 import { userImageRequest } from "../../../utils/hooks/userImageRequest";
 
 import { DOMAIN } from "../../../config";
+import { UseIonRouterResult } from "@ionic/react";
 
 const openImageUpdateModal = (
   present: any,
   updateTokens: Function,
   presentAlert: any,
   updatingUserImage: any,
+  router: UseIonRouterResult,
 ) => {
   present({
     onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
@@ -16,13 +18,14 @@ const openImageUpdateModal = (
         data.append("image", ev.detail.data.file);
 
         userImageRequest(
-          `http://${DOMAIN}/user`,
+          `{DOMAIN}/user`,
           "PUT",
           data,
           updateTokens,
           presentAlert,
           updatingUserImage,
           "form",
+          router,
         );
       }
     },

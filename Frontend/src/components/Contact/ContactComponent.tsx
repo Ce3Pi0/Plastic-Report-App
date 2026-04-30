@@ -14,10 +14,12 @@ const ContactComponent: React.FC = () => {
 
   const [presentAlert] = useIonAlert();
 
-  const handleSendMail = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSendMail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendEmail(presentAlert, form);
-    form.current!.reset();
+
+    await sendEmail(presentAlert, form);
+
+    form.current?.reset();
   };
 
   return (

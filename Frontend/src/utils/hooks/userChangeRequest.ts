@@ -1,3 +1,4 @@
+import { UseIonRouterResult } from "@ionic/react";
 import { ErrorCodes } from "../../config";
 import {
   IUserLogin,
@@ -19,6 +20,7 @@ export const userChangeRequest = async (
   updateTokens: any,
   presentAlert: any,
   setLoading: any,
+  router: UseIonRouterResult,
   refreshing: boolean = true,
 ) => {
   const accessHeaders = getAuthToken();
@@ -47,8 +49,10 @@ export const userChangeRequest = async (
             updateTokens,
             presentAlert,
             setLoading,
+            router,
             false,
           ),
+        router,
       });
       return;
     }
@@ -60,7 +64,7 @@ export const userChangeRequest = async (
 
     setMistake(false);
     setMessage("");
-    window.location.assign("/");
+    router.push("/", "back");
   } catch (err: any) {
     switch (err.status) {
       case ErrorCodes.NOT_FOUND:
@@ -69,7 +73,7 @@ export const userChangeRequest = async (
         break;
       case ErrorCodes.TOO_MANY_REQUESTS:
         handleTooManyRequestsError(presentAlert, () =>
-          window.location.assign("/account/login"),
+          router.push("/account/login", "back"),
         );
         break;
       case ErrorCodes.UNAUTHORIZED:

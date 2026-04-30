@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router";
+import React, { useContext, useState } from "react";
 
 import {
   IonButton,
@@ -9,23 +8,28 @@ import {
   IonInput,
   IonTitle,
   useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
 import { DOMAIN, UNSAFE_PASSWORD } from "../../config";
 import { sendConfirmPasswordReset } from "../../utils/hooks/sendConfirmPasswordReset";
+import { GlobalContext } from "../../context/Context";
+import { IContext } from "../../interfaces/interfaces";
 
 const AccountForgotChangeComponent: React.FC = () => {
   const queryParams = new URLSearchParams(window.location.search);
   const token = queryParams.get("token");
+
+  const router = useIonRouter();
+
+  const { user } = useContext(GlobalContext) as IContext;
 
   const [presentAlert] = useIonAlert();
 
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
-
-  const history = useHistory();
 
   const SendResetToken = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,8 +47,9 @@ const AccountForgotChangeComponent: React.FC = () => {
     }
 
     sendConfirmPasswordReset(
-      `http://${DOMAIN}/auth/forgot_password?token=${token}&password=${password}`,
+      `{DOMAIN}/auth/forgot_password?token=${token}&password=${password}`,
       presentAlert,
+      router,
     );
   };
 
@@ -62,7 +67,11 @@ const AccountForgotChangeComponent: React.FC = () => {
           <IonFab horizontal="start" vertical="top">
             <IonFabButton
               size={"small"}
-              onClick={() => history.push("/account/login")}
+              onClick={() =>
+                user
+                  ? router.push("/account", "back")
+                  : router.push("/account/login", "back")
+              }
             >
               <IonIcon icon={arrowBack} />
             </IonFabButton>
@@ -129,7 +138,7 @@ const AccountForgotChangeComponent: React.FC = () => {
           >
             <IonFabButton
               color={"danger"}
-              onClick={() => window.location.assign("/account/login")}
+              onClick={() => router.push("/account/login", "back")}
             >
               <IonIcon icon={arrowBack} />
             </IonFabButton>

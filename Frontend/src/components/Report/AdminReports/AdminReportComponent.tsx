@@ -18,6 +18,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
 import { checkmarkOutline, closeOutline } from "ionicons/icons";
 
@@ -30,6 +31,8 @@ import { DOMAIN } from "../../../config";
 import useAddressFetch from "../../../utils/hooks/requestAddress";
 
 const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
+  const router = useIonRouter();
+
   const { updateTokens } = useContext(GlobalContext) as IContext;
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -46,27 +49,29 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const HandleAccept = () => {
+  const handleAccept = () => {
     reportRequest(
-      `http://${DOMAIN}/report?id=${report.id}&status=completed`,
+      `{DOMAIN}/report?id=${report.id}&status=completed`,
       "PUT",
       undefined,
       updateTokens,
       presentAlert,
       undefined,
       setLoading,
+      router,
     );
   };
 
-  const HandleDecline = () => {
+  const handleDecline = () => {
     reportRequest(
-      `http://${DOMAIN}/report?id=${report.id}&status=rejected`,
+      `{DOMAIN}/report?id=${report.id}&status=rejected`,
       "PUT",
       undefined,
       updateTokens,
       presentAlert,
       undefined,
       setLoading,
+      router,
     );
   };
 
@@ -145,7 +150,7 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
               size="small"
               color={"success"}
               onClick={() => {
-                HandleAccept();
+                handleAccept();
               }}
             >
               <IonIcon icon={checkmarkOutline} />
@@ -157,7 +162,7 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
               size="small"
               color={"danger"}
               onClick={() => {
-                HandleDecline();
+                handleDecline();
               }}
             >
               <IonIcon icon={closeOutline} />

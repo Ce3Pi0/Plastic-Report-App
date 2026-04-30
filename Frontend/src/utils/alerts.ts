@@ -1,7 +1,3 @@
-// FIXME: Alert window relocation bugs Ionic Tabs
-// FIXME: Change password bug
-// FIXME: Finish testing
-
 const alert = (
   message: string,
   subHeader: string,

@@ -5,8 +5,13 @@ import { IFetch } from "../../interfaces/interfaces";
 import { getAuthToken } from "../utils";
 import { ErrorCodes } from "../../config";
 import { FetchRefreshToken } from "./fetchRefreshTokenRequest";
+import { UseIonRouterResult } from "@ionic/react";
 
-const useFetch = (url: string, updateTokens: any): IFetch => {
+const useFetch = (
+  url: string,
+  updateTokens: any,
+  router: UseIonRouterResult,
+): IFetch => {
   const [data, setData] = useState<JSON | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,7 +19,7 @@ const useFetch = (url: string, updateTokens: any): IFetch => {
   useEffect(() => {
     const AbtCnt = new AbortController();
 
-    fetchData(url, AbtCnt, setData, setErr, setLoading, updateTokens);
+    fetchData(url, AbtCnt, setData, setErr, setLoading, updateTokens, router);
 
     return () => AbtCnt.abort();
   }, []);
@@ -29,6 +34,8 @@ const fetchData = async (
   setErr: Dispatch<SetStateAction<string | null>>,
   setLoading: Dispatch<SetStateAction<boolean>>,
   updateTokens: any,
+  router: UseIonRouterResult,
+  refreshing: boolean = true,
 ) => {
   const accessHeaders = getAuthToken();
 
@@ -40,13 +47,24 @@ const fetchData = async (
     });
 
     if (
-      data.status === ErrorCodes.UNAUTHORIZED ||
-      data.status === ErrorCodes.UNPROCESSABLE_CONTENT
+      (data.status === ErrorCodes.UNAUTHORIZED ||
+        data.status === ErrorCodes.UNPROCESSABLE_CONTENT) &&
+      refreshing
     ) {
       FetchRefreshToken({
         updateTokens,
         retryFunction: () =>
-          fetchData(url, AbtCnt, setData, setErr, setLoading, updateTokens),
+          fetchData(
+            url,
+            AbtCnt,
+            setData,
+            setErr,
+            setLoading,
+            updateTokens,
+            router,
+            false,
+          ),
+        router,
       });
       return;
     }

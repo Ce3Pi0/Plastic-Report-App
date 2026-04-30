@@ -7,11 +7,12 @@ export const FetchRefreshToken = async ({
   updateTokens,
   contentType,
   retryFunction,
+  router,
 }: RefreshDataType) => {
   const refreshHeaders = getRefreshToken();
 
   try {
-    const data = await fetch(`http://${DOMAIN}/auth/refresh_token`, {
+    const data = await fetch(`{DOMAIN}/auth/refresh_token`, {
       method: "GET",
       headers: refreshHeaders,
     });
@@ -31,6 +32,6 @@ export const FetchRefreshToken = async ({
 
     if (data.status === ErrorCodes.OK) retryFunction();
   } catch (err: any) {
-    handleExpiredSession();
+    handleExpiredSession(router);
   }
 };

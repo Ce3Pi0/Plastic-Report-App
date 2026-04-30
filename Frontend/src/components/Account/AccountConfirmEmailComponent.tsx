@@ -1,12 +1,20 @@
 import React from "react";
 
-import { IonFab, IonFabButton, IonIcon, useIonAlert } from "@ionic/react";
+import {
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  useIonAlert,
+  useIonRouter,
+} from "@ionic/react";
 import { arrowBack, checkmark } from "ionicons/icons";
 
 import { sendConfirmEmail } from "../../utils/hooks/sendConfirmMail";
 import { DOMAIN } from "../../config";
 
 const AccountConfirmEmailComponent: React.FC = () => {
+  const router = useIonRouter();
+
   const queryParams = new URLSearchParams(window.location.search);
   const token: string | null = queryParams.get("token");
 
@@ -25,7 +33,7 @@ const AccountConfirmEmailComponent: React.FC = () => {
       >
         <IonFabButton
           color={"danger"}
-          onClick={() => window.location.assign("/account/login")}
+          onClick={() => router.push("/account/login", "back")}
         >
           <IonIcon icon={arrowBack} />
         </IonFabButton>
@@ -45,8 +53,9 @@ const AccountConfirmEmailComponent: React.FC = () => {
           color={"success"}
           onClick={() =>
             sendConfirmEmail(
-              `http://${DOMAIN}/auth/confirm_email?token=${token}`,
+              `{DOMAIN}/auth/confirm_email?token=${token}`,
               presentAlert,
+              router,
             )
           }
         >

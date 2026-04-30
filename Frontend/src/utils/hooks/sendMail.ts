@@ -1,5 +1,3 @@
-// TODO: Fix who sends the email on EMAILJS
-
 import emailjs from "@emailjs/browser";
 import { handleSuccessAlert } from "../alerts";
 import { ErrorCodes } from "../../config";

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router";
+import React, { useContext, useState } from "react";
 
 import {
   IonButton,
@@ -9,11 +8,14 @@ import {
   IonInput,
   IonTitle,
   useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
 import { changePasswordRequest } from "../../utils/hooks/changePasswordRequest";
 import { DOMAIN } from "../../config";
+import { GlobalContext } from "../../context/Context";
+import { IContext } from "../../interfaces/interfaces";
 
 const AccountForgotComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();
@@ -21,13 +23,15 @@ const AccountForgotComponent: React.FC = () => {
   const [email, setEmail] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const history = useHistory();
+  const { user } = useContext(GlobalContext) as IContext;
+
+  const router = useIonRouter();
 
   const sendResetToken = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     changePasswordRequest(
-      `http://${DOMAIN}/auth/forgot_password_token?email=${email}`,
+      `{DOMAIN}/auth/forgot_password_token?email=${email}`,
       setMessage,
       presentAlert,
     );
@@ -46,7 +50,11 @@ const AccountForgotComponent: React.FC = () => {
         <IonFab horizontal="start" vertical="top">
           <IonFabButton
             size={"small"}
-            onClick={() => history.push("/account/login")}
+            onClick={() =>
+              user
+                ? router.push("/account/change", "back")
+                : router.push("/account/login", "back")
+            }
           >
             <IonIcon icon={arrowBack} />
           </IonFabButton>

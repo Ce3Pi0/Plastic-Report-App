@@ -8,8 +8,13 @@ import {
 } from "../alerts";
 import { DOMAIN } from "../../config";
 import { validateEmail } from "../utils";
+import { UseIonRouterResult } from "@ionic/react";
 
-export const sendConfirmEmail = async (url: string, presentAlert: any) => {
+export const sendConfirmEmail = async (
+  url: string,
+  presentAlert: any,
+  router: UseIonRouterResult,
+) => {
   try {
     const data = await fetch(url, {
       method: "POST",
@@ -17,7 +22,7 @@ export const sendConfirmEmail = async (url: string, presentAlert: any) => {
 
     if (!data.ok) throw { status: data.status };
 
-    window.location.assign("/account/login");
+    router.push("/account/login", "back");
   } catch (err: any) {
     switch (err.status) {
       case ErrorCodes.NOT_FOUND:
@@ -35,7 +40,7 @@ export const sendConfirmEmail = async (url: string, presentAlert: any) => {
               return;
             }
             const data = await fetch(
-              `http://${DOMAIN}/auth/send_confirm_email_token?email=${email}`,
+              `{DOMAIN}/auth/send_confirm_email_token?email=${email}`,
               {
                 method: "GET",
               },

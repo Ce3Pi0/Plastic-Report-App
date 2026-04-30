@@ -32,7 +32,7 @@ const AboutPage: React.FC = () => {
 
   const ScrollToTop = () => contentRef.current?.scrollToTop(500);
 
-  const HandleScroll = (ev: CustomEvent<ScrollDetail>) => {
+  const handleScroll = (ev: CustomEvent<ScrollDetail>) => {
     if (ev.detail.scrollTop > 20) setBackToTop(true);
     else setBackToTop(false);
   };
@@ -53,7 +53,7 @@ const AboutPage: React.FC = () => {
 
         <IonContent
           scrollEvents={true}
-          onIonScroll={HandleScroll}
+          onIonScroll={handleScroll}
           ref={contentRef}
         >
           <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>

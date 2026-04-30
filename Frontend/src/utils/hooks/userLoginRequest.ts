@@ -7,7 +7,8 @@ import {
   handleTooManyRequestsError,
 } from "../alerts";
 import { DOMAIN } from "../../config";
-import { getAuthToken, getUser, setUserData, validateEmail } from "../utils";
+import { getAuthToken, getUser, validateEmail } from "../utils";
+import { UseIonRouterResult } from "@ionic/react";
 
 export const userLoginRequest = async (
   url: string,
@@ -18,6 +19,7 @@ export const userLoginRequest = async (
   setLoggedIn: any,
   presentAlert: any,
   setLoading: any,
+  router: UseIonRouterResult,
 ) => {
   const accessHeaders = getAuthToken();
   setLoading(true);
@@ -32,10 +34,8 @@ export const userLoginRequest = async (
 
     const json = await data.json();
 
-    setUserData(json);
-
     const current_user: IUser = getUser(json);
-    window.location.assign("/home");
+    router.push("/home", "root", "replace");
 
     setLoggedIn(true, current_user);
     setMistake(false);
@@ -48,7 +48,7 @@ export const userLoginRequest = async (
         break;
       case ErrorCodes.TOO_MANY_REQUESTS:
         handleTooManyRequestsError(presentAlert, () =>
-          window.location.assign("/account/login"),
+          router.push("/account/login", "back"),
         );
         break;
       case ErrorCodes.PRECONDITION_FAILED:
@@ -63,7 +63,7 @@ export const userLoginRequest = async (
               return;
             }
             const data = await fetch(
-              `http://${DOMAIN}/auth/send_confirm_email_token?email=${email}`,
+              `{DOMAIN}/auth/send_confirm_email_token?email=${email}`,
               {
                 method: "GET",
               },

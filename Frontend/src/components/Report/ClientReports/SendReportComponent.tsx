@@ -13,6 +13,7 @@ import {
   IonRefresherContent,
   IonTitle,
   useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
 import { arrowUpOutline, camera, locationSharp } from "ionicons/icons";
 
@@ -29,6 +30,8 @@ import { handleRefresh } from "../../../utils/utils";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
 const SendReportComponent: React.FC = () => {
+  const router = useIonRouter();
+
   const { updateTokens } = useContext(GlobalContext) as IContext;
 
   const [mapInstance, setMapInstance] = useState<any>(null);
@@ -43,11 +46,11 @@ const SendReportComponent: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const HandleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files === null ? null : e.target.files[0]);
   };
 
-  const HandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (location.lat === undefined || location.lng === undefined) {
@@ -75,14 +78,15 @@ const SendReportComponent: React.FC = () => {
     data.append("lon", location.lng!);
     data.append("lat", location.lat!);
 
-    reportRequest(
-      `http://${DOMAIN}/report`,
+    await reportRequest(
+      `{DOMAIN}/report`,
       "POST",
       data,
       updateTokens,
       presentAlert,
       "form",
       setLoading,
+      router,
     );
 
     setFile(null);
@@ -139,7 +143,7 @@ const SendReportComponent: React.FC = () => {
         </IonFab>
         <form
           className="h-[100%] w-[100%] absolute flex"
-          onSubmit={HandleSubmit}
+          onSubmit={handleSubmit}
         >
           <IonFab horizontal="start" vertical="bottom">
             <div className="flex items-end justify-center">
@@ -149,7 +153,7 @@ const SendReportComponent: React.FC = () => {
                   <input
                     className="upload hidden"
                     type="file"
-                    onChange={(e) => HandleSetFile(e)}
+                    onChange={(e) => handleSetFile(e)}
                     accept="image/*"
                     value={""}
                   />
@@ -162,7 +166,7 @@ const SendReportComponent: React.FC = () => {
                   <input
                     className="camera hidden"
                     type="file"
-                    onChange={(e) => HandleSetFile(e)}
+                    onChange={(e) => handleSetFile(e)}
                     accept="image/*"
                     capture="environment"
                     value={""}

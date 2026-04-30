@@ -21,7 +21,7 @@ const UpdateUserImageModal = ({
   const { user } = useContext(GlobalContext) as IContext;
   const [file, setFile] = useState<File | null>(null);
 
-  const HandleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files === null ? null : e.target.files[0]);
   };
 
@@ -51,7 +51,7 @@ const UpdateUserImageModal = ({
             <input
               type="file"
               required
-              onChange={(e) => HandleSetFile(e)}
+              onChange={(e) => handleSetFile(e)}
               accept="image/x-png,image/gif,image/jpeg"
             />
           </form>

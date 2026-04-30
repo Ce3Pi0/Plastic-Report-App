@@ -15,6 +15,7 @@ import {
   IonIcon,
   IonRefresher,
   IonRefresherContent,
+  useIonRouter,
 } from "@ionic/react";
 
 /* Components */
@@ -29,6 +30,8 @@ import { DOMAIN } from "../../../config";
 import { handleRefresh } from "../../../utils/utils";
 
 const ShowReportsComponent: React.FC = () => {
+  const router = useIonRouter();
+
   const [status, setStatus] = useState("");
   const [hidden, setHidden] = useState<boolean>(false);
 
@@ -38,7 +41,7 @@ const ShowReportsComponent: React.FC = () => {
     data: reports,
     err,
     loading,
-  } = useFetch(`http://${DOMAIN}/report`, updateTokens);
+  } = useFetch(`{DOMAIN}/report`, updateTokens, router);
 
   const HideTooltip = () => {
     if (hidden)

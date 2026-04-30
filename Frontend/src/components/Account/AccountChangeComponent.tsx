@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router";
 
 import {
   IonButton,
@@ -10,6 +9,7 @@ import {
   IonLoading,
   IonTitle,
   useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
@@ -34,9 +34,9 @@ const AccountChangeComponent: React.FC = () => {
   const [mistake, setMistake] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
-  const history = useHistory();
+  const router = useIonRouter();
 
-  const HandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage("");
 
@@ -62,8 +62,11 @@ const AccountChangeComponent: React.FC = () => {
       new_password: newPassword,
     };
 
+    setMessage("");
+    setMistake(false);
+
     userChangeRequest(
-      `http://${DOMAIN}/user?id=${user?.id}`,
+      `{DOMAIN}/user?id=${user?.id}`,
       "PUT",
       newUser,
       setMessage,
@@ -71,6 +74,7 @@ const AccountChangeComponent: React.FC = () => {
       updateTokens,
       presentAlert,
       setLoading,
+      router,
     );
   };
 
@@ -83,12 +87,16 @@ const AccountChangeComponent: React.FC = () => {
       <form
         id="form"
         className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
-        onSubmit={HandleSubmit}
+        onSubmit={handleSubmit}
       >
         <IonFab horizontal="start" vertical="top">
           <IonFabButton
             size={"small"}
-            onClick={() => history.push("/account/login")}
+            onClick={() =>
+              user
+                ? router.push("/account", "back")
+                : router.push("/account/login", "back")
+            }
           >
             <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>

@@ -10,7 +10,9 @@ from config.jwtConfig import jwt_config
 from config.cloudinaryConfig import CloudinaryConfig
 
 # Configure Flask App
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../../Frontend/dist', 
+            static_url_path='/')
+
 MailHandlerInstance.init_app(app)
 CORS(app)
 

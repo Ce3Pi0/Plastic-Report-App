@@ -102,7 +102,6 @@ class UserService(BaseService):
     
         return data
 
-    # FIXME: Major bug (pass doesn't get checked)
     @staticmethod
     def update(user_id: str, user_to_update_id: str | None, image: FileStorage | None, body: UserUpdateSchema | None):
         user = User.query.filter_by(id=user_id).first()
@@ -153,7 +152,11 @@ class UserService(BaseService):
 
             user_to_update.salt = salt
             user_to_update.password = new_hashed_pw
-        db.session.commit()
+            
+            db.session.commit()
+        else:
+            abort(HttpError.BAD_REQUEST)
+
 
     @staticmethod
     def delete(user_id: str, user_to_delete_id: str):

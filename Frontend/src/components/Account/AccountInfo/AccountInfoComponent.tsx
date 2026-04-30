@@ -14,6 +14,7 @@ import {
   IonLoading,
   useIonAlert,
   useIonModal,
+  useIonRouter,
 } from "@ionic/react";
 import { appsOutline, arrowDownOutline, checkmark } from "ionicons/icons";
 
@@ -34,24 +35,25 @@ import { RiProgress1Line } from "react-icons/ri";
 import { IoCheckmark, IoWarning } from "react-icons/io5";
 
 const AccountInfoComponent: React.FC = () => {
-  const { user, setLoggedIn, updateTokens } = useContext(
-    GlobalContext,
-  ) as IContext;
+  const { setLoggedIn, updateTokens } = useContext(GlobalContext) as IContext;
+
+  const router = useIonRouter();
 
   const [status, setStatus] = useState("");
   const [hidden, setHidden] = useState<boolean>(false);
   const [updatingUserImage, setUpdatingUserImage] = useState<boolean>(false);
 
   const { data, err, loading } = useFetch(
-    `http://${DOMAIN}/user`,
+    `{DOMAIN}/user`,
     updateTokens,
+    router,
   );
 
   const {
     data: reports,
     err: reports_error,
     loading: reports_loading,
-  } = useFetch(`http://${DOMAIN}/report`, updateTokens);
+  } = useFetch(`{DOMAIN}/report`, updateTokens, router);
 
   const [presentAlert] = useIonAlert();
   const [present, dismiss] = useIonModal(UpdateUserImageModal, {
@@ -171,6 +173,7 @@ const AccountInfoComponent: React.FC = () => {
                     updateTokens,
                     presentAlert,
                     setUpdatingUserImage,
+                    router,
                   )
                 }
               >
@@ -208,7 +211,7 @@ const AccountInfoComponent: React.FC = () => {
             <IonButton
               color={"tertiary"}
               fill="clear"
-              onClick={() => window.location.assign("/account/change")}
+              onClick={() => router.push("/account/change", "back")}
             >
               Change Password
             </IonButton>

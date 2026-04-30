@@ -10,6 +10,7 @@ import {
   IonMenuToggle,
   useIonModal,
   useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
 import {
   arrowBackCircleOutline,
@@ -29,6 +30,8 @@ import { IContext } from "../../interfaces/interfaces";
 import MenuLink from "./MenuLink";
 
 const MenuComponent: React.FC = () => {
+  const router = useIonRouter();
+
   const [presentAlert] = useIonAlert();
   const menuRef = useRef<any>(undefined);
 
@@ -73,7 +76,7 @@ const MenuComponent: React.FC = () => {
           <h3
             className="text-[#cdcdcd] no-underline hover:cursor-pointer hover:text-[var(--ion-color-light-contrast)]"
             onClick={() =>
-              openReportIssueModal(present, updateTokens, presentAlert)
+              openReportIssueModal(present, updateTokens, presentAlert, router)
             }
           >
             <IonIcon icon={bug} size={"small"} />{" "}

@@ -1,3 +1,4 @@
+import { UseIonRouterResult } from "@ionic/react";
 import { ErrorCodes } from "../../config";
 import { methodType } from "../../types";
 import {
@@ -16,6 +17,8 @@ export const userImageRequest = async (
   presentAlert: any,
   setLoading: any,
   contentType: string | undefined,
+  router: UseIonRouterResult,
+  refreshing: boolean = true,
 ) => {
   const accessHeaders = getAuthToken(contentType);
   setLoading(true);
@@ -28,8 +31,9 @@ export const userImageRequest = async (
     });
 
     if (
-      data.status === ErrorCodes.UNAUTHORIZED ||
-      data.status === ErrorCodes.UNPROCESSABLE_CONTENT
+      (data.status === ErrorCodes.UNAUTHORIZED ||
+        data.status === ErrorCodes.UNPROCESSABLE_CONTENT) &&
+      refreshing
     ) {
       FetchRefreshToken({
         updateTokens,
@@ -43,7 +47,10 @@ export const userImageRequest = async (
             presentAlert,
             setLoading,
             contentType,
+            router,
+            false,
           ),
+        router,
       });
       return;
     }

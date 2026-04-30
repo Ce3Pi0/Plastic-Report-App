@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { IUser, IContext } from "../interfaces/interfaces";
+import { setUserData } from "../utils/utils";
 
 const initial_state: IContext = {
   loggedIn: false,
@@ -30,6 +31,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
       user,
     });
     localStorage.setItem("logged_in", userLoggedIn ? "true" : "false");
+    user && setUserData(user);
   };
 
   const updateTokens = (): void => {

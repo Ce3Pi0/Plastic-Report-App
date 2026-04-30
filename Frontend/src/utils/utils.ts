@@ -1,4 +1,4 @@
-import { RefresherEventDetail } from "@ionic/react";
+import { RefresherEventDetail, UseIonRouterResult } from "@ionic/react";
 import {
   IUserChange,
   IUserRegister,
@@ -36,10 +36,10 @@ export const setTokens = (json: any) => {
   localStorage.setItem("refresh_token", json.refresh_token);
 };
 
-export const handleExpiredSession = () => {
+export const handleExpiredSession = (router: UseIonRouterResult) => {
   if (window.localStorage.getItem("logged_in") === "true") {
     window.alert("Session expired!");
-    window.location.assign("/account/login");
+    router.push("/account/login", "back");
     window.localStorage.clear();
   }
   window.localStorage.setItem("logged_in", "false");
@@ -79,15 +79,15 @@ export function validateEmail(email: string): boolean {
   return res.test(String(email).toLowerCase());
 }
 
-export const setUserData = (json: any) => {
-  window.localStorage.setItem("id", json.id);
-  window.localStorage.setItem("username", json.username);
-  window.localStorage.setItem("gender", json.gender);
-  window.localStorage.setItem("type", json.type);
-  window.localStorage.setItem("access_token", json.access_token);
-  window.localStorage.setItem("refresh_token", json.refresh_token);
+export const setUserData = (user: IUser) => {
+  window.localStorage.setItem("id", user.id.toString());
+  window.localStorage.setItem("username", user.username);
+  window.localStorage.setItem("gender", user.gender);
+  window.localStorage.setItem("type", user.type);
+  window.localStorage.setItem("access_token", user.access_token);
+  window.localStorage.setItem("refresh_token", user.refresh_token);
   window.localStorage.setItem("logged_in", "true");
-  window.localStorage.setItem("url", json.img_url);
+  window.localStorage.setItem("url", user.url?.toString() || "");
 };
 
 export const getUser = (json: any): IUser => {
