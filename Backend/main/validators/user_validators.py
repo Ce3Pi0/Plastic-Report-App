@@ -25,12 +25,6 @@ class UserUpdateSchema(BaseModel):
     password: str = Field(min_length=1)
     new_password: str = Field(min_length=1)
 
-    @field_validator("password")
-    def check_password(cls, v):
-        if len(v) < (get_env.get("PASS_LEN") or 6):
-            raise ValueError("Password too weak")
-        return v
-    
     @field_validator("new_password")
     def check_new_password(cls, v):
         if len(v) < (get_env.get("PASS_LEN") or 6):

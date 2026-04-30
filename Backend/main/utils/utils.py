@@ -96,9 +96,9 @@ def check_last_request_time(current_request):
     else:
         current_request.time = datetime.now()
 
-def get_user_email(token: str):
+def get_user_email(token: str, salt: str):
     try:
-        email = s.loads(token, salt="email-confirm", max_age=3600)
+        email = s.loads(token, salt=salt, max_age=3600)
         return email
     except SignatureExpired:
         abort(HttpError.PRECONDITION_FAILED, "Token has expired")

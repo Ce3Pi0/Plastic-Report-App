@@ -12,7 +12,7 @@ import {
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
-import { DOMAIN, UNSAFE_PASSWORD } from "../../utils/utils";
+import { DOMAIN, UNSAFE_PASSWORD } from "../../config";
 import { sendConfirmPasswordReset } from "../../utils/hooks/sendConfirmPasswordReset";
 
 const AccountForgotChangeComponent: React.FC = () => {

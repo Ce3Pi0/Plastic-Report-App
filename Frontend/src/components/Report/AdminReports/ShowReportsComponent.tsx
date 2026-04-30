@@ -25,7 +25,8 @@ import { GlobalContext } from "../../../context/Context";
 import { IContext, IReport } from "../../../interfaces/interfaces";
 
 import useFetch from "../../../utils/hooks/useFetch";
-import { DOMAIN, HandleRefresh } from "../../../utils/utils";
+import { DOMAIN } from "../../../config";
+import { handleRefresh } from "../../../utils/utils";
 
 const ShowReportsComponent: React.FC = () => {
   const [status, setStatus] = useState("");
@@ -51,7 +52,7 @@ const ShowReportsComponent: React.FC = () => {
 
   return (
     <IonContent>
-      <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
+      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
         <IonRefresherContent />
       </IonRefresher>
       <IonFab slot="fixed" horizontal="end" vertical="top">

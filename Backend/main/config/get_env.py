@@ -34,4 +34,4 @@ get_env = {
 }
 
 
-get_env["FRONTEND_DOMAIN"] = f"${get_domain(get_env["ENV"], get_env["PROD_FRONTEND_DOMAIN"], get_env["DEV_FRONTEND_DOMAIN"])}{get_env["FRONTEND_PORT"]}"
+get_env["FRONTEND_DOMAIN"] = f"{get_domain(get_env["ENV"], get_env["PROD_FRONTEND_DOMAIN"], get_env["DEV_FRONTEND_DOMAIN"])}{get_env["FRONTEND_PORT"]}"

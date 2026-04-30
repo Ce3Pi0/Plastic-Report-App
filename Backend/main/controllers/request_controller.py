@@ -18,7 +18,7 @@ class RequestController(BaseController):
         if not validate_request_type(request_type):
             abort(HttpError.METHOD_NOT_ALLOWED, "Type not allowed")
 
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
 
         RequestService.create(user_id, request_type, request_user_id)
         
@@ -26,7 +26,7 @@ class RequestController(BaseController):
     
     @staticmethod
     def read(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         request_id = request.args.get("id")
         request_user_id = request.args.get("user_id")
 
@@ -42,7 +42,7 @@ class RequestController(BaseController):
     
     @staticmethod
     def update(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         request_user_id = request.args.get("user_id")
         request_type = request.args.get("req_type")
 
@@ -58,7 +58,7 @@ class RequestController(BaseController):
     
     @staticmethod
     def delete(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         request_id = request.args.get("id")
         request_user_id = request.args.get("user_id")
 

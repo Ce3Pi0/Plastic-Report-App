@@ -11,7 +11,7 @@ from services.report_service import ReportService
 class ReportController(BaseController):
     @staticmethod
     def create(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         
         if user_id is None:
             abort(HttpError.UNAUTHORIZED, "Invalid credentials")
@@ -32,7 +32,7 @@ class ReportController(BaseController):
     
     @staticmethod
     def read(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         report_id = request.args.get("id")
         report_status = request.args.get("status")
 
@@ -54,7 +54,7 @@ class ReportController(BaseController):
         if report_id is None or report_status is None:
             abort(HttpError.BAD_REQUEST, "Key not in request")
 
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
 
         ReportService.update(user_id, report_id, report_status)
 
@@ -62,7 +62,7 @@ class ReportController(BaseController):
 
     @staticmethod
     def delete(request: Request):  
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         report_id = request.args.get("id")
 
         if user_id is None:

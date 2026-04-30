@@ -13,7 +13,7 @@ import {
 import { arrowBack } from "ionicons/icons";
 
 import { changePasswordRequest } from "../../utils/hooks/changePasswordRequest";
-import { DOMAIN } from "../../utils/utils";
+import { DOMAIN } from "../../config";
 
 const AccountForgotComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();

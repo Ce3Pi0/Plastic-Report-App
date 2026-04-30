@@ -1,7 +1,7 @@
 import { OverlayEventDetail } from "@ionic/core";
 import { userImageRequest } from "../../../utils/hooks/userImageRequest";
 
-import { DOMAIN } from "../../../utils/utils";
+import { DOMAIN } from "../../../config";
 
 const openImageUpdateModal = (
   present: any,

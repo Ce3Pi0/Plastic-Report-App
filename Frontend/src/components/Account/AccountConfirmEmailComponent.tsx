@@ -4,7 +4,7 @@ import { IonFab, IonFabButton, IonIcon, useIonAlert } from "@ionic/react";
 import { arrowBack, checkmark } from "ionicons/icons";
 
 import { sendConfirmEmail } from "../../utils/hooks/sendConfirmMail";
-import { DOMAIN } from "../../utils/utils";
+import { DOMAIN } from "../../config";
 
 const AccountConfirmEmailComponent: React.FC = () => {
   const queryParams = new URLSearchParams(window.location.search);

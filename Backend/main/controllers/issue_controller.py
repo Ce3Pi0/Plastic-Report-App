@@ -11,7 +11,7 @@ from validators.issue_validators import IssueCreateSchema
 class IssueController(BaseController):
     @staticmethod
     def create(request: Request):
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
 
         if user_id is None:
             abort(HttpError.UNAUTHORIZED, "Invalid credentials")
@@ -28,7 +28,7 @@ class IssueController(BaseController):
 
     @staticmethod
     def read(request: Request):
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         issue_id = request.args.get("id")
 
         if user_id is None:
@@ -46,7 +46,7 @@ class IssueController(BaseController):
 
     @staticmethod
     def update(request: Request):
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         issue_id = request.args.get("id")
         issue_fixed = request.args.get("fixed")
 
@@ -62,7 +62,7 @@ class IssueController(BaseController):
 
     @staticmethod
     def delete(request: Request):
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         issue_id = request.args.get("id")
 
         if issue_id is None:

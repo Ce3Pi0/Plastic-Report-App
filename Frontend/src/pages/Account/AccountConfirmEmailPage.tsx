@@ -12,7 +12,7 @@ import {
 
 import AccountConfirmEmailComponent from "../../components/Account/AccountConfirmEmailComponent";
 
-import { HandleRefresh } from "../../utils/utils";
+import { handleRefresh } from "../../utils/utils";
 
 const AccountConfirmEmailPage: React.FC = () => {
   return (
@@ -23,7 +23,7 @@ const AccountConfirmEmailPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
         <AccountConfirmEmailComponent />

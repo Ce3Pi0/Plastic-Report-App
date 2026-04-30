@@ -1,3 +1,5 @@
+// FIXME: Radio buttons on click fix
+
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router";
 
@@ -17,17 +19,13 @@ import {
 } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 
-import { GlobalContext } from "../../context/Context";
+import { IUserRegister } from "../../interfaces/interfaces";
 
-import { IContext, IUserRegister } from "../../interfaces/interfaces";
-
-import { userRequest } from "../../utils/hooks/userRequest";
-import { DOMAIN, UNSAFE_PASSWORD } from "../../utils/utils";
+import { userRegisterRequest } from "../../utils/hooks/userRegisterRequest";
+import { DOMAIN, UNSAFE_PASSWORD } from "../../config";
 
 const AccountRegisterComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();
-
-  const { updateTokens } = useContext(GlobalContext) as IContext;
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -65,15 +63,12 @@ const AccountRegisterComponent: React.FC = () => {
       gender,
     };
 
-    userRequest(
+    userRegisterRequest(
       `http://${DOMAIN}/auth/register`,
       "POST",
       newUser,
       setMessage,
-      undefined,
-      undefined,
       setUserExists,
-      updateTokens,
       presentAlert,
       setLoading,
     );

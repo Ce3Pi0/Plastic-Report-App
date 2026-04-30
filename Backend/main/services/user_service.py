@@ -102,17 +102,18 @@ class UserService(BaseService):
     
         return data
 
+    # FIXME: Major bug (pass doesn't get checked)
     @staticmethod
     def update(user_id: str, user_to_update_id: str | None, image: FileStorage | None, body: UserUpdateSchema | None):
         user = User.query.filter_by(id=user_id).first()
- 
+
         if user is None:
             abort(HttpError.NOT_FOUND, "User not found")
         
         user_to_update = user
 
         if user_to_update_id is not None and user_id != user_to_update_id and validate_privilege(user.type):
-            user_to_update = User.query.filter_by(id=user_to_update).first()
+            user_to_update = User.query.filter_by(id=user_to_update_id).first()
         if image is not None:
             result = upload(image, folder="users", unique_filename=True)
             
@@ -132,26 +133,26 @@ class UserService(BaseService):
             abort(HttpError.INTERNAL_SERVER_ERROR, "Data transmission error")
 
         if validate_privilege(user.type) or user_id == user_to_update_id:
-            user_password = decode_postgres_bytea(user.password)
-            user_salt = decode_postgres_bytea(user.salt)
+            user_password = decode_postgres_bytea(user_to_update.password)
+            user_salt = decode_postgres_bytea(user_to_update.salt)
 
             if user_password is None or user_salt is None:
                 abort(HttpError.INTERNAL_SERVER_ERROR, "User data corrupted")
 
             hashed_pass = hashPassword(body.password, user_salt).decode("UTF-8")
-        
+
+            print(user_password.decode("UTF-8"), hashed_pass)
             if not hmac.compare_digest(user_password.decode("UTF-8"), hashed_pass):
                 abort(HttpError.UNAUTHORIZED, "Password doesn't match")
 
-        if body.password == body.new_password:
-            abort(HttpError.PRECONDITION_FAILED, "New password cannot be the same as the old one")
+            if body.password == body.new_password:
+                abort(HttpError.PRECONDITION_FAILED, "New password cannot be the same as the old one")
 
-        salt = genSalt()
-        new_hashed_pw = hashPassword(body.new_password, salt)
+            salt = genSalt()
+            new_hashed_pw = hashPassword(body.new_password, salt)
 
-        user_to_update.salt = salt
-        user_to_update.password = new_hashed_pw
-
+            user_to_update.salt = salt
+            user_to_update.password = new_hashed_pw
         db.session.commit()
 
     @staticmethod

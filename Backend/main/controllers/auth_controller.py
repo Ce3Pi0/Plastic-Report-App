@@ -34,7 +34,7 @@ class AuthController:
 
     @staticmethod
     def refresh(_: Request):
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
 
         if user_id is None:
             abort(HttpError.UNAUTHORIZED, "Invalid credentials")

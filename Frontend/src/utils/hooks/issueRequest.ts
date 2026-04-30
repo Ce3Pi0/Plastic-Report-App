@@ -1,111 +1,52 @@
-import { FetchRefreshToken, methodType } from "../utils";
+import { ErrorCodes } from "../../config";
+import { methodType } from "../../types";
+import {
+  handleGenericError,
+  handleNotAllowedError,
+  handleSuccessAlert,
+  handleTooManyRequestsError,
+} from "../alerts";
+import { getAuthToken } from "../utils";
+import { FetchRefreshToken } from "./fetchRefreshTokenRequest";
 
-export const issueRequest = (
+export const issueRequest = async (
   url: string,
   method: methodType,
   body: BodyInit | undefined,
   updateTokens: any,
   presentAlert: any,
 ) => {
-  let myHeaders = new Headers();
+  const accessHeaders = getAuthToken();
 
-  myHeaders.append(
-    "Authorization",
-    `Bearer ${window.localStorage.getItem("access_token")}`,
-  );
-  myHeaders.append("Content-Type", "application/json");
+  try {
+    const data = await fetch(url, {
+      method: method,
+      headers: accessHeaders,
+      body: body,
+    });
 
-  fetch(url, {
-    method: method,
-    headers: myHeaders,
-    body: body,
-  })
-    .then((res) => {
-      if (res.status === 429) {
-        presentAlert({
-          subHeader: "Fail",
-          message: "To many requests sent... Slow down!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
+    if (
+      data.status === ErrorCodes.UNAUTHORIZED ||
+      data.status === ErrorCodes.UNPROCESSABLE_CONTENT
+    ) {
+      FetchRefreshToken({
+        updateTokens,
+        retryFunction: () =>
+          issueRequest(url, method, body, updateTokens, presentAlert),
+      });
+      return;
+    }
 
-        throw Error("Too many requests sent!");
-      }
-      if (res.status === 405) {
-        presentAlert({
-          subHeader: "Fail",
-          message: "Account privilage too low!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
+    if (!data.ok) throw { status: data.status };
 
-        throw Error("Account privilage too low!");
-      }
-      if (res.status === 401 || res.status === 422) {
-        if (method === "POST")
-          FetchRefreshToken(
-            url,
-            method,
-            undefined,
-            body,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            "issue",
-            updateTokens,
-            presentAlert,
-            undefined,
-          );
-        else if (method === "PUT")
-          FetchRefreshToken(
-            url,
-            method,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            "issue",
-            updateTokens,
-            undefined,
-            undefined,
-          );
-      } else {
-        if (!res.ok) {
-          throw Error("Something went wrong!");
-        }
-        return res.json();
-      }
-    })
-    .then((json) => {
-      if (json.msg !== "success") throw Error("Something went wrong!");
-
-      if (presentAlert !== undefined && method === "POST") {
-        presentAlert({
-          subHeader: "Success!",
-          message: "Issue report sent successfully!",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
-      } else window.location.reload();
-    })
-    .catch((err) => Error(err));
+    if (presentAlert !== undefined && method === "POST")
+      handleSuccessAlert(presentAlert, "Issue report sent successfully!");
+    else window.location.reload();
+  } catch (err: any) {
+    if (err.status === ErrorCodes.TOO_MANY_REQUESTS)
+      handleTooManyRequestsError(presentAlert);
+    else if (err.status === ErrorCodes.NOT_ALLOWED)
+      handleNotAllowedError(presentAlert);
+    else handleGenericError(presentAlert);
+  }
 };

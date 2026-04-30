@@ -11,7 +11,7 @@ import {
 /* Components */
 import AccountRegisterComponent from "../../components/Account/AccountRegisterComponent";
 
-import { HandleRefresh } from "../../utils/utils";
+import { handleRefresh } from "../../utils/utils";
 
 const AccountRegisterPage: React.FC = () => {
   return (
@@ -22,7 +22,7 @@ const AccountRegisterPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
         <AccountRegisterComponent />

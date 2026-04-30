@@ -27,7 +27,7 @@ import { GlobalContext } from "../../../context/Context";
 import { IReport, IContext } from "../../../interfaces/interfaces";
 
 import useFetch from "../../../utils/hooks/useFetch";
-import { DOMAIN } from "../../../utils/utils";
+import { DOMAIN } from "../../../config";
 import UpdateUserImageModal from "../../Modals/Image/imageUpdateModal";
 import openImageUpdateModal from "../../Modals/Image/openImageUpdateModal";
 import { RiProgress1Line } from "react-icons/ri";

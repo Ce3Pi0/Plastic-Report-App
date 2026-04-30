@@ -12,13 +12,13 @@ import { GlobalContext } from "../../context/Context";
 
 import { IUserLogin, IContext } from "../../interfaces/interfaces";
 
-import { userRequest } from "../../utils/hooks/userRequest";
-import { DOMAIN } from "../../utils/utils";
+import { userLoginRequest } from "../../utils/hooks/userLoginRequest";
+import { DOMAIN } from "../../config";
 
 const AccountLoginComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();
 
-  const { setLoggedIn, updateTokens } = useContext(GlobalContext) as IContext;
+  const { setLoggedIn } = useContext(GlobalContext) as IContext;
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -36,15 +36,13 @@ const AccountLoginComponent: React.FC = () => {
       password,
     };
 
-    userRequest(
+    userLoginRequest(
       `http://${DOMAIN}/auth/login`,
       "POST",
       user,
       setMessage,
       setMistake,
       setLoggedIn,
-      undefined,
-      updateTokens,
       presentAlert,
       setLoading,
     );

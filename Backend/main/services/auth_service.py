@@ -91,7 +91,7 @@ class AuthService:
 
     @staticmethod
     def confirm_email(token: str):
-        email = get_user_email(token)
+        email = get_user_email(token, salt="email-confirm")
 
         user = User.query.filter_by(email=email).first()
 
@@ -107,7 +107,7 @@ class AuthService:
 
     @staticmethod
     def get_reset_token(email: str):
-        user = User.query.filter_by(email).first()
+        user = User.query.filter_by(email=email).first()
 
         if user is None: 
             abort(HttpError.NOT_FOUND, "User not found")
@@ -124,13 +124,13 @@ class AuthService:
 
     @staticmethod
     def verify_reset_token(token: str, password: str):
-        email = get_user_email(token)
+        email = get_user_email(token, salt="password-forgot")
 
         user = User.query.filter_by(email=email).first()
 
         if user is None:
             abort(HttpError.NOT_FOUND, "User not found")
-
+        
         if len(password) < (get_env.get("PASS_LEN") or 6):
             abort(HttpError.NOT_ACCEPTABLE, "Password to weak")
 

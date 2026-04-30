@@ -7,12 +7,17 @@ import { peopleOutline } from "ionicons/icons";
 /* Components */
 import MemberComponent from "./MemberComponent";
 
-import HristijanImg from "../../images/Hristijan.jpg";
+import MyImg from "../../images/Hristijan.jpg";
 
-const TeamComponent: React.FC = () => {
+interface Props {
+  scrollToElement: React.RefObject<HTMLDivElement>;
+}
+
+const TeamComponent: React.FC<Props> = ({ scrollToElement }: Props) => {
   return (
     <div
-      className="box-border p-0 m-0 w-[100%] font-['Roboto',_sans-serif] bg-[var(--ion-color-light)] flex justify-center flex-col me-component"
+      ref={scrollToElement}
+      className="box-border p-0 m-0 w-[100%] font-['Roboto',_sans-serif] bg-[var(--ion-color-light)] flex justify-center flex-col"
       id="test"
     >
       <div className="mx-[30px] py-5 flex items-center justify-center text-center flex-col">
@@ -34,7 +39,7 @@ const TeamComponent: React.FC = () => {
           msg={
             "I am the main developer of this application which was built as a part of a bigger project during my High School education. The project's goals was to create a business focusing on circular economy. My main roles included designing and developing the Frontend and Backend systems of this application."
           }
-          img={HristijanImg}
+          img={MyImg}
           name="Hristijan Nikolovski-Postler"
           email="hristijannikolovski16@gmail.com"
         />

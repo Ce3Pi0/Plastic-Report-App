@@ -1,4 +1,3 @@
-# TODO: Add /api/v1 to all frontend requests and add auth for auth routes instead of user
 from config.config import app
 from config.get_env import get_env
 from routes import register_routes

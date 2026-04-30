@@ -3,7 +3,7 @@ import { OverlayEventDetail } from "@ionic/core";
 import { IIssue } from "../../../../interfaces/interfaces";
 import { issueRequest } from "../../../../utils/hooks/issueRequest";
 
-import { DOMAIN } from "../../../../utils/utils";
+import { DOMAIN } from "../../../../config";
 
 const openReportIssueModal = (
   present: any,

@@ -23,7 +23,7 @@ import { GlobalContext } from "../../../../context/Context";
 import { IContext } from "../../../../interfaces/interfaces";
 
 import useFetch from "../../../../utils/hooks/useFetch";
-import { DOMAIN } from "../../../../utils/utils";
+import { DOMAIN } from "../../../../config";
 
 import { issueRequest } from "../../../../utils/hooks/issueRequest";
 

@@ -24,7 +24,7 @@ class UserController(BaseController):
     
     @staticmethod
     def read(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         query = request.args.get("query")
         user_to_read_id = request.args.get("id")
 
@@ -41,7 +41,7 @@ class UserController(BaseController):
     
     @staticmethod
     def update(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         user_to_update_id = request.args.get("id")
         image = request.files.get("image")
 
@@ -55,14 +55,15 @@ class UserController(BaseController):
 
         if user_id is None:
             abort(HttpError.UNAUTHORIZED, "Invalid Credentials")
-        
+
+
         UserService.update(user_id, user_to_update_id, image, body)
 
         return {"msg":"success"}
     
     @staticmethod
     def delete(request: Request):    
-        user_id = get_jwt_identity()
+        user_id = str(get_jwt_identity())
         user_to_delete_id = request.args.get("id")
 
         if user_id is None:

@@ -17,8 +17,8 @@ import { GlobalContext } from "../../context/Context";
 
 import { IUserChange, IContext } from "../../interfaces/interfaces";
 
-import { userRequest } from "../../utils/hooks/userRequest";
-import { DOMAIN, UNSAFE_PASSWORD } from "../../utils/utils";
+import { userChangeRequest } from "../../utils/hooks/userChangeRequest";
+import { DOMAIN, UNSAFE_PASSWORD } from "../../config";
 
 const AccountChangeComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();
@@ -62,14 +62,12 @@ const AccountChangeComponent: React.FC = () => {
       new_password: newPassword,
     };
 
-    userRequest(
-      `http://${DOMAIN}/user`,
+    userChangeRequest(
+      `http://${DOMAIN}/user?id=${user?.id}`,
       "PUT",
       newUser,
       setMessage,
       setMistake,
-      undefined,
-      undefined,
       updateTokens,
       presentAlert,
       setLoading,

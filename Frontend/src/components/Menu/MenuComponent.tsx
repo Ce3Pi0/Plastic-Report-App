@@ -1,5 +1,4 @@
 import React, { useContext, useRef } from "react";
-import { Link } from "react-router-dom";
 
 import {
   IonHeader,
@@ -27,6 +26,7 @@ import ViewIssueModal from "../Modals/Issue/admin/ViewIssueModal";
 import { GlobalContext } from "../../context/Context";
 
 import { IContext } from "../../interfaces/interfaces";
+import MenuLink from "./MenuLink";
 
 const MenuComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();
@@ -56,47 +56,19 @@ const MenuComponent: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <div>
-          <Link
-            className="text-[#cdcdcd] no-underline hover:cursor-pointer hover:text-[var(--ion-color-light-contrast)]"
-            to="/home"
-            onClick={() =>
-              menuRef.current?.isOpen().then((res: any) => {
-                if (res === true) menuRef.current?.close();
-              })
-            }
-          >
-            <h3>
-              <IonIcon icon={home} size={"small"} /> Home
-            </h3>
-          </Link>
-
-          <Link
-            className="text-[#cdcdcd] no-underline hover:cursor-pointer hover:text-[var(--ion-color-light-contrast)]"
+          <MenuLink to="/home" menuRef={menuRef} icon={home} text="Home" />
+          <MenuLink
             to="/home/about"
-            onClick={() =>
-              menuRef.current?.isOpen().then((res: any) => {
-                if (res === true) menuRef.current?.close();
-              })
-            }
-          >
-            <h3>
-              <IonIcon icon={informationCircle} size={"small"} /> About
-            </h3>
-          </Link>
-
-          <Link
-            className="text-[#cdcdcd] no-underline hover:cursor-pointer hover:text-[var(--ion-color-light-contrast)]"
+            menuRef={menuRef}
+            icon={informationCircle}
+            text="About"
+          />
+          <MenuLink
             to="/home/contact"
-            onClick={() =>
-              menuRef.current?.isOpen().then((res: any) => {
-                if (res === true) menuRef.current?.close();
-              })
-            }
-          >
-            <h3>
-              <IonIcon icon={mail} size={"small"} /> Contact
-            </h3>
-          </Link>
+            menuRef={menuRef}
+            icon={mail}
+            text="Contact"
+          />
 
           <h3
             className="text-[#cdcdcd] no-underline hover:cursor-pointer hover:text-[var(--ion-color-light-contrast)]"

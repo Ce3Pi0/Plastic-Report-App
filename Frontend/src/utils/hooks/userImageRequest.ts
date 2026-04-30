@@ -1,66 +1,67 @@
-import { FetchRefreshToken, methodType } from "../utils";
+import { ErrorCodes } from "../../config";
+import { methodType } from "../../types";
+import {
+  handleGenericError,
+  handleSuccessAlert,
+  handleTooManyRequestsError,
+} from "../alerts";
+import { getAuthToken } from "../utils";
+import { FetchRefreshToken } from "./fetchRefreshTokenRequest";
 
+export const userImageRequest = async (
+  url: string,
+  method: methodType,
+  body: BodyInit | undefined,
+  updateTokens: any,
+  presentAlert: any,
+  setLoading: any,
+  contentType: string | undefined,
+) => {
+  const accessHeaders = getAuthToken(contentType);
+  setLoading(true);
 
-export const userImageRequest = (url: string, method: methodType, body: BodyInit | undefined, updateTokens: any, presentAlert: any,updatingUserImage: any, contentType: string | undefined) => {
-    let myHeaders = new Headers();
+  try {
+    const data = await fetch(url, {
+      method: method,
+      headers: accessHeaders,
+      body: body,
+    });
 
-    myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
-    if (contentType !== "form") myHeaders.append("Content-Type", "application/json");
+    if (
+      data.status === ErrorCodes.UNAUTHORIZED ||
+      data.status === ErrorCodes.UNPROCESSABLE_CONTENT
+    ) {
+      FetchRefreshToken({
+        updateTokens,
+        contentType,
+        retryFunction: () =>
+          userImageRequest(
+            url,
+            method,
+            body,
+            updateTokens,
+            presentAlert,
+            setLoading,
+            contentType,
+          ),
+      });
+      return;
+    }
+    if (!data.ok) throw { status: data.status };
 
-    if (updatingUserImage !== undefined)
-        updatingUserImage(true);
-    fetch(url, {
-        method: method,
-        headers: myHeaders,
-        body: body
-    })
-        .then(res => {
-            if (res.status === 429) {
-                presentAlert({
-                    subHeader: 'Fail',
-                    message: 'To many requests sent... Slow down!',
-                    buttons: [{
-                        text: 'OK',
-                        role: 'confirm',
-                    },],
-                });
-
-                if (updatingUserImage !== undefined)
-                    updatingUserImage(false);
-                throw Error("Too many requests sent!")
-            }
-            if (res.status === 401 || res.status === 422) {
-                if (contentType === "form") FetchRefreshToken(url, method, undefined, body, undefined, undefined, updatingUserImage, undefined, undefined, undefined, "update_image", updateTokens, presentAlert, contentType);
-            } else {
-                if (!res.ok) {
-                    throw Error("Something went wrong!")
-                }
-                return res.json();
-            }
-        })
-        .then(json => {
-            if (json.msg !== "success") throw Error("Something went wrong!")
-
-            if (presentAlert !== undefined) {
-                if (updatingUserImage !== undefined)
-                    updatingUserImage(false);
-                presentAlert({
-                    subHeader: 'Success!',
-                    message: 'User image updated successfully!',
-                    buttons: [{
-                        text: 'OK',
-                        role: 'confirm',
-                        handler: () => {
-                            window.location.reload();
-                        },
-                    },],
-                });
-            } else window.location.reload();
-        })
-        .catch(err => {
-            if (updatingUserImage !== undefined)
-                updatingUserImage(false);
-            throw Error(err)
-        })
-
-}
+    handleSuccessAlert(
+      presentAlert,
+      "User image updated successfully!",
+      "Success!",
+      () => {
+        window.location.reload();
+      },
+    );
+  } catch (err: any) {
+    if (err.status === ErrorCodes.TOO_MANY_REQUESTS) {
+      handleTooManyRequestsError(presentAlert);
+    } else handleGenericError(presentAlert);
+  } finally {
+    setLoading(false);
+  }
+};

@@ -26,7 +26,7 @@ import { GlobalContext } from "../../../context/Context";
 import { IContext, IReport } from "../../../interfaces/interfaces";
 
 import { reportRequest } from "../../../utils/hooks/reportRequest";
-import { DOMAIN } from "../../../utils/utils";
+import { DOMAIN } from "../../../config";
 import useAddressFetch from "../../../utils/hooks/requestAddress";
 
 const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {

@@ -22,7 +22,7 @@ import MenuComponent from "../../components/Menu/MenuComponent";
 import ContactComponent from "../../components/Contact/ContactComponent";
 import FooterComponent from "../../components/Contact/FooterComponent";
 
-import { HandleRefresh } from "../../utils/utils";
+import { handleRefresh } from "../../utils/utils";
 
 const ContactPage: React.FC = () => {
   const contentRef = createRef<HTMLIonContentElement>();
@@ -37,8 +37,7 @@ const ContactPage: React.FC = () => {
 
   return (
     <>
-      {window.location.pathname.includes("home") && <MenuComponent />}
-
+      <MenuComponent />
       <IonPage id="main-content">
         <IonHeader>
           <IonToolbar>
@@ -54,13 +53,10 @@ const ContactPage: React.FC = () => {
           onIonScroll={HandleScroll}
           ref={contentRef}
         >
-          <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
           <ContactComponent />
-          <br />
-          <br />
-          <br />
           <FooterComponent />
         </IonContent>
 

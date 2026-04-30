@@ -16,13 +16,12 @@ import {
 import MenuComponent from "../../components/Menu/MenuComponent";
 import HomeComponent from "../../components/Home/HomeComponent";
 
-import { HandleRefresh } from "../../utils/utils";
+import { handleRefresh } from "../../utils/utils";
 
 const HomePage: React.FC = () => {
   return (
     <>
-      {window.location.pathname.includes("home") && <MenuComponent />}
-
+      <MenuComponent />
       <IonPage id="main-content">
         <IonHeader>
           <IonToolbar>
@@ -34,7 +33,7 @@ const HomePage: React.FC = () => {
         </IonHeader>
 
         <IonContent fullscreen={true}>
-          <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
           <HomeComponent />

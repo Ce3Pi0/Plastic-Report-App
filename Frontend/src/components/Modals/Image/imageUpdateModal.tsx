@@ -1,4 +1,3 @@
-// TODO: Add an image preview
 import { useContext, useState } from "react";
 
 import {

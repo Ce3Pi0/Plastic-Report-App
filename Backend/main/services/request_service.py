@@ -97,7 +97,7 @@ class RequestService(BaseService):
             abort(HttpError.NOT_FOUND, "Request not found")
 
         if current_request.time is not None:
-            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=get_env.get("REQUEST_TIMER_LIMIT")):
+            if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=int(get_env.get("REQUEST_TIMER_LIMIT") or 5)):
                 current_request.time = datetime.now()
             else:
                 abort(HttpError.UNAUTHORIZED, "Too many requests")

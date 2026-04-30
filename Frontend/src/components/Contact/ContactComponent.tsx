@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import emailjs from "@emailjs/browser";
 
 import {
   IonButton,
@@ -8,104 +7,67 @@ import {
   IonTitle,
   useIonAlert,
 } from "@ionic/react";
+import { sendEmail } from "../../utils/hooks/sendMail";
 
 const ContactComponent: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
 
   const [presentAlert] = useIonAlert();
 
-  const SendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSendMail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    emailjs
-      .sendForm(
-        "service_x9vj4ns",
-        "template_xw8sfpc",
-        form.current!,
-        "XT-HJGrCMokknkVE6",
-      )
-      .then(
-        (res) => {
-          if (res.status === 200) {
-            presentAlert({
-              subHeader: "Success",
-              message: "Email has been sent successfully!",
-              buttons: [
-                {
-                  text: "OK",
-                  role: "confirm",
-                },
-              ],
-            });
-          }
-        },
-        (err) => {
-          presentAlert({
-            subHeader: "Fail",
-            message: err,
-            buttons: [
-              {
-                text: "OK",
-                role: "confirm",
-              },
-            ],
-          });
-        },
-      );
+    sendEmail(presentAlert, form);
+    form.current!.reset();
   };
 
   return (
     <div
       id="container"
-      className="m-auto flex justify-center items-center mt-4"
+      className="m-auto flex justify-center items-center my-11"
     >
       <form
         id="form"
-        className="bg-[var(--ion-color-light)] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px]"
+        className="bg-[var(--ion-color-light)] min-h-[60vh] min-[800px]:w-[30%] max-[800px]:w-[70%] rounded-[10px] p-[20px] flex flex-col justify-between"
         ref={form}
-        onSubmit={SendEmail}
+        onSubmit={handleSendMail}
       >
-        <IonTitle className="text-[22px] p-[10px] text-center" id="title">
-          Send us an email
-        </IonTitle>
+        <div className="h-[10%]">
+          <IonTitle className="text-[22px] p-[10px] text-center " id="title">
+            Send us an email!
+          </IonTitle>
+        </div>
 
-        <IonLabel className="text-[17px]">Name</IonLabel>
-        <br />
+        <IonLabel className="text-[17px] my-2">Name</IonLabel>
         <IonInput
+          className="mb-2"
           required={true}
           placeholder="Enter your name"
           type="text"
           name="user_name"
         />
-        <br />
 
-        <IonLabel>Email</IonLabel>
-        <br />
+        <IonLabel className="my-2">Email</IonLabel>
         <IonInput
+          className="mb-2"
           required={true}
           placeholder="Enter your email"
           type="email"
           name="user_email"
         />
-        <br />
 
-        <IonLabel>Message</IonLabel>
-        <br />
-        <br />
+        <IonLabel class="my-2">Message</IonLabel>
         <textarea
-          className="resize-none h-[170px] w-[100%] rounded-[6px] p-[10px]"
+          className="resize-none h-[170px] w-[100%] rounded-[6px] p-[10px] my-2"
           placeholder="Enter a message you want to send"
           required
           name="message"
         />
-        <br />
 
         <IonButton
           type="submit"
           id="button"
           className="flex justify-center ml-[35%] max-w-[30%]"
         >
-          {" "}
           Send
         </IonButton>
       </form>

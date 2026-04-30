@@ -1,4 +1,4 @@
-import React, { createRef, useState } from "react";
+import React, { createRef, useRef, useState } from "react";
 
 import {
   IonButtons,
@@ -22,10 +22,12 @@ import AboutComponent from "../../components/About/AboutComponent";
 import TeamComponent from "../../components/About/TeamComponent";
 import MenuComponent from "../../components/Menu/MenuComponent";
 
-import { HandleRefresh } from "../../utils/utils";
+import { handleRefresh } from "../../utils/utils";
 
 const AboutPage: React.FC = () => {
   const contentRef = createRef<HTMLIonContentElement>();
+  const scrollToElement = useRef<HTMLDivElement | null>(null);
+
   const [backToTop, setBackToTop] = useState<boolean>(false);
 
   const ScrollToTop = () => contentRef.current?.scrollToTop(500);
@@ -37,7 +39,7 @@ const AboutPage: React.FC = () => {
 
   return (
     <>
-      {window.location.pathname.includes("home") && <MenuComponent />}
+      <MenuComponent />
 
       <IonPage id="main-content">
         <IonHeader>
@@ -54,11 +56,11 @@ const AboutPage: React.FC = () => {
           onIonScroll={HandleScroll}
           ref={contentRef}
         >
-          <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
-          <AboutComponent />
-          <TeamComponent />
+          <AboutComponent scrollToElement={scrollToElement} />
+          <TeamComponent scrollToElement={scrollToElement} />
         </IonContent>
 
         {backToTop && (

@@ -1,38 +1,41 @@
-export const changePasswordRequest = (url: string, setMessage: any, presentAlert: any) => {
-    let myHeaders = new Headers();
+import { ErrorCodes } from "../../config";
+import {
+  handleGenericError,
+  handleNotFoundAlert,
+  handleSuccessAlert,
+  handleTooManyRequestsError,
+} from "../alerts";
+import { getAuthToken } from "../utils";
 
-    myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
+export const changePasswordRequest = async (
+  url: string,
+  setMessage: any,
+  presentAlert: any,
+) => {
+  const accessHeaders = getAuthToken();
 
-    fetch(url, {
-        method: "GET",
-        headers: myHeaders,
-    })
-        .then(res => {
-            if (res.status === 404) {
-                throw Error("User not found")
-            }
+  try {
+    const data = await fetch(url, {
+      method: "GET",
+      headers: accessHeaders,
+    });
 
-            if (res.status === 429){
-                throw Error("Too many requests sent")
-            }
+    if (!data.ok) {
+      throw { status: data.status };
+    }
 
-            if (!res.ok) {
-                throw Error("Something went wrong")
-            }
-            setMessage("");
-            return res.json();
-        })
-        .then(json => {
-            if (json.msg === "success") {
-                presentAlert({
-                    subHeader: 'Reset link sent',
-                    message: 'Open your email to reset your password',
-                    buttons: [{
-                        text: 'OK',
-                        role: 'confirm',
-                    },],
-                })
-            }
-        })
-        .catch(err => setMessage(err.message))
-}
+    setMessage("");
+    handleSuccessAlert(
+      presentAlert,
+      "Password reset link sent",
+      "Reset link sent",
+    );
+  } catch (err: any) {
+    if (err.status === ErrorCodes.NOT_FOUND)
+      handleNotFoundAlert(presentAlert, "User not found");
+    else if (err.status === ErrorCodes.TOO_MANY_REQUESTS)
+      handleTooManyRequestsError(presentAlert);
+    else handleGenericError(presentAlert);
+    setMessage(err.message);
+  }
+};

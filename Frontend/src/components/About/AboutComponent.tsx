@@ -5,7 +5,11 @@ import { arrowDownOutline } from "ionicons/icons";
 
 import img from "../../images/programmer.png";
 
-const AboutComponent: React.FC = () => (
+interface Props {
+  scrollToElement: React.RefObject<HTMLDivElement>;
+}
+
+const AboutComponent: React.FC<Props> = ({ scrollToElement }: Props) => (
   <div className="text-center mb-[200px]">
     <IonTitle>
       <h1 className="text-[62px]">About Me</h1>
@@ -27,9 +31,7 @@ const AboutComponent: React.FC = () => (
     >
       <IonFabButton
         onClick={() =>
-          document
-            .querySelector(".me-component")!
-            .scrollIntoView({ behavior: "smooth" })
+          scrollToElement.current?.scrollIntoView({ behavior: "smooth" })
         }
       >
         <IonIcon icon={arrowDownOutline} />

@@ -1,59 +1,67 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 import { IFetch } from "../../interfaces/interfaces";
 
-import { FetchRefreshToken } from '../utils';
-
+import { getAuthToken } from "../utils";
+import { ErrorCodes } from "../../config";
+import { FetchRefreshToken } from "./fetchRefreshTokenRequest";
 
 const useFetch = (url: string, updateTokens: any): IFetch => {
-    const [data, setData] = useState<JSON | null>(null);
-    const [err, setErr] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<JSON | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        const AbtCnt = new AbortController();
+  useEffect(() => {
+    const AbtCnt = new AbortController();
 
-        let myHeaders = new Headers();
+    fetchData(url, AbtCnt, setData, setErr, setLoading, updateTokens);
 
-        myHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("access_token")}`);
-        myHeaders.append("Content-Type", "application/json");
+    return () => AbtCnt.abort();
+  }, []);
 
-        fetch(url, {
-            method: "GET",
-            headers: myHeaders,
-            signal: AbtCnt.signal
-        })
-            .then(data => {
-                if (data.status === 422 || data.status === 401) {
-                    let refreshHeaders = new Headers();
+  return { data, err, loading };
+};
 
-                    refreshHeaders.append("Authorization", `Bearer ${window.localStorage.getItem("refresh_token")}`);
-                    refreshHeaders.append("Content-Type", "application/json");
+const fetchData = async (
+  url: string,
+  AbtCnt: AbortController,
+  setData: Dispatch<SetStateAction<JSON | null>>,
+  setErr: Dispatch<SetStateAction<string | null>>,
+  setLoading: Dispatch<SetStateAction<boolean>>,
+  updateTokens: any,
+) => {
+  const accessHeaders = getAuthToken();
 
-                    FetchRefreshToken(url, undefined, AbtCnt, undefined, undefined, setData, setLoading, setErr, undefined, undefined, "data", updateTokens, undefined, undefined);
-                }
-                else {
-                    setLoading(false);
-                    if (!data.ok) {
-                        throw Error("Something went wrong!")
-                    }
-                    return data.json()
-                }
-            })
-            .then(json => {
-                setLoading(false);
-                setData(json);
-                setErr(null);
-            })
-            .catch(err => {
-                setLoading(false);
-                setErr(err.message);
-            })
+  try {
+    const data = await fetch(url, {
+      method: "GET",
+      headers: accessHeaders,
+      signal: AbtCnt.signal,
+    });
 
-        return () => AbtCnt.abort();
-    }, []);
+    if (
+      data.status === ErrorCodes.UNAUTHORIZED ||
+      data.status === ErrorCodes.UNPROCESSABLE_CONTENT
+    ) {
+      FetchRefreshToken({
+        updateTokens,
+        retryFunction: () =>
+          fetchData(url, AbtCnt, setData, setErr, setLoading, updateTokens),
+      });
+      return;
+    }
+    if (!data.ok) throw new Error("Something went wrong!");
 
-    return { data, err, loading };
-}
+    const json = await data.json();
+
+    setData(json);
+
+    setLoading(false);
+    setErr(null);
+  } catch (err: any) {
+    setErr(err.message);
+    setLoading(false);
+  }
+};
 
 export default useFetch;

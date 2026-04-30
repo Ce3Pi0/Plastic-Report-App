@@ -1,5 +1,3 @@
-// TODO: Add an image preview
-
 import React, { useContext, useState } from "react";
 import { RiGalleryFill } from "react-icons/ri";
 import GoogleMapReact from "google-map-react";
@@ -26,12 +24,8 @@ import { GlobalContext } from "../../../context/Context";
 import { IContext, ILocation } from "../../../interfaces/interfaces";
 
 import { reportRequest } from "../../../utils/hooks/reportRequest";
-import {
-  DOMAIN,
-  MACEDONIA_CENTER,
-  DEFAULT_ZOOM,
-  HandleRefresh,
-} from "../../../utils/utils";
+import { DOMAIN, MACEDONIA_CENTER, DEFAULT_ZOOM } from "../../../config";
+import { handleRefresh } from "../../../utils/utils";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
 const SendReportComponent: React.FC = () => {
@@ -81,13 +75,6 @@ const SendReportComponent: React.FC = () => {
     data.append("lon", location.lng!);
     data.append("lat", location.lat!);
 
-    let myHeaders = new Headers();
-
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${window.localStorage.getItem("access_token")}`,
-    );
-
     reportRequest(
       `http://${DOMAIN}/report`,
       "POST",
@@ -97,6 +84,9 @@ const SendReportComponent: React.FC = () => {
       "form",
       setLoading,
     );
+
+    setFile(null);
+    setLocation({ lat: undefined, lng: undefined });
   };
 
   const useCurrentLocation = () => {
@@ -121,7 +111,7 @@ const SendReportComponent: React.FC = () => {
 
   return (
     <IonContent>
-      <IonRefresher slot="fixed" onIonRefresh={HandleRefresh}>
+      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
         <IonRefresherContent />
       </IonRefresher>
 
@@ -205,8 +195,7 @@ const SendReportComponent: React.FC = () => {
         </form>
 
         <GoogleMapReact
-          // TODO: Move key to ENV_VAR
-          bootstrapURLKeys={{ key: "AIzaSyBRVyqes2s_hnBHs-kEq26aFRerVRE6Obs" }}
+          bootstrapURLKeys={{ key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY }}
           defaultCenter={MACEDONIA_CENTER}
           defaultZoom={DEFAULT_ZOOM}
           yesIWantToUseGoogleMapApiInternals
