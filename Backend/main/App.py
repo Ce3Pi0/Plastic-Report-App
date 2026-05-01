@@ -4,7 +4,8 @@ from routes import register_routes, register_static_routes
 from config.errorHandler import register_error_handlers
 from config.checkOriginConfig import check_origin
 
-check_origin(app)
+# Comment in development
+# check_origin(app)
 
 register_routes(app)
 register_error_handlers(app)

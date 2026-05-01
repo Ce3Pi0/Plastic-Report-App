@@ -113,20 +113,22 @@ const AccountLoginComponent: React.FC = () => {
           Login
         </IonButton>
 
-        <a
-          id="create"
-          className="float-left no-underline"
-          href="/account/create"
-        >
-          <p>create an account</p>
-        </a>
-        <a
-          id="forgot"
-          className="float-right text-center no-underline"
-          href="/account/forgot"
-        >
-          <p>forgot password</p>
-        </a>
+        <div className="flex w-[100%] items-center justify-between max-[10000px]:flex-col min-[1000px]:flex-row">
+          <a
+            id="create"
+            className="float-left no-underline"
+            href="/account/create"
+          >
+            <p>create an account</p>
+          </a>
+          <a
+            id="forgot"
+            className="float-right text-center no-underline"
+            href="/account/forgot"
+          >
+            <p>forgot password</p>
+          </a>
+        </div>
       </form>
     </div>
   );

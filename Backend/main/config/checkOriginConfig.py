@@ -11,10 +11,7 @@ def check_origin(app):
             
             is_valid = (origin and origin.startswith(prod_url)) or \
                     (referer and referer.startswith(prod_url))
-            
-            is_local = (origin and "localhost" in origin) or \
-                    (referer and "localhost" in referer)
 
-            if not (is_valid or is_local):
+            if not is_valid:
                 app.logger.warning(f"Unauthorized API access blocked: {request.path}")
                 abort(403)

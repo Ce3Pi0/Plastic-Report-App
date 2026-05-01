@@ -23,6 +23,10 @@ class AuthController:
     @staticmethod
     def login(request: Request):
         data: Dict[str, Any] = request.json or {}
+
+        # TODO: Remove
+        print(data)
+
         try:
             body = AuthLoginSchema(**data)
         except ValidationError as e:
