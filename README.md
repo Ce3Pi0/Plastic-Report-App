@@ -27,6 +27,7 @@ manage reports and issues submitted by clients.
 - [Environment Variables](#environment-variables)
 - [System Architecture](#system-architecture)
 - [API Architecture](#api-architecture)
+- [Core Features](#core-features)
 - [Database Design](#database-design)
 - [Deployment Architecture](#deployment-architecture)
 - [Testing Strategy](#testing-strategy)
@@ -234,6 +235,7 @@ Create .env files for both frontend and backend.
   | DELETE | /api/v1/report?id=         | Delete report |
 
 - ### Issue
+  
   | Method | Endpoint                 | Description  |
   | ------ | ------------------------ | ------------ |
   | GET    | /api/v1/issue?id=        | Get issue(s) |
@@ -241,7 +243,7 @@ Create .env files for both frontend and backend.
   | PUT    | /api/v1/issue?id=&fixed= | Update issue |
   | DELETE | /api/v1/issue?id=        | Delete issue |
 
-
+<a id="core-features"></a>
 ## Core Features
 
 -   User Authentication (JWT-based)
@@ -250,101 +252,114 @@ Create .env files for both frontend and backend.
 -   Status tracking for reports
 -   Issue management
 
-
+<a id="database-design"></a>
 ## Database Design
 
-Table issue
+- ### Issues Table
+    | Name | Type | Constraints |
+    |------|------|-------------|
+    | `id` | `int4` | Primary |
+    | `name` | `varchar` |  |
+    | `description` | `varchar` |  Nullable |
+    | `fixed` | `bool` |  |
+    | `user_id` | `int4` |  |
 
-  Name          Type      Constraints
-  ------------- --------- -------------
-  id            int4      Primary
-  name          varchar   
-  description   varchar   Nullable
-  fixed         bool      
-  user_id       int4      
+- ### Reports Table
+    | Name | Type | Constraints |
+    |------|------|-------------|
+    | `id` | `int4` | Primary |
+    | `lat` | `varchar` |  |
+    | `lon` | `varchar` |  |
+    | `url` | `varchar` |  Nullable |
+    | `public_url` | `varchar` |  Nullable |
+    | `status` | `varchar` |  |
+    | `user_id` | `int4` |  |
 
-Table report
+- ### Requests Table
+    | Name | Type | Constraints |
+    |------|------|-------------|
+    | `id` | `int4` | Primary |
+    | `type` | `varchar` |  |
+    | `time` | `varchar` |  Nullable |
+    | `user_id` | `int4` |  |
 
-  Name         Type      Constraints
-  ------------ --------- -------------
-  id           int4      Primary
-  lat          varchar   
-  lon          varchar   
-  url          varchar   Nullable
-  public_url   varchar   Nullable
-  status       varchar   
-  user_id      int4      
+- ### User Table
+    | Name | Type | Constraints |
+    |------|------|-------------|
+    | `id` | `int4` | Primary |
+    | `type` | `varchar` |  |
+    | `name` | `varchar` |  |
+    | `url` | `varchar` |  Nullable |
+    | `public_url` | `varchar` |  Nullable |
+    | `username` | `varchar` |  Unique |
+    | `email` | `varchar` |  Unique |
+    | `confirmed` | `bool` |  |
+    | `password` | `varchar` |  |
+    | `salt` | `varchar` |  Unique |
+    | `gender` | `varchar` |  Nullable |
 
-Table request
+---
 
-  Name      Type      Constraints
-  --------- --------- -------------
-  id        int4      Primary
-  type      varchar   
-  time      varchar   Nullable
-  user_id   int4      
+- ### Relationships
+  - Requests.user_id -> User (1 -> N)
+  - Reports.user_id -> User (1 -> N)
+  - Issues.user_id -> User (1 -> N)
 
-Table user
+<a id="deployment-architecture"></a>
+## Deployment Architecture
 
-  Name         Type      Constraints
-  ------------ --------- -------------
-  id           int4      Primary
-  type         varchar   
-  name         varchar   
-  url          varchar   Nullable
-  public_url   varchar   Nullable
-  username     varchar   Unique
-  email        varchar   Unique
-  confirmed    bool      
-  password     varchar   
-  salt         varchar   Unique
-  gender       varchar   Nullable
+```
+Frontend (Vite build) -> Served via Flask / Static Hosting
+Backend (Flask) -> Render Web Service
+Database -> Supabase
+Media -> Cloudinary
+```
 
-------------------------------------------------------------------------
+<a id="testing-strategy"></a>
+## Testing Strategy
 
-Deployment Architecture
+This project does not include automated unit tests.
 
-    Frontend (Vite build) -> Served via Flask
-    Backend (Flask) -> Render Web Service
-    Database -> Supabase
-    Media -> Cloudinary
+### Manual Testing (Postman)
 
-------------------------------------------------------------------------
+- Import Postman collection from:
+  ```bash
+  /Postman/Plastic Report App.postman_collection.json
+  ```
+- Test the following endpoint groups:
+  - Auth
+  - User
+  - Request
+  - Report
+  - Issue
 
-Testing Strategy
+<a id="coding-style"></a>
+## Coding Style
 
-Manual testing recommended using tools like Postman.
+- ESLint (TypeScript)
+- TypeScript strict typing
+- Pylance (Python)
 
-Test key flows: - Authentication - Report creation - Image uploads - Map
-rendering - Status updates
-
-------------------------------------------------------------------------
-
-Coding Style
-
--   ESLint (Frontend)
--   TypeScript strict typing
--   Python best practices (Flask + Pydantic validation)
-
-------------------------------------------------------------------------
-
-Deployment
+<a id="deployment"></a>
+## Deployment
 
 Hosted on Render.
 
-Build Command
+Build Command:
 
-    cd Frontend && npm install && npm run build && cd ../Backend && pip install -r requirements.txt
+```bash
+cd Frontend && npm install && npm run build && cd ../Backend && pip install -r requirements.txt
+```
 
 Start Command
-
+```bash
     gunicorn --chdir Backend/main --bind 0.0.0.0:$PORT App:app
+```
 
-------------------------------------------------------------------------
+<a id="built-with"></a>
+## Built With
 
-Built With
-
--   Ionic React (TypeScript)
+-   Ionic React (Vite & TypeScript)
 -   Vite
 -   Flask
 -   Supabase
@@ -353,17 +368,17 @@ Built With
 -   Google Maps API
 -   EmailJS
 
-------------------------------------------------------------------------
-
-License
+<a id="license"></a>
+## License
 
 This project is for educational and portfolio purposes.
 
-------------------------------------------------------------------------
+---
 
 Acknowledgments
 
 -   Render
+-   Ionic
 -   Supabase
 -   Cloudinary
 -   Google Maps Platform
