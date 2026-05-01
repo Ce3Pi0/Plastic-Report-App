@@ -34,9 +34,15 @@ const AccountLoginComponent: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!username || !password) {
+      const formData = new FormData(e.currentTarget);
+      setUsername(formData.get("username") as string);
+      setPassword(formData.get("password") as string);
+    }
+
     const user: IUserLogin = {
-      username,
-      password,
+      username: username,
+      password: password,
     };
 
     userLoginRequest(
@@ -71,7 +77,7 @@ const AccountLoginComponent: React.FC = () => {
         <br />
 
         <IonInput
-          onIonChange={(e) => {
+          onIonInput={(e) => {
             if (e.detail.value === undefined) return;
             setUsername(e.detail.value!);
           }}
@@ -87,7 +93,7 @@ const AccountLoginComponent: React.FC = () => {
 
         <IonInput
           type="password"
-          onIonChange={(e) => {
+          onIonInput={(e) => {
             if (e.detail.value === undefined) return;
             setPassword(e.detail.value!);
           }}
