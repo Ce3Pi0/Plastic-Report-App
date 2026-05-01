@@ -97,8 +97,6 @@ const AccountRegisterComponent: React.FC = () => {
           Create account
         </IonTitle>
 
-        <br />
-
         <IonInput
           type="email"
           onIonChange={(e) => {
@@ -113,8 +111,6 @@ const AccountRegisterComponent: React.FC = () => {
           required={true}
         />
 
-        <br />
-
         <IonInput
           onIonChange={(e) => {
             if (e.detail.value === undefined) return;
@@ -128,8 +124,6 @@ const AccountRegisterComponent: React.FC = () => {
           required={true}
         />
 
-        <br />
-
         <IonInput
           onIonChange={(e) => {
             if (e.detail.value === undefined) return;
@@ -142,8 +136,6 @@ const AccountRegisterComponent: React.FC = () => {
           placeholder="Enter username"
           required={true}
         />
-
-        <br />
 
         <IonInput
           type="password"
@@ -164,7 +156,7 @@ const AccountRegisterComponent: React.FC = () => {
         <IonRadioGroup
           value={gender}
           onIonChange={(e) => setGender(e.detail.value)}
-          className="!flex !flex-row !items-center pt-1"
+          className="!flex !flex-row !items-center pt-1 max-[800px]:!flex-col max-[800px]:!w-[100%]"
         >
           {genders.map((gender, index) => (
             <GenderComponent
@@ -190,7 +182,7 @@ const AccountRegisterComponent: React.FC = () => {
           type="submit"
           expand="block"
           id="button"
-          className="flex justify-center ml-[35%] max-w-[30%]"
+          className="flex justify-center ml-[35%] max-w-[40%]"
         >
           Register
         </IonButton>

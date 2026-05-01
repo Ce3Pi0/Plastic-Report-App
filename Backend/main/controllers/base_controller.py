@@ -1,16 +1,16 @@
 class BaseController:
     @staticmethod
-    def create(request):
+    def create():
         pass
 
     @staticmethod
-    def read(request):
+    def read():
         pass
 
     @staticmethod
-    def update(request):
+    def update():
         pass
 
     @staticmethod
-    def delete(request):
+    def delete():
         pass

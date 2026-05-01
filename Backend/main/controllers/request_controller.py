@@ -44,7 +44,7 @@ class RequestController(BaseController):
     def update(request: Request):    
         user_id = str(get_jwt_identity())
         request_user_id = request.args.get("user_id")
-        request_type = request.args.get("req_type")
+        request_type = request.args.get("type")
 
         if user_id is None:
             abort(HttpError.UNAUTHORIZED, "Invalid credentials")

@@ -6,5 +6,5 @@ def serializer_config() -> URLSafeTimedSerializer:
     if not get_env.get("SECRET_KEY"):
         raise RuntimeError("Secret key not found")
     
-    s = URLSafeTimedSerializer(get_env.get("SECRET_KEY"))
+    s = URLSafeTimedSerializer(str(get_env.get("SECRET_KEY") or ""))
     return s

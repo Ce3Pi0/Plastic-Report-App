@@ -154,7 +154,7 @@ const AccountChangeComponent: React.FC = () => {
           type="submit"
           expand="block"
           id="button"
-          className="flex justify-center ml-[35%] max-w-[30%]"
+          className="flex justify-center ml-[35%] max-w-[35%]"
         >
           Change
         </IonButton>

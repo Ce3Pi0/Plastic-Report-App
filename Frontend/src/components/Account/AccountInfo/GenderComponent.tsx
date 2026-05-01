@@ -11,7 +11,7 @@ const GenderComponent = ({ gender, setGender }: Props) => {
   return (
     <IonItem
       color={"light"}
-      className="w-[50%] px-2"
+      className="w-[50%] px-2 max-[800px]:w-[100%] max-[800px]:px-0"
       onClick={() => setGender(gender)}
     >
       <IonLabel>{gender.charAt(0).toUpperCase() + gender.slice(1)}</IonLabel>
