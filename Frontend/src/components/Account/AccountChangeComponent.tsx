@@ -66,7 +66,7 @@ const AccountChangeComponent: React.FC = () => {
     setMistake(false);
 
     userChangeRequest(
-      `{DOMAIN}/user?id=${user?.id}`,
+      `${DOMAIN}/user?id=${user?.id}`,
       "PUT",
       newUser,
       setMessage,

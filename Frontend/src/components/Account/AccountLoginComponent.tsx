@@ -40,7 +40,7 @@ const AccountLoginComponent: React.FC = () => {
     };
 
     userLoginRequest(
-      `{DOMAIN}/auth/login`,
+      `${DOMAIN}/auth/login`,
       "POST",
       user,
       setMessage,

@@ -12,7 +12,7 @@ export const FetchRefreshToken = async ({
   const refreshHeaders = getRefreshToken();
 
   try {
-    const data = await fetch(`{DOMAIN}/auth/refresh_token`, {
+    const data = await fetch(`${DOMAIN}/auth/refresh_token`, {
       method: "GET",
       headers: refreshHeaders,
     });

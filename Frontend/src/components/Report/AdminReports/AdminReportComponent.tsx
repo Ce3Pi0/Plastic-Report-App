@@ -51,7 +51,7 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
 
   const handleAccept = () => {
     reportRequest(
-      `{DOMAIN}/report?id=${report.id}&status=completed`,
+      `${DOMAIN}/report?id=${report.id}&status=completed`,
       "PUT",
       undefined,
       updateTokens,
@@ -64,7 +64,7 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
 
   const handleDecline = () => {
     reportRequest(
-      `{DOMAIN}/report?id=${report.id}&status=rejected`,
+      `${DOMAIN}/report?id=${report.id}&status=rejected`,
       "PUT",
       undefined,
       updateTokens,

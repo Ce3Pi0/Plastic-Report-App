@@ -36,7 +36,6 @@ import NotFoundPage from "./pages/NotFound/NotFoundPage";
 import { GlobalContext, GlobalProvider } from "./context/Context";
 
 import { IContext } from "./interfaces/interfaces";
-import AppUrlListener from "./AppUrlListener";
 import { authRoutes, protectedRoutes, sharedRoutes } from "./routes";
 import TabBar from "./tabs";
 
@@ -112,7 +111,6 @@ const App: React.FC = () => (
   <GlobalProvider>
     <IonApp>
       <IonReactRouter>
-        <AppUrlListener />
         <Tabs />
       </IonReactRouter>
     </IonApp>

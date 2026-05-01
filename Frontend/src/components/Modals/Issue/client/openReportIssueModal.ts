@@ -28,7 +28,7 @@ const openReportIssueModal = (
         myHeaders.append("Content-Type", "application/json");
 
         issueRequest(
-          `{DOMAIN}/issue`,
+          `${DOMAIN}/issue`,
           "POST",
           JSON.stringify(newIssueReport),
           updateTokens,

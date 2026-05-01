@@ -79,7 +79,7 @@ const SendReportComponent: React.FC = () => {
     data.append("lat", location.lat!);
 
     await reportRequest(
-      `{DOMAIN}/report`,
+      `${DOMAIN}/report`,
       "POST",
       data,
       updateTokens,

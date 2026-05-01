@@ -63,7 +63,7 @@ const AccountRegisterComponent: React.FC = () => {
     };
 
     userRegisterRequest(
-      `{DOMAIN}/auth/register`,
+      `${DOMAIN}/auth/register`,
       "POST",
       newUser,
       setMessage,

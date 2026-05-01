@@ -31,7 +31,7 @@ const AccountForgotComponent: React.FC = () => {
     e.preventDefault();
 
     changePasswordRequest(
-      `{DOMAIN}/auth/forgot_password_token?email=${email}`,
+      `${DOMAIN}/auth/forgot_password_token?email=${email}`,
       setMessage,
       presentAlert,
     );

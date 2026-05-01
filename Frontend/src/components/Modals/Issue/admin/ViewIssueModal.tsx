@@ -40,7 +40,7 @@ const ViewIssueModal = ({
   const [presentAlert] = useIonAlert();
 
   const { data, err, loading } = useFetch(
-    `{DOMAIN}/issue`,
+    `${DOMAIN}/issue`,
     updateTokens,
     router,
   );
@@ -52,7 +52,7 @@ const ViewIssueModal = ({
     e.preventDefault();
 
     issueRequest(
-      `{DOMAIN}/issue?id=${id}&fixed=True`,
+      `${DOMAIN}/issue?id=${id}&fixed=True`,
       "PUT",
       undefined,
       updateTokens,

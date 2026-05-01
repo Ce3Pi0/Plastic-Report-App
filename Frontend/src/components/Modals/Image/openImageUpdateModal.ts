@@ -18,7 +18,7 @@ const openImageUpdateModal = (
         data.append("image", ev.detail.data.file);
 
         userImageRequest(
-          `{DOMAIN}/user`,
+          `${DOMAIN}/user`,
           "PUT",
           data,
           updateTokens,

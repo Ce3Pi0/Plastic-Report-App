@@ -41,7 +41,7 @@ const ShowReportsComponent: React.FC = () => {
     data: reports,
     err,
     loading,
-  } = useFetch(`{DOMAIN}/report`, updateTokens, router);
+  } = useFetch(`${DOMAIN}/report`, updateTokens, router);
 
   const HideTooltip = () => {
     if (hidden)

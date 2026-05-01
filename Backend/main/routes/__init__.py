@@ -13,4 +13,4 @@ def register_routes(app):
     app.register_blueprint(auth_bp, url_prefix="/api/v1")
 
 def register_static_routes(app):
-    app.register_blueprint(static_bp, url_prefix="/")
+    app.register_blueprint(static_bp)

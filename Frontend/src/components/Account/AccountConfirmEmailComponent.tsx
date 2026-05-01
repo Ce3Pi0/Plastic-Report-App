@@ -53,7 +53,7 @@ const AccountConfirmEmailComponent: React.FC = () => {
           color={"success"}
           onClick={() =>
             sendConfirmEmail(
-              `{DOMAIN}/auth/confirm_email?token=${token}`,
+              `${DOMAIN}/auth/confirm_email?token=${token}`,
               presentAlert,
               router,
             )

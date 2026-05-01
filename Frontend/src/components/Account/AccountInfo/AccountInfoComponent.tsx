@@ -44,7 +44,7 @@ const AccountInfoComponent: React.FC = () => {
   const [updatingUserImage, setUpdatingUserImage] = useState<boolean>(false);
 
   const { data, err, loading } = useFetch(
-    `{DOMAIN}/user`,
+    `${DOMAIN}/user`,
     updateTokens,
     router,
   );
@@ -53,7 +53,7 @@ const AccountInfoComponent: React.FC = () => {
     data: reports,
     err: reports_error,
     loading: reports_loading,
-  } = useFetch(`{DOMAIN}/report`, updateTokens, router);
+  } = useFetch(`${DOMAIN}/report`, updateTokens, router);
 
   const [presentAlert] = useIonAlert();
   const [present, dismiss] = useIonModal(UpdateUserImageModal, {

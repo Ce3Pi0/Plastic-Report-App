@@ -49,7 +49,7 @@ export const userRegisterRequest = async (
 
 const sendConfirmEmailRequest = async (email: string, presentAlert: any) => {
   const data = await fetch(
-    `{DOMAIN}/auth/send_confirm_email_token?email=${email}`,
+    `${DOMAIN}/auth/send_confirm_email_token?email=${email}`,
     {
       method: "GET",
     },

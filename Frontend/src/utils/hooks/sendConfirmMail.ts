@@ -40,7 +40,7 @@ export const sendConfirmEmail = async (
               return;
             }
             const data = await fetch(
-              `{DOMAIN}/auth/send_confirm_email_token?email=${email}`,
+              `${DOMAIN}/auth/send_confirm_email_token?email=${email}`,
               {
                 method: "GET",
               },

@@ -1,21 +1,20 @@
 import os
-from config.get_env import get_env
 from flask import Blueprint, send_from_directory
+from pathlib import Path
 
-build_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), str(get_env.get("FRONTEND_DIST"))))
+current_file = Path(__file__).resolve()
+dist_path = current_file.parents[3] / "Frontend" / "dist"
 
-static_bp = Blueprint('static', __name__, static_folder=build_dir)
+static_bp = Blueprint('static', __name__)
+
 
 @static_bp.route('/', defaults={'path': ''})
 @static_bp.route('/<path:path>')
-def serve_frontend(path: str):
-    folder = static_bp.static_folder
+def serve_frontend(path):
+    folder = os.path.abspath(str(dist_path))
     
-    if not folder:
-        return "Static folder not found", 500
+    full_path = os.path.normpath(os.path.join(folder, path))
 
-    full_path = os.path.join(folder, path)
-    
     if path != "" and os.path.exists(full_path):
         return send_from_directory(folder, path)
     
