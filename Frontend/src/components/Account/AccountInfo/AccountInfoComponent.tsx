@@ -63,6 +63,7 @@ const AccountInfoComponent: React.FC = () => {
   const logOut = () => {
     window.localStorage.clear();
     setLoggedIn(false, null);
+    window.location.replace("/account/login");
   };
 
   const hideTooltip = () => {
