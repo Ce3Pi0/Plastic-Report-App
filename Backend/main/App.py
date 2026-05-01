@@ -5,7 +5,7 @@ from config.errorHandler import register_error_handlers
 from config.checkOriginConfig import check_origin
 
 # Comment in development
-# check_origin(app)
+check_origin(app)
 
 register_routes(app)
 register_error_handlers(app)

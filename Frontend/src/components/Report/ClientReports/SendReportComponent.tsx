@@ -182,7 +182,8 @@ const SendReportComponent: React.FC = () => {
                       onClick={() => setFile(null)}
                     />
                   </div>
-                  <IonImg
+                  <img
+                    className="max-w-[100px] max-h-[100px] object-contain"
                     src={file === null ? "" : URL.createObjectURL(file)}
                   />
                 </div>
