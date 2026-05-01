@@ -14,7 +14,8 @@ app = Flask(__name__, static_folder='../../../Frontend/dist',
             static_url_path='/')
 
 MailHandlerInstance.init_app(app)
-CORS(app)
+# Configure CORS REMOVE IN DEVELOPMENT
+CORS(app, resources={r"/api/v1/*": {"origins": "https://plastic-report-app.onrender.com"}})
 
 # Configure SQLAlchemy
 SupabaseConfig.init_app(app)
