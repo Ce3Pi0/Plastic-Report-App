@@ -2,6 +2,9 @@ from config.config import app
 from config.get_env import get_env
 from routes import register_routes, register_static_routes
 from config.errorHandler import register_error_handlers
+from config.checkOriginConfig import check_origin
+
+check_origin(app)
 
 register_routes(app)
 register_error_handlers(app)
