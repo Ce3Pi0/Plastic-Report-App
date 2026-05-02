@@ -1,6 +1,6 @@
 import { IonItem, IonLabel, IonRadio } from "@ionic/react";
 import React from "react";
-import { gendersType } from "../../../types";
+import { gendersType } from "../../types";
 
 interface Props {
   gender: gendersType;

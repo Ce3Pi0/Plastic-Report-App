@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
 
 import {
   IonButton,
@@ -20,7 +19,7 @@ import { IUserRegister } from "../../interfaces/interfaces";
 
 import { userRegisterRequest } from "../../utils/hooks/userRegisterRequest";
 import { DOMAIN, UNSAFE_PASSWORD } from "../../config";
-import GenderComponent from "./AccountInfo/GenderComponent";
+import GenderComponent from "./GenderComponent";
 import { gendersType } from "../../types";
 
 const AccountRegisterComponent: React.FC = () => {

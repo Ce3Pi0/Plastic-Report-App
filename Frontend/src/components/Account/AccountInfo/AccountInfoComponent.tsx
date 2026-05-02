@@ -31,9 +31,7 @@ import useFetch from "../../../utils/hooks/useFetch";
 import { DOMAIN } from "../../../config";
 import UpdateUserImageModal from "../../Modals/Image/imageUpdateModal";
 import openImageUpdateModal from "../../Modals/Image/openImageUpdateModal";
-import { RiProgress1Line } from "react-icons/ri";
-import { IoCheckmark, IoWarning } from "react-icons/io5";
-import FilterPopover from "../../Misc/filterPopover";
+import FilterPopover from "../../Misc/FilterPopover";
 
 const AccountInfoComponent: React.FC = () => {
   const { setLoggedIn, updateTokens } = useContext(GlobalContext) as IContext;

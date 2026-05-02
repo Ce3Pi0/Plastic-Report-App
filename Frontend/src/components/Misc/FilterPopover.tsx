@@ -1,7 +1,5 @@
 import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
-import { appsOutline, arrowDownOutline } from "ionicons/icons";
-import { IoCheckmark, IoWarning } from "react-icons/io5";
-import { RiProgress1Line } from "react-icons/ri";
+import { arrowDownOutline } from "ionicons/icons";
 import { hideTooltip } from "../../utils/utils";
 import { DirectionType } from "../../types";
 import FilterPopoverElement from "./FilterPopoverElement";
