@@ -24,7 +24,7 @@ import { DOMAIN } from "../../../config";
 import { handleRefresh } from "../../../utils/utils";
 import { IoCheckmark, IoWarning } from "react-icons/io5";
 import { RiProgress1Line } from "react-icons/ri";
-import FilterPopover from "../../Misc/filterPopover";
+import FilterPopover from "../../Misc/FilterPopover";
 
 const ShowReportsComponent: React.FC = () => {
   const router = useIonRouter();
