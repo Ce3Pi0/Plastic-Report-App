@@ -14,7 +14,8 @@ app = Flask(__name__, static_folder='../../../Frontend/dist',
             static_url_path='/')
 
 MailHandlerInstance.init_app(app)
-# Configure CORS REMOVE IN DEVELOPMENT
+# Configure CORS
+# CORS(app) # Dev Only
 CORS(app, resources={r"/api/v1/*": {"origins": "https://plastic-report-app.onrender.com"}}, supports_credentials=True)
 
 # Configure SQLAlchemy
