@@ -338,23 +338,47 @@ Media -> Cloudinary
 
 <img width="357" height="730" alt="image" src="https://github.com/user-attachments/assets/1aa38cab-f8b1-45dc-bc1c-63dec5283009" />
 
+<br />
+
 <img width="344" height="732" alt="image" src="https://github.com/user-attachments/assets/765198fc-843a-40b7-80a2-680fd6f1535e" />
 
 - ### Contact Page
 
 <img width="355" height="732" alt="image" src="https://github.com/user-attachments/assets/0e35131b-0ff7-4412-a5c5-5a61894d0453" />
 
+<br />
+
 <img width="354" height="731" alt="image" src="https://github.com/user-attachments/assets/48c4f69f-bcd6-4800-8fd2-bee9ce468514" />
 
 - ### Report an Issue Page
 
-<img width="354" height="729" alt="image" src="https://github.com/user-attachments/assets/5385e7ae-9f44-473d-a4be-163a6924486c" />
+  #### Client
+
+  <img width="354" height="729" alt="image" src="https://github.com/user-attachments/assets/5385e7ae-9f44-473d-a4be-163a6924486c" />
+
+  #### Admin
+
+  <img width="350" height="726" alt="image" src="https://github.com/user-attachments/assets/e0f7ff28-aabe-4669-8499-90f06ba0bd75" />
 
 - ### Report Page
 
-<img width="354" height="728" alt="image" src="https://github.com/user-attachments/assets/00e73d7d-81c5-4ef5-8c72-ed1d50a5e33e" />
+  #### Client
+  
+  <img width="354" height="728" alt="image" src="https://github.com/user-attachments/assets/00e73d7d-81c5-4ef5-8c72-ed1d50a5e33e" />
 
-<img width="354" height="729" alt="image" src="https://github.com/user-attachments/assets/4ee13466-5ed8-409f-aa97-8aed69f72332" />
+  <br />
+  
+  <img width="354" height="729" alt="image" src="https://github.com/user-attachments/assets/4ee13466-5ed8-409f-aa97-8aed69f72332" />
+
+  #### Admin
+  
+  <img width="356" height="732" alt="image" src="https://github.com/user-attachments/assets/5c934316-9d2d-4fe7-8c7b-3df1d5b31738" />
+
+  <br />
+
+  <img width="350" height="725" alt="image" src="https://github.com/user-attachments/assets/85259f56-12b2-49b0-830a-58f38048c020" />
+
+  <br />
 
 - ### User Info Page
 
@@ -364,7 +388,7 @@ Media -> Cloudinary
 
 <img width="348" height="735" alt="image" src="https://github.com/user-attachments/assets/8c2cdb03-9223-4be8-b968-60d7fb68ba9d" />
 
-
+<br />
 
 <a id="testing-strategy"></a>
 ## Testing Strategy
