@@ -21,13 +21,13 @@ const TabBar = () => {
       <IonTabButton tab="report" href="/report" selected={isSelected("report")}>
         <IonIcon
           icon={
-            user?.type === "client" || user?.type === undefined
+            user?.view === "client" || user?.view === undefined
               ? locate
               : listOutline
           }
         />
         <IonLabel>
-          {user?.type === "client" || user?.type === undefined
+          {user?.view === "client" || user?.view === undefined
             ? "Report"
             : "Reports"}
         </IonLabel>

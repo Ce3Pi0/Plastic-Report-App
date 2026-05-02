@@ -84,6 +84,7 @@ export const setUserData = (user: IUser) => {
   window.localStorage.setItem("username", user.username);
   window.localStorage.setItem("gender", user.gender);
   window.localStorage.setItem("type", user.type);
+  window.localStorage.setItem("view", user.type);
   window.localStorage.setItem("access_token", user.access_token);
   window.localStorage.setItem("refresh_token", user.refresh_token);
   window.localStorage.setItem("logged_in", "true");
@@ -96,6 +97,7 @@ export const getUser = (json: any): IUser => {
     username: json.username,
     gender: json.gender,
     type: json.type,
+    view: json.type,
     access_token: json.access_token,
     refresh_token: json.refresh_token,
     url: json.img_url,

@@ -162,7 +162,9 @@ const AccountInfoComponent: React.FC = () => {
         <div>
           <p style={{ textAlign: "center" }}>Error while fetching user data</p>
           <IonFab horizontal="center">
-            <IonButton onClick={() => logOut()}>Logout</IonButton>
+            <IonButton onClick={() => logOut()} routerLink="/account/login">
+              Logout
+            </IonButton>
           </IonFab>
         </div>
       )}

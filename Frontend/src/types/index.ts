@@ -13,3 +13,7 @@ export type RefreshDataType = {
 };
 
 export type DirectionType = "left" | "down";
+
+export type UserType = "admin" | "client";
+
+export type ViewType = "admin" | "client";

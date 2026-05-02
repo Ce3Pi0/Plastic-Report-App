@@ -38,7 +38,7 @@ const MenuComponent: React.FC = () => {
   const { user, updateTokens } = useContext(GlobalContext) as IContext;
 
   const [present, dismiss] = useIonModal(
-    user?.type === "client" ? ReportIssueModal : ViewIssueModal,
+    user?.view === "client" ? ReportIssueModal : ViewIssueModal,
     {
       onDismiss: (data: string, role: string) => dismiss(data, role),
     },
@@ -80,7 +80,7 @@ const MenuComponent: React.FC = () => {
             }
           >
             <IonIcon icon={bug} size={"small"} />{" "}
-            {user?.type === "client" ? "Report an issue" : "View issues"}
+            {user?.view === "client" ? "Report an issue" : "View issues"}
           </h3>
         </div>
       </IonContent>

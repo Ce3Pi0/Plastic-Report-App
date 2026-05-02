@@ -1,10 +1,13 @@
+import { UserType, ViewType } from "../types";
+
 export interface IUser {
   id: number;
   username: string;
   gender: string;
   access_token: string;
   refresh_token: string;
-  type: string;
+  type: UserType;
+  view: ViewType;
   url: string | null;
 }
 
@@ -50,6 +53,7 @@ export interface IReport {
 export interface IContext {
   loggedIn: boolean;
   setLoggedIn: (userLoggedIn: boolean, user: IUser | null) => void;
+  setView: (view: ViewType) => void;
   updateTokens: () => void;
   user: IUser | null;
   isLoaded: boolean;

@@ -1,6 +1,12 @@
 import { useContext } from "react";
 
-import { IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import {
+  IonButton,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 
 /* Components */
 import SendReportComponent from "../../components/Report/ClientReports/SendReportComponent";
@@ -9,21 +15,37 @@ import ShowReportsComponent from "../../components/Report/AdminReports/ShowRepor
 import { GlobalContext } from "../../context/Context";
 
 import { IContext } from "../../interfaces/interfaces";
+import { RiAdminLine, RiUser3Line } from "react-icons/ri";
 
 const Report: React.FC = () => {
-  const { user } = useContext(GlobalContext) as IContext;
+  const { user, setView } = useContext(GlobalContext) as IContext;
+
+  console.log(user);
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          {user?.type === "client" && <IonTitle>Report</IonTitle>}
-          {user?.type === "admin" && <IonTitle>All reports</IonTitle>}
+          {user?.view === "client" && <IonTitle>Report</IonTitle>}
+          {user?.view === "admin" && <IonTitle>All reports</IonTitle>}
+
+          {user?.type === "admin" && (
+            <IonButton
+              slot="end"
+              onClick={() => {
+                setView(user?.view === "admin" ? "client" : "admin");
+              }}
+              color={"primary"}
+            >
+              {user?.view === "admin" ? <RiUser3Line /> : <RiAdminLine />}
+              {user?.view === "admin" ? "Client" : "Admin"} view
+            </IonButton>
+          )}
         </IonToolbar>
       </IonHeader>
 
-      {user?.type === "client" && <SendReportComponent />}
-      {user?.type === "admin" && <ShowReportsComponent />}
+      {user?.view === "client" && <SendReportComponent />}
+      {user?.view === "admin" && <ShowReportsComponent />}
     </IonPage>
   );
 };

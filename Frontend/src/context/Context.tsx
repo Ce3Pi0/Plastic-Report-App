@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 
 import { IUser, IContext } from "../interfaces/interfaces";
 import { setUserData } from "../utils/utils";
+import { ViewType } from "../types";
 
 const initial_state: IContext = {
   loggedIn: false,
   setLoggedIn: () => {
+    return;
+  },
+  setView: () => {
     return;
   },
   updateTokens: () => {
@@ -34,6 +38,17 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
     user && setUserData(user);
   };
 
+  const setView = (view: ViewType): void => {
+    setState((prev) => ({
+      ...prev,
+      user: {
+        ...prev.user!,
+        view,
+      },
+    }));
+    localStorage.setItem("view", view);
+  };
+
   const updateTokens = (): void => {
     setState({
       ...state,
@@ -43,7 +58,8 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
         gender: localStorage.getItem("gender")!,
         access_token: localStorage.getItem("access_token")!,
         refresh_token: localStorage.getItem("refresh_token")!,
-        type: localStorage.getItem("type")!,
+        type: localStorage.getItem("type")! as "admin" | "client",
+        view: localStorage.getItem("view")! as "admin" | "client",
         url: localStorage.getItem("url")!,
       },
     });
@@ -60,7 +76,8 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
           gender: localStorage.getItem("gender")!,
           access_token: localStorage.getItem("access_token")!,
           refresh_token: localStorage.getItem("refresh_token")!,
-          type: localStorage.getItem("type")!,
+          type: localStorage.getItem("type")! as "admin" | "client",
+          view: localStorage.getItem("view")! as "admin" | "client",
           url: localStorage.getItem("url")!,
         },
         isLoaded: true,
@@ -79,6 +96,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         loggedIn: state.loggedIn,
         setLoggedIn,
+        setView,
         updateTokens,
         user: state.user,
         isLoaded: state.isLoaded,
