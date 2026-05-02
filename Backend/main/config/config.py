@@ -7,6 +7,7 @@ from config.serializerConfig import serializer_config
 from config.mailConfig import MailHandlerInstance
 from config.supabaseConfig import SupabaseConfig
 from config.jwtConfig import jwt_config
+from config.get_env import get_env
 from config.cloudinaryConfig import CloudinaryConfig
 
 # Configure Flask App
@@ -29,7 +30,7 @@ CloudinaryConfig.init()
 jwt = jwt_config(app)
 
 # Configure Limiter
-limiter = Limiter(app=app, key_func=get_remote_address)
+limiter = Limiter(app=app, key_func=get_remote_address, enabled=get_env.get("ENV") != "DEVELOPMENT")
 
 # Configure Serializer
 s = serializer_config()

@@ -1,16 +1,18 @@
+from flask import Request
+
 class BaseController:
     @staticmethod
-    def create():
+    def create(request: Request):
         pass
 
     @staticmethod
-    def read():
+    def read(request: Request):
         pass
 
     @staticmethod
-    def update():
+    def update(request: Request):
         pass
 
     @staticmethod
-    def delete():
+    def delete(request: Request):
         pass

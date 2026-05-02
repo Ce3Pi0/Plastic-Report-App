@@ -88,6 +88,9 @@ def validate_request_type(req_type: str) -> bool:
     return req_type in __types
 
 def check_last_request_time(current_request):
+    if get_env.get("ENV") == "DEVELOPMENT":
+        return
+
     if current_request.time is not None:
             if datetime.now() - datetime.strptime(current_request.time, '%Y-%m-%d %H:%M:%S.%f') > timedelta(minutes=int(get_env.get("REQUEST_TIMER_LIMIT") or 5)):
                 current_request.time = datetime.now()

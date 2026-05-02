@@ -150,14 +150,16 @@ const AccountChangeComponent: React.FC = () => {
           {!message && !mistake && <br></br>} {message}{" "}
           {mistake && "Incorrect password"}
         </p>
-        <IonButton
-          type="submit"
-          expand="block"
-          id="button"
-          className="flex justify-center ml-[35%] max-w-[35%]"
-        >
-          Change
-        </IonButton>
+        <div className="w-[100%] flex justify-center items-center">
+          <IonButton
+            type="submit"
+            expand="block"
+            id="button"
+            className="w-[35%]"
+          >
+            Change
+          </IonButton>
+        </div>
         <a
           id="forgot"
           className="text-center no-underline"
