@@ -16,7 +16,7 @@ import {
   useIonModal,
   useIonRouter,
 } from "@ionic/react";
-import { appsOutline, arrowDownOutline, checkmark } from "ionicons/icons";
+import { appsOutline, arrowDownOutline } from "ionicons/icons";
 
 import { Avatar } from "@mui/material";
 
@@ -33,6 +33,7 @@ import UpdateUserImageModal from "../../Modals/Image/imageUpdateModal";
 import openImageUpdateModal from "../../Modals/Image/openImageUpdateModal";
 import { RiProgress1Line } from "react-icons/ri";
 import { IoCheckmark, IoWarning } from "react-icons/io5";
+import FilterPopover from "../../Misc/filterPopover";
 
 const AccountInfoComponent: React.FC = () => {
   const { setLoggedIn, updateTokens } = useContext(GlobalContext) as IContext;
@@ -66,98 +67,16 @@ const AccountInfoComponent: React.FC = () => {
     window.location.replace("/account/login");
   };
 
-  const hideTooltip = () => {
-    if (hidden)
-      document.getElementById("first_tooltip_text")!.style.visibility =
-        "hidden";
-    else
-      document.getElementById("first_tooltip_text")!.style.visibility =
-        "visible";
-    setHidden(!hidden);
-  };
-
   return (
     <div>
       {data && (
         <>
-          <IonFab slot="fixed" horizontal="end" vertical="top">
-            <div className="group relative inline-block">
-              <IonFabButton size="small" onClick={(e) => hideTooltip()}>
-                <IonIcon icon={arrowDownOutline} />
-              </IonFabButton>
-              <span
-                id="first_tooltip_text"
-                className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]"
-              >
-                Filter
-              </span>
-            </div>
-
-            <IonFabList className="tooltips" side="bottom">
-              <div className="group relative inline-block">
-                <IonFabButton
-                  size="small"
-                  color="success"
-                  onClick={() => {
-                    setStatus("completed");
-                    hideTooltip();
-                  }}
-                >
-                  <IoCheckmark size={24} className="text-black" />
-                </IonFabButton>
-                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
-                  Completed
-                </span>
-              </div>
-
-              <div className="group relative inline-block">
-                <IonFabButton
-                  size="small"
-                  color="warning"
-                  onClick={() => {
-                    setStatus("pending");
-                    hideTooltip();
-                  }}
-                >
-                  <RiProgress1Line size={24} />
-                </IonFabButton>
-                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
-                  Pending
-                </span>
-              </div>
-
-              <div className="group relative inline-block">
-                <IonFabButton
-                  size="small"
-                  color="danger"
-                  onClick={() => {
-                    setStatus("rejected");
-                    hideTooltip();
-                  }}
-                >
-                  <IoWarning size={24} className="text-black" />
-                </IonFabButton>
-                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
-                  Rejected
-                </span>
-              </div>
-
-              <div className="group relative inline-block">
-                <IonFabButton
-                  size="small"
-                  onClick={() => {
-                    setStatus("");
-                    hideTooltip();
-                  }}
-                >
-                  <IonIcon icon={appsOutline} />
-                </IonFabButton>
-                <span className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]">
-                  All
-                </span>
-              </div>
-            </IonFabList>
-          </IonFab>
+          <FilterPopover
+            direction="down"
+            hidden={hidden}
+            setHidden={setHidden}
+            setStatus={setStatus}
+          />
 
           <IonCard className="bg-[var(--ion-color-step-150)] rounded-[15px] pb-[15px] border-[3px] border-solid border-[var(--ion-color-success)]">
             <IonLoading

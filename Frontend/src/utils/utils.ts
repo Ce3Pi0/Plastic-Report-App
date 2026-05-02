@@ -65,19 +65,19 @@ export const getLocation = (
   });
 };
 
-export function instanceOfUserChange(data: any): data is IUserChange {
+export const instanceOfUserChange = (data: any): data is IUserChange => {
   return "new_password" in data;
-}
+};
 
-export function instanceOfUserRegister(data: any): data is IUserRegister {
+export const instanceOfUserRegister = (data: any): data is IUserRegister => {
   return "name" in data;
-}
+};
 
-export function validateEmail(email: string): boolean {
+export const validateEmail = (email: string): boolean => {
   const res =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return res.test(String(email).toLowerCase());
-}
+};
 
 export const setUserData = (user: IUser) => {
   window.localStorage.setItem("id", user.id.toString());
@@ -100,4 +100,18 @@ export const getUser = (json: any): IUser => {
     refresh_token: json.refresh_token,
     url: json.img_url,
   };
+};
+
+export const checkStatus = (status: string): string => {
+  if (status === "completed") return "success";
+  else if (status === "pending") return "warning";
+  return "danger";
+};
+
+export const hideTooltip = (hidden: boolean, setHidden: any) => {
+  if (hidden)
+    document.getElementById("first_tooltip_text")!.style.visibility = "hidden";
+  else
+    document.getElementById("first_tooltip_text")!.style.visibility = "visible";
+  setHidden(!hidden);
 };

@@ -11,3 +11,5 @@ export type RefreshDataType = {
   retryFunction: () => void | Promise<void>;
   router: UseIonRouterResult;
 };
+
+export type DirectionType = "left" | "down";

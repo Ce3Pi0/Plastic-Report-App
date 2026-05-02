@@ -11,14 +11,9 @@ import {
 import { IReport } from "../../../interfaces/interfaces";
 import { IoCheckmark, IoWarning } from "react-icons/io5";
 import { RiProgress1Line } from "react-icons/ri";
+import { checkStatus } from "../../../utils/utils";
 
 const ReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
-  const checkStatus = (status: string): string => {
-    if (status === "completed") return "success";
-    else if (status === "pending") return "warning";
-    return "danger";
-  };
-
   const badgeColor = checkStatus(report.status);
 
   return (

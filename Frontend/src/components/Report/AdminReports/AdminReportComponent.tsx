@@ -29,6 +29,9 @@ import { IContext, IReport } from "../../../interfaces/interfaces";
 import { reportRequest } from "../../../utils/hooks/reportRequest";
 import { DOMAIN } from "../../../config";
 import useAddressFetch from "../../../utils/hooks/requestAddress";
+import { checkStatus } from "../../../utils/utils";
+import { IoCheckmark, IoWarning } from "react-icons/io5";
+import { RiProgress1Line } from "react-icons/ri";
 
 const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
   const router = useIonRouter();
@@ -75,6 +78,8 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
     );
   };
 
+  const badgeColor = checkStatus(report.status);
+
   return (
     <IonCard>
       <IonCardHeader>
@@ -83,18 +88,10 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
 
       <IonCardContent>
         <IonLoading isOpen={loading} message={"Applying changes..."} />
-        <IonBadge
-          className="min-[800px]:w-[10%] max-[800px]:w-[50%]"
-          color={
-            report.status === "pending"
-              ? "warning"
-              : report.status === "completed"
-                ? "success"
-                : "danger"
-          }
-          slot="start"
-        >
-          {" "}
+        <IonBadge className="mb-1" color={badgeColor} slot="start">
+          {badgeColor === "danger" && <IoWarning />}
+          {badgeColor === "success" && <IoCheckmark />}
+          {badgeColor === "warning" && <RiProgress1Line />}
         </IonBadge>
         <br />
         Location: {location_loading && "...Loading location"}
@@ -136,7 +133,6 @@ const AdminReportComponent: React.FC<{ report: IReport }> = ({ report }) => {
         </IonHeader>
 
         <IonContent className="ion-padding">
-          {/* relative pt-[2%] m-auto flex justify-center items-center */}
           <div className="relative">
             <img className="max-h-[350px]" src={report.url} alt="Not found" />
           </div>
