@@ -16,11 +16,10 @@ class MailHandler:
         app.config.update(dict(
             MAIL_SERVER = get_env.get("MAIL_SERVER"),
             MAIL_PORT = get_env.get("MAIL_PORT"),
-            MAIL_USE_TLS = False,
-            MAIL_USE_SSL = True,
+            MAIL_USE_TLS = True,
+            MAIL_USE_SSL = False,
             MAIL_USERNAME = get_env.get("MAIL_USERNAME"),
             MAIL_PASSWORD = get_env.get("MAIL_PASSWORD"),
-            MAIL_DEBUG= True # Testing Only
         ))
         self.__mail = Mail(app)
     
