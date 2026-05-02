@@ -25,7 +25,7 @@ const FilterPopover = ({ direction, hidden, setHidden, setStatus }: Props) => {
         </IonFabButton>
         <span
           id="first_tooltip_text"
-          className="invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 top-[30%] left-[-110%]"
+          className={`invisible group-hover:visible w-[120%] bg-[var(--ion-color-light-contrast)] text-[var(--ion-color-light)] text-center rounded-[6px] pt-[5px] pr-0 absolute text-[11px] z-1 ${direction === "down" ? "top-[100%] left-[0%]" : "top-[30%] left-[-110%]"}`}
         >
           Filter
         </span>
