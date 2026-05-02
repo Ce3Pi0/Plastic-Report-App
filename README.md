@@ -315,6 +315,57 @@ Database -> Supabase
 Media -> Cloudinary
 ```
 
+<a id="screenshots"></a>
+## Screenshots:
+
+- ### Login Page
+
+<img width="357" height="730" alt="image" src="https://github.com/user-attachments/assets/7f091797-bfd7-47ca-bf4e-6ed1a033fe90" />
+
+- ### Register Page
+
+<img width="355" height="731" alt="image" src="https://github.com/user-attachments/assets/2f62328b-467b-4822-a44d-fc21c7f6e7b5" />
+
+- ### Forgot Password Page
+
+<img width="355" height="727" alt="image" src="https://github.com/user-attachments/assets/337c5799-c920-45b7-be7f-d563e3c92b6c" />
+
+ - ### Home Page
+
+<img width="348" height="735" alt="image" src="https://github.com/user-attachments/assets/9fd382b7-71ef-488c-9f9d-95dd7c96ea55" />
+
+- ### About Page
+
+<img width="357" height="730" alt="image" src="https://github.com/user-attachments/assets/1aa38cab-f8b1-45dc-bc1c-63dec5283009" />
+
+<img width="344" height="732" alt="image" src="https://github.com/user-attachments/assets/765198fc-843a-40b7-80a2-680fd6f1535e" />
+
+- ### Contact Page
+
+<img width="355" height="732" alt="image" src="https://github.com/user-attachments/assets/0e35131b-0ff7-4412-a5c5-5a61894d0453" />
+
+<img width="354" height="731" alt="image" src="https://github.com/user-attachments/assets/48c4f69f-bcd6-4800-8fd2-bee9ce468514" />
+
+- ### Report an Issue Page
+
+<img width="354" height="729" alt="image" src="https://github.com/user-attachments/assets/5385e7ae-9f44-473d-a4be-163a6924486c" />
+
+- ### Report Page
+
+<img width="354" height="728" alt="image" src="https://github.com/user-attachments/assets/00e73d7d-81c5-4ef5-8c72-ed1d50a5e33e" />
+
+<img width="354" height="729" alt="image" src="https://github.com/user-attachments/assets/4ee13466-5ed8-409f-aa97-8aed69f72332" />
+
+- ### User Info Page
+
+<img width="347" height="737" alt="image" src="https://github.com/user-attachments/assets/bf050c59-d5fa-46da-8eb9-d283d8ce2b8f" />
+
+- ### Change Password Page
+
+<img width="348" height="735" alt="image" src="https://github.com/user-attachments/assets/8c2cdb03-9223-4be8-b968-60d7fb68ba9d" />
+
+
+
 <a id="testing-strategy"></a>
 ## Testing Strategy
 
@@ -353,7 +404,8 @@ cd Frontend && npm install && npm run build && cd ../Backend && pip install -r r
 
 Start Command
 ```bash
-    gunicorn --chdir Backend/main --bind 0.0.0.0:$PORT App:app
+    gunicorn --chdir Backend/main --bind 0.0.0.0:$PORT App:app (Production)
+    flask run (Development)
 ```
 
 <a id="built-with"></a>
