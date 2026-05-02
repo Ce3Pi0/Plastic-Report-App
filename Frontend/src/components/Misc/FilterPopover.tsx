@@ -1,5 +1,5 @@
 import { IonFab, IonFabButton, IonFabList, IonIcon } from "@ionic/react";
-import { arrowDownOutline } from "ionicons/icons";
+import { arrowBackOutline, arrowDownOutline } from "ionicons/icons";
 import { hideTooltip } from "../../utils/utils";
 import { DirectionType } from "../../types";
 import FilterPopoverElement from "./FilterPopoverElement";
@@ -20,7 +20,7 @@ const FilterPopover = ({ direction, hidden, setHidden, setStatus }: Props) => {
           onClick={(e) => hideTooltip(hidden, setHidden)}
         >
           <IonIcon
-            icon={direction === "down" ? arrowDownOutline : arrowDownOutline}
+            icon={direction === "down" ? arrowDownOutline : arrowBackOutline}
           />
         </IonFabButton>
         <span
@@ -31,7 +31,10 @@ const FilterPopover = ({ direction, hidden, setHidden, setStatus }: Props) => {
         </span>
       </div>
 
-      <IonFabList className="tooltips" side="bottom">
+      <IonFabList
+        className="tooltips"
+        side={direction === "down" ? "bottom" : "start"}
+      >
         <FilterPopoverElement
           hidden={hidden}
           setHidden={setHidden}
