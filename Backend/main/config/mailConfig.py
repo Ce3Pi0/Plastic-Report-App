@@ -20,11 +20,13 @@ class MailHandler:
             MAIL_USE_SSL = False,
             MAIL_USERNAME = get_env.get("MAIL_USERNAME"),
             MAIL_PASSWORD = get_env.get("MAIL_PASSWORD"),
+            MAIL_DEBUG= True # Testing Only
         ))
         self.__mail = Mail(app)
     
     def send_async_email(self, app: Flask, msg):
         with app.app_context():
+            print(f"DEBUG: Attempting to send email to {msg.recipients}...")
             try:
                 if self.__mail is None:
                     raise RuntimeError("MailHandler not initialized. Call MailHandler.init_app(app) before using this method.")
