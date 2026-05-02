@@ -448,14 +448,3 @@ Start Command
 ## License
 
 This project is for educational and portfolio purposes.
-
----
-
-Acknowledgments
-
--   Render
--   Ionic
--   Supabase
--   Cloudinary
--   Google Maps Platform
--   EmailJS
