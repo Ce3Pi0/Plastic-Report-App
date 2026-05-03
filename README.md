@@ -109,10 +109,7 @@ Create .env files for both frontend and backend.
     FRONTEND_PORT
     HOST
     JWT_SECRET
-    MAIL_PASSWORD
-    MAIL_PORT
-    MAIL_SERVER
-    MAIL_USERNAME
+    BREVO_API_KEY
     MY_MAIL
     PASS_LEN
     PORT
@@ -166,7 +163,7 @@ Create .env files for both frontend and backend.
 
 ### High Level Architecture
 
-![PlasticReportAppSystemArchitecture](https://github.com/user-attachments/assets/9ea5ceda-f99e-4938-a843-0c51d2b53185)
+<img width="546" height="481" alt="PlasticReportAppSystemArchitecture" src="https://github.com/user-attachments/assets/04b04f53-46a7-4750-b7e2-1527f20ee13d" />
 
 ### Architecture Principles
 
@@ -178,6 +175,8 @@ Create .env files for both frontend and backend.
    - Access + Refresh Token System
 1. #### Cloud-Backed Media Layer
    - Cloudinary Handles Static Media Files:
+1. #### Email API
+    Backend Email Delivery Through Brevo
 1. #### Geolocation-Based Reporting System:
    - Frontend Integrates Google Maps API
 1. #### Serverless Email Handling:
@@ -443,6 +442,7 @@ Start Command
 -   Tailwind CSS
 -   Google Maps API
 -   EmailJS
+-   Brevo
 
 <a id="license"></a>
 ## License
