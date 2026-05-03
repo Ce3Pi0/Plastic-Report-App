@@ -23,7 +23,7 @@ const AccountForgotChangeComponent: React.FC = () => {
 
   const router = useIonRouter();
 
-  const { user } = useContext(GlobalContext) as IContext;
+  const { user, isLoaded } = useContext(GlobalContext) as IContext;
 
   const [presentAlert] = useIonAlert();
 
@@ -126,7 +126,7 @@ const AccountForgotChangeComponent: React.FC = () => {
           </IonButton>
         </form>
       )}
-      {!token && (
+      {!token && isLoaded && !user && (
         <>
           <h2 className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2">
             Token not specified!

@@ -3,12 +3,14 @@ import { home, listOutline, locate, person } from "ionicons/icons";
 import { useContext } from "react";
 import { GlobalContext } from "../context/Context";
 import { IContext } from "../interfaces/interfaces";
+import { useLocation } from "react-router";
 
 const TabBar = () => {
   const { user } = useContext(GlobalContext) as IContext;
+  const location = useLocation();
 
   const isSelected = (path: string) => {
-    return window.location.pathname.includes(path);
+    return location.pathname.includes(path);
   };
 
   return (

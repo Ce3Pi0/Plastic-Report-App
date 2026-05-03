@@ -20,7 +20,7 @@ export const sendConfirmPasswordReset = async (
 
     if (!data.ok) throw { status: data.status };
 
-    router.push("/account/login", "back");
+    router.push("/account", "back");
   } catch (err: any) {
     switch (err.status) {
       case ErrorCodes.NOT_FOUND:

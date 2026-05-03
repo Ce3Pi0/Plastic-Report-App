@@ -1,10 +1,12 @@
 {
   "cSpell.words": [
     "backref",
+    "brevo",
     "bytea",
     "dotenv",
     "gensalt",
     "hashpw",
-    "Supabase"
+    "Supabase",
+    "Transac"
   ]
 }

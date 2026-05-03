@@ -1,6 +1,8 @@
 from enum import Enum
 
 class HttpError(Enum):
+    OK = ("OK", 200)
+    CREATED = ("Created", 201)
     BAD_REQUEST = ("Bad request", 400)
     UNAUTHORIZED = ("Unauthorized", 401)
     NOT_FOUND = ("Not found", 404)

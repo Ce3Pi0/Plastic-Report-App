@@ -57,14 +57,12 @@ export const userChangeRequest = async (
       return;
     }
 
-    if (!data.ok) {
-      console.log(data);
-      throw { status: data.status };
-    }
+    if (!data.ok) throw { status: data.status };
 
     setMistake(false);
     setMessage("");
-    router.push("/", "back");
+
+    router.push("/", "root");
   } catch (err: any) {
     switch (err.status) {
       case ErrorCodes.NOT_FOUND:

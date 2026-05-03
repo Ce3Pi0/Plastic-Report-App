@@ -23,15 +23,12 @@ get_env = {
     "PROD_FRONTEND_DOMAIN": os.getenv("PROD_FRONTEND_DOMAIN"),
     "DATABASE_URL": os.getenv("DATABASE_URL"),
     "MY_MAIL": os.getenv("MY_MAIL"),
-    "MAIL_SERVER": os.getenv("MAIL_SERVER"),
-    "MAIL_PORT": os.getenv("MAIL_PORT", "587"),
-    "MAIL_USERNAME": os.getenv("MAIL_USERNAME"),
-    "MAIL_PASSWORD": os.getenv("MAIL_PASSWORD"),
     "REQUEST_TIMER_LIMIT": os.getenv("REQUEST_TIMER_LIMIT", "5"),
     "HOST": os.getenv("HOST", "0.0.0.0"),
     "CLOUDINARY_NAME": os.getenv("CLOUDINARY_NAME"),
     "CLOUDINARY_API_KEY": os.getenv("CLOUDINARY_API_KEY"),
     "CLOUDINARY_API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+    "BREVO_API_KEY": os.getenv("BREVO_API_KEY")
 }
 
 

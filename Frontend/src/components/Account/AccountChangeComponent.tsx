@@ -23,7 +23,9 @@ import { DOMAIN, UNSAFE_PASSWORD } from "../../config";
 const AccountChangeComponent: React.FC = () => {
   const [presentAlert] = useIonAlert();
 
-  const { user, updateTokens } = useContext(GlobalContext) as IContext;
+  const { user, updateTokens, loggedIn } = useContext(
+    GlobalContext,
+  ) as IContext;
 
   const [loading, setLoading] = useState<boolean>(false);
 

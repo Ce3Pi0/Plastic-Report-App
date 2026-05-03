@@ -5,7 +5,8 @@ from config.errorHandler import register_error_handlers
 from config.checkOriginConfig import check_origin
 
 # Comment in development
-check_origin(app)
+if get_env.get("ENV") != "DEVELOPMENT":
+    check_origin(app)
 
 register_routes(app)
 register_error_handlers(app)

@@ -87,7 +87,7 @@ class AuthService:
 
         token = s.dumps(email, salt='email-confirm')
 
-        MailHandlerInstance.send_link("Welcome new user! When you click this link, you will be able to confirm your email!", email, f"{get_env["FRONTEND_DOMAIN"]}/account/confirm_email?token={token}")
+        MailHandlerInstance.send_link("Welcome new user!", "When you click this link, you will be able to confirm your email!", email, f"{get_env["FRONTEND_DOMAIN"]}/account/confirm_email?token={token}")
 
     @staticmethod
     def confirm_email(token: str):
@@ -120,7 +120,7 @@ class AuthService:
 
         token = s.dumps(email, salt='password-forgot')
 
-        MailHandlerInstance.send_link("Welcome user! When you click this link, you will be able to change your password!", email, f"{get_env["FRONTEND_DOMAIN"]}/account/forgot_change?token={token}")
+        MailHandlerInstance.send_link("Welcome user!", "When you click this link, you will be able to change your password!", email, f"{get_env["FRONTEND_DOMAIN"]}/account/forgot_change?token={token}")
 
     @staticmethod
     def verify_reset_token(token: str, password: str):
