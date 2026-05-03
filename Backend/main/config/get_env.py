@@ -10,7 +10,7 @@ def get_domain(env: str, prod_domain: str | None, dev_domain) -> str:
             raise RuntimeError("Production domain not specified")
         return prod_domain
     else:
-        return dev_domain
+        return f"{dev_domain}{get_env['FRONTEND_PORT']}"
 
 get_env = {
     "ENV": os.getenv("ENV", "DEVELOPMENT"),
@@ -32,4 +32,4 @@ get_env = {
 }
 
 
-get_env["FRONTEND_DOMAIN"] = f"{get_domain(get_env["ENV"], get_env["PROD_FRONTEND_DOMAIN"], get_env["DEV_FRONTEND_DOMAIN"])}{get_env["FRONTEND_PORT"]}"
+get_env["FRONTEND_DOMAIN"] = f"{get_domain(get_env["ENV"], get_env["PROD_FRONTEND_DOMAIN"], get_env["DEV_FRONTEND_DOMAIN"])}"
